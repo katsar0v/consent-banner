@@ -1,0 +1,53 @@
+.kdcb-settings-wrap .widefat input[type="text"],
+.kdcb-settings-wrap .widefat input[type="number"],
+.kdcb-settings-wrap .widefat input[type="color"],
+.kdcb-settings-wrap .widefat select {
+  width: 100%;
+}
+
+.kdcb-settings-wrap .kdcb-settings-tabs {
+  margin: 18px 0 12px;
+}
+
+.kdcb-settings-wrap .nav-tab-disabled {
+  color: #a7aaad;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.kdcb-settings-wrap .kdcb-tab-badge {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 6px;
+  border: 1px solid #dcdcde;
+  border-radius: 999px;
+  background: #f6f7f7;
+  color: #646970;
+  font-size: 11px;
+  line-height: 1.5;
+  vertical-align: middle;
+}
+
+.kdcb-settings-wrap .kdcb-settings-panel {
+  margin-top: 12px;
+}
+
+.kdcb-settings-wrap #kdcb-categories-table td,
+.kdcb-settings-wrap #kdcb-categories-table th,
+.kdcb-settings-wrap .kdcb-texts-table td,
+.kdcb-settings-wrap .kdcb-texts-table th,
+.kdcb-settings-wrap .kdcb-button-colors-table td,
+.kdcb-settings-wrap .kdcb-button-colors-table th {
+  vertical-align: middle;
+}
+
+.kdcb-settings-wrap .form-table label {
+  display: inline-block;
+  margin-bottom: 8px;
+}
+
+.kdcb-settings-wrap .kdcb-color-input {
+  min-width: 74px;
+  height: 36px;
+  padding: 2px;
+}

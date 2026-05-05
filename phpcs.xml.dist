@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<ruleset name="CookieBanner">
+  <description>PHPCS ruleset for Cookie Banner plugin.</description>
+
+  <arg name="basepath" value="."/>
+  <arg name="extensions" value="php"/>
+  <arg value="sp"/>
+
+  <file>cookie-banner.php</file>
+  <file>includes</file>
+  <file>uninstall.php</file>
+  <file>views</file>
+
+  <exclude-pattern>vendor/*</exclude-pattern>
+  <exclude-pattern>node_modules/*</exclude-pattern>
+
+  <rule ref="WordPress"/>
+  <rule ref="WordPress-Extra"/>
+  <rule ref="WordPress-Docs"/>
+  <rule ref="PHPCompatibilityWP">
+    <properties>
+      <property name="testVersion" value="8.1-"/>
+    </properties>
+  </rule>
+</ruleset>

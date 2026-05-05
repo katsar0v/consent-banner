@@ -1,0 +1,25 @@
+# Dependencies
+vendor/
+node_modules/
+
+# OS/Editor specific
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Project specific
+/assets/css/*.map
+/assets/js/*.map
+
+# Testing and Logs
+/tests/temp/
+*.log
+.phpunit.result.cache
+
+# Environment
+.env
+.env.local
+
