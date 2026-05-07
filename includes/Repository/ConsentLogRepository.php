@@ -2,15 +2,15 @@
 /**
  * Consent log persistence.
  *
- * @package KatsarovDesign\CookieBanner
+ * @package KatsarovDesign\ConsentBanner
  */
 
 declare(strict_types=1);
 
-namespace KatsarovDesign\CookieBanner\Repository;
+namespace KatsarovDesign\ConsentBanner\Repository;
 
-use KatsarovDesign\CookieBanner\Domain\ConsentState;
-use KatsarovDesign\CookieBanner\Installer;
+use KatsarovDesign\ConsentBanner\Domain\ConsentState;
+use KatsarovDesign\ConsentBanner\Installer;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -20,8 +20,8 @@ final class ConsentLogRepository {
 	public function insert( ConsentState $state ): void {
 		global $wpdb;
 
-		$ip         = isset( $_SERVER['REMOTE_ADDR'] ) ? (string) wp_unslash( $_SERVER['REMOTE_ADDR'] ) : '';
-		$user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? (string) wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) : '';
+		$ip         = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
+		$user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : '';
 		$payload    = wp_json_encode( $state->to_array() );
 		$payload    = false === $payload ? '' : $payload;
 

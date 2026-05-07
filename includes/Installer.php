@@ -2,26 +2,27 @@
 /**
  * Database and option installer.
  *
- * @package KatsarovDesign\CookieBanner
+ * @package KatsarovDesign\ConsentBanner
  */
 
 declare(strict_types=1);
 
-namespace KatsarovDesign\CookieBanner;
+namespace KatsarovDesign\ConsentBanner;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 final class Installer {
-	public const DB_VERSION                  = '0.1.0';
-	public const OPTION_DB_VERSION           = 'kdcb_db_version';
-	public const OPTION_SETTINGS             = 'kdcb_settings';
-	public const OPTION_CONSENT_VERSION      = 'kdcb_consent_version';
-	public const OPTION_REMOVE_ON_UNINSTALL  = 'kdcb_remove_on_uninstall';
-	public const TABLE_CONSENT_LOG           = 'kdcb_consent_log';
+	public const DB_VERSION                  = '0.2.0';
+	public const OPTION_DB_VERSION           = 'kdconsent_db_version';
+	public const OPTION_SETTINGS             = 'kdconsent_settings';
+	public const OPTION_CONSENT_VERSION      = 'kdconsent_consent_version';
+	public const OPTION_REMOVE_ON_UNINSTALL  = 'kdconsent_remove_on_uninstall';
+	public const TABLE_CONSENT_LOG           = 'kdconsent_consent_log';
 
 	public static function install(): void {
+		self::migrate_legacy_data();
 		self::create_tables();
 		self::ensure_options();
 		update_option( self::OPTION_DB_VERSION, self::DB_VERSION, false );
@@ -33,6 +34,44 @@ final class Installer {
 		if ( version_compare( $current_version, self::DB_VERSION, '<' ) ) {
 			self::install();
 		}
+	}
+
+	public static function migrate_legacy_data(): void {
+		self::copy_legacy_option( LegacyCompat::OPTION_SETTINGS, self::OPTION_SETTINGS );
+		self::copy_legacy_option( LegacyCompat::OPTION_CONSENT_VERSION, self::OPTION_CONSENT_VERSION );
+		self::copy_legacy_option( LegacyCompat::OPTION_DB_VERSION, self::OPTION_DB_VERSION );
+		self::copy_legacy_option( LegacyCompat::OPTION_REMOVE_ON_UNINSTALL, self::OPTION_REMOVE_ON_UNINSTALL );
+		self::rename_legacy_consent_log_table();
+	}
+
+	private static function copy_legacy_option( string $legacy_option, string $new_option ): void {
+		if ( false !== get_option( $new_option, false ) ) {
+			return;
+		}
+
+		$missing      = '__kdconsent_missing_option__';
+		$legacy_value = get_option( $legacy_option, $missing );
+		if ( $missing === $legacy_value ) {
+			return;
+		}
+
+		add_option( $new_option, $legacy_value, '', false );
+	}
+
+	private static function rename_legacy_consent_log_table(): void {
+		global $wpdb;
+
+		$legacy_table = self::legacy_consent_log_table_name();
+		$new_table    = self::consent_log_table_name();
+
+		$legacy_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $legacy_table ) );
+		$new_exists    = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $new_table ) );
+
+		if ( $legacy_table !== $legacy_exists || $new_table === $new_exists ) {
+			return;
+		}
+
+		$wpdb->query( "RENAME TABLE `{$legacy_table}` TO `{$new_table}`" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 	}
 
 	public static function create_tables(): void {
@@ -101,8 +140,13 @@ final class Installer {
 			),
 		);
 
+		$default_categories = apply_filters( LegacyCompat::DEFAULT_CATEGORIES_FILTER, $default_categories );
+		if ( ! is_array( $default_categories ) ) {
+			$default_categories = array();
+		}
+
 		return array(
-			'categories'          => apply_filters( 'kdcb_default_categories', $default_categories ),
+			'categories'          => apply_filters( 'kdconsent_default_categories', $default_categories ),
 			'texts'               => array(
 				'en_US' => array(
 					'bannerTitle'      => 'We use cookies',
@@ -190,6 +234,12 @@ final class Installer {
 		return $wpdb->prefix . self::TABLE_CONSENT_LOG;
 	}
 
+	public static function legacy_consent_log_table_name(): string {
+		global $wpdb;
+
+		return $wpdb->prefix . LegacyCompat::TABLE_CONSENT_LOG;
+	}
+
 	public static function uninstall(): void {
 		if ( ! self::should_remove_on_uninstall() ) {
 			return;
@@ -210,6 +260,7 @@ final class Installer {
 		global $wpdb;
 
 		$wpdb->query( 'DROP TABLE IF EXISTS ' . self::consent_log_table_name() ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		$wpdb->query( 'DROP TABLE IF EXISTS ' . self::legacy_consent_log_table_name() ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 	}
 
 	public static function delete_options(): void {
@@ -217,5 +268,9 @@ final class Installer {
 		delete_option( self::OPTION_SETTINGS );
 		delete_option( self::OPTION_CONSENT_VERSION );
 		delete_option( self::OPTION_REMOVE_ON_UNINSTALL );
+		delete_option( LegacyCompat::OPTION_DB_VERSION );
+		delete_option( LegacyCompat::OPTION_SETTINGS );
+		delete_option( LegacyCompat::OPTION_CONSENT_VERSION );
+		delete_option( LegacyCompat::OPTION_REMOVE_ON_UNINSTALL );
 	}
 }

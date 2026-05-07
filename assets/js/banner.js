@@ -1,6 +1,6 @@
 (function () {
-  var config = window.kdcbConfig || {};
-  var root = document.getElementById('kdcb-banner-root');
+  var config = window.kdconsentConfig || {};
+  var root = document.getElementById('kdconsent-banner-root');
   var categories = Array.isArray(config.categories) ? config.categories : [];
   var consent = config.consent && Number(config.consent.v) === Number(config.consentVersion) ? config.consent : null;
   var listeners = [];
@@ -30,32 +30,32 @@
   var animationType = normalizeAnimation(behavior.animation);
   var showDelayMs = normalizeDelay(behavior.showDelayMs);
   var animationClasses = [
-    'kdcb-anim-fade-in',
-    'kdcb-anim-slide-in-up',
-    'kdcb-anim-slide-in-left',
-    'kdcb-anim-slide-in-right',
-    'kdcb-anim-slide-in-down',
-    'kdcb-anim-blur-in'
+    'kdconsent-anim-fade-in',
+    'kdconsent-anim-slide-in-up',
+    'kdconsent-anim-slide-in-left',
+    'kdconsent-anim-slide-in-right',
+    'kdconsent-anim-slide-in-down',
+    'kdconsent-anim-blur-in'
   ];
 
   var wrapper = document.createElement('div');
   wrapper.className =
-    'kdcb-banner kdcb-position-' + (behavior.position || 'bottom');
+    'kdconsent-banner kdconsent-position-' + (behavior.position || 'bottom');
 
   var title = document.createElement('h3');
-  title.className = 'kdcb-banner-title';
+  title.className = 'kdconsent-banner-title';
   title.textContent = labels.bannerTitle;
 
   var body = document.createElement('p');
-  body.className = 'kdcb-banner-body';
+  body.className = 'kdconsent-banner-body';
   body.textContent = labels.bannerBody;
 
   var actions = document.createElement('div');
-  actions.className = 'kdcb-banner-actions';
+  actions.className = 'kdconsent-banner-actions';
 
-  var acceptButton = buildButton(labels.acceptAllLabel, 'kdcb-btn kdcb-btn-primary kdcb-btn-accept');
-  var rejectButton = buildButton(labels.rejectAllLabel, 'kdcb-btn kdcb-btn-secondary kdcb-btn-reject');
-  var customizeButton = buildButton(labels.customizeLabel, 'kdcb-btn kdcb-btn-tertiary kdcb-btn-customize');
+  var acceptButton = buildButton(labels.acceptAllLabel, 'kdconsent-btn kdconsent-btn-primary kdconsent-btn-accept');
+  var rejectButton = buildButton(labels.rejectAllLabel, 'kdconsent-btn kdconsent-btn-secondary kdconsent-btn-reject');
+  var customizeButton = buildButton(labels.customizeLabel, 'kdconsent-btn kdconsent-btn-tertiary kdconsent-btn-customize');
 
   actions.appendChild(acceptButton);
   if (showRejectButton) {
@@ -69,28 +69,28 @@
   wrapper.hidden = true;
 
   var bannerBackdrop = document.createElement('div');
-  bannerBackdrop.className = 'kdcb-banner-overlay';
+  bannerBackdrop.className = 'kdconsent-banner-overlay';
   setBannerBackdropVisibility(false);
 
   var modalOverlay = document.createElement('div');
-  modalOverlay.className = 'kdcb-modal-overlay';
+  modalOverlay.className = 'kdconsent-modal-overlay';
   setModalVisibility(false);
 
   var modal = document.createElement('div');
-  modal.className = 'kdcb-modal';
+  modal.className = 'kdconsent-modal';
 
   var modalTitle = document.createElement('h3');
-  modalTitle.className = 'kdcb-modal-title';
+  modalTitle.className = 'kdconsent-modal-title';
   modalTitle.textContent = labels.preferencesTitle;
 
   var modalBody = document.createElement('div');
-  modalBody.className = 'kdcb-modal-body';
+  modalBody.className = 'kdconsent-modal-body';
 
   var modalActions = document.createElement('div');
-  modalActions.className = 'kdcb-modal-actions';
+  modalActions.className = 'kdconsent-modal-actions';
 
-  var saveButton = buildButton(labels.saveLabel, 'kdcb-btn kdcb-btn-primary kdcb-btn-save');
-  var closeButton = buildButton(labels.closeLabel, 'kdcb-btn kdcb-btn-tertiary kdcb-btn-close');
+  var saveButton = buildButton(labels.saveLabel, 'kdconsent-btn kdconsent-btn-primary kdconsent-btn-save');
+  var closeButton = buildButton(labels.closeLabel, 'kdconsent-btn kdconsent-btn-tertiary kdconsent-btn-close');
 
   modalActions.appendChild(saveButton);
   modalActions.appendChild(closeButton);
@@ -109,10 +109,10 @@
 
   categories.forEach(function (category) {
     var item = document.createElement('div');
-    item.className = 'kdcb-modal-item';
+    item.className = 'kdconsent-modal-item';
 
     var left = document.createElement('div');
-    left.className = 'kdcb-modal-item-text';
+    left.className = 'kdconsent-modal-item-text';
 
     var label = document.createElement('strong');
     label.textContent = category.label || category.id;
@@ -175,7 +175,7 @@
       return;
     }
 
-    var trigger = target.closest('.kdcb-open-preferences');
+    var trigger = target.closest('.kdconsent-open-preferences, .kdcb-open-preferences');
     if (!trigger) {
       return;
     }
@@ -184,7 +184,7 @@
     openPreferences();
   });
 
-  window.kdcb = {
+  window.kdconsent = {
     getConsent: function () {
       return consent ? JSON.parse(JSON.stringify(consent)) : null;
     },
@@ -207,6 +207,7 @@
       };
     }
   };
+  window.kdcb = window.kdconsent;
 
   function buildButton(label, className) {
     var button = document.createElement('button');
@@ -252,22 +253,22 @@
   }
 
   function applyBannerAnimation() {
-    var className = 'kdcb-anim-' + animationType;
+    var className = 'kdconsent-anim-' + animationType;
 
-    wrapper.classList.remove('kdcb-anim-enter');
+    wrapper.classList.remove('kdconsent-anim-enter');
     animationClasses.forEach(function (item) {
       wrapper.classList.remove(item);
     });
 
     void wrapper.offsetWidth;
 
-    wrapper.classList.add('kdcb-anim-enter');
+    wrapper.classList.add('kdconsent-anim-enter');
     wrapper.classList.add(className);
 
     wrapper.addEventListener(
       'animationend',
       function () {
-        wrapper.classList.remove('kdcb-anim-enter');
+        wrapper.classList.remove('kdconsent-anim-enter');
         wrapper.classList.remove(className);
       },
       { once: true }
@@ -306,7 +307,7 @@
     var backdropOpacity = normalizeOpacity(backdrop.opacity);
     var backdropValue = toRgba(backdropColor || '#000000', backdropOpacity);
 
-    root.style.setProperty('--kdcb-backdrop', backdropValue);
+    root.style.setProperty('--kdconsent-backdrop', backdropValue);
     if (modalOverlayElement && modalOverlayElement.style) {
       modalOverlayElement.style.setProperty('background', backdropValue, 'important');
     }
@@ -336,7 +337,7 @@
           return;
         }
 
-        root.style.setProperty('--kdcb-btn-' + buttonKey + '-' + colorKeyMap[settingKey], color);
+        root.style.setProperty('--kdconsent-btn-' + buttonKey + '-' + colorKeyMap[settingKey], color);
       });
     });
   }
@@ -487,6 +488,11 @@
       }
     });
 
+    document.dispatchEvent(
+      new CustomEvent('kdconsent:consent-changed', {
+        detail: consent
+      })
+    );
     document.dispatchEvent(
       new CustomEvent('kdcb:consent-changed', {
         detail: consent

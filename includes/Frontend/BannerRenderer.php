@@ -2,12 +2,12 @@
 /**
  * Banner root rendering.
  *
- * @package KatsarovDesign\CookieBanner
+ * @package KatsarovDesign\ConsentBanner
  */
 
 declare(strict_types=1);
 
-namespace KatsarovDesign\CookieBanner\Frontend;
+namespace KatsarovDesign\ConsentBanner\Frontend;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -19,6 +19,6 @@ final class BannerRenderer {
 			return;
 		}
 
-		echo '<div id="kdcb-banner-root"></div>';
+		echo '<div id="kdconsent-banner-root"></div>';
 	}
 }

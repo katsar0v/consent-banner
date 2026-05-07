@@ -2,27 +2,27 @@
 /**
  * Plugin bootstrap.
  *
- * @package KatsarovDesign\CookieBanner
+ * @package KatsarovDesign\ConsentBanner
  */
 
 declare(strict_types=1);
 
-namespace KatsarovDesign\CookieBanner;
+namespace KatsarovDesign\ConsentBanner;
 
-use KatsarovDesign\CookieBanner\Admin\Assets as AdminAssets;
-use KatsarovDesign\CookieBanner\Admin\Menu;
-use KatsarovDesign\CookieBanner\Admin\SettingsPage;
-use KatsarovDesign\CookieBanner\Frontend\Assets as FrontendAssets;
-use KatsarovDesign\CookieBanner\Frontend\BannerRenderer;
-use KatsarovDesign\CookieBanner\Frontend\Shortcode;
-use KatsarovDesign\CookieBanner\Rest\RestRouter;
+use KatsarovDesign\ConsentBanner\Admin\Assets as AdminAssets;
+use KatsarovDesign\ConsentBanner\Admin\Menu;
+use KatsarovDesign\ConsentBanner\Admin\SettingsPage;
+use KatsarovDesign\ConsentBanner\Frontend\Assets as FrontendAssets;
+use KatsarovDesign\ConsentBanner\Frontend\BannerRenderer;
+use KatsarovDesign\ConsentBanner\Frontend\Shortcode;
+use KatsarovDesign\ConsentBanner\Rest\RestRouter;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 final class Plugin {
-	public const TEXT_DOMAIN = 'cookie-banner';
+	public const TEXT_DOMAIN = 'consent-banner';
 	public const CAPABILITY  = 'manage_options';
 
 	private static ?self $instance = null;
@@ -40,13 +40,14 @@ final class Plugin {
 	public function init(): void {
 		add_action( 'init', array( $this, 'load_textdomain' ) );
 		add_action( 'admin_menu', array( Menu::class, 'register' ) );
-		add_action( 'admin_post_kdcb_save_settings', array( SettingsPage::class, 'handle_save' ) );
+		add_action( 'admin_post_kdconsent_save_settings', array( SettingsPage::class, 'handle_save' ) );
 		add_action( 'admin_enqueue_scripts', array( AdminAssets::class, 'enqueue' ) );
 		add_action( 'wp_enqueue_scripts', array( FrontendAssets::class, 'enqueue' ) );
 		add_action( 'wp_footer', array( BannerRenderer::class, 'render_container' ) );
 		add_action( 'rest_api_init', array( RestRouter::class, 'register_routes' ) );
 		add_action( 'init', array( Shortcode::class, 'register' ) );
 
+		LegacyCompat::register();
 		Installer::maybe_upgrade();
 	}
 
@@ -62,7 +63,7 @@ final class Plugin {
 		load_plugin_textdomain(
 			self::TEXT_DOMAIN,
 			false,
-			dirname( plugin_basename( KDCB_PLUGIN_FILE ) ) . '/languages'
+			dirname( plugin_basename( KDCONSENT_PLUGIN_FILE ) ) . '/languages'
 		);
 	}
 }

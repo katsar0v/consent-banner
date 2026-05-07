@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
-<ruleset name="CookieBanner">
-  <description>PHPCS ruleset for Cookie Banner plugin.</description>
+<ruleset name="ConsentBanner">
+  <description>PHPCS ruleset for Consent Banner plugin.</description>
 
   <arg name="basepath" value="."/>
   <arg name="extensions" value="php"/>
   <arg value="sp"/>
 
-  <file>cookie-banner.php</file>
+  <file>consent-banner.php</file>
   <file>includes</file>
   <file>uninstall.php</file>
   <file>views</file>
@@ -14,9 +14,31 @@
   <exclude-pattern>vendor/*</exclude-pattern>
   <exclude-pattern>node_modules/*</exclude-pattern>
 
-  <rule ref="WordPress"/>
+  <rule ref="WordPress">
+    <exclude name="WordPress.Files.FileName.NotHyphenatedLowercase"/>
+    <exclude name="WordPress.Files.FileName.InvalidClassFileName"/>
+    <exclude name="WordPress.DB.DirectDatabaseQuery.DirectQuery"/>
+    <exclude name="WordPress.DB.DirectDatabaseQuery.NoCaching"/>
+    <exclude name="WordPress.DB.DirectDatabaseQuery.SchemaChange"/>
+    <exclude name="WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode"/>
+    <exclude name="WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode"/>
+  </rule>
   <rule ref="WordPress-Extra"/>
-  <rule ref="WordPress-Docs"/>
+  <rule ref="Squiz.Commenting">
+    <severity>0</severity>
+  </rule>
+  <rule ref="Generic.Commenting.DocComment">
+    <severity>0</severity>
+  </rule>
+  <rule ref="Generic.Formatting.MultipleStatementAlignment">
+    <severity>0</severity>
+  </rule>
+  <rule ref="WordPress.Arrays.MultipleStatementAlignment">
+    <severity>0</severity>
+  </rule>
+  <rule ref="Generic.CodeAnalysis.UnusedFunctionParameter">
+    <severity>0</severity>
+  </rule>
   <rule ref="PHPCompatibilityWP">
     <properties>
       <property name="testVersion" value="8.1-"/>

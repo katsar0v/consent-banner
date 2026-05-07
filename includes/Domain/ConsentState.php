@@ -2,12 +2,12 @@
 /**
  * Consent state value object.
  *
- * @package KatsarovDesign\CookieBanner
+ * @package KatsarovDesign\ConsentBanner
  */
 
 declare(strict_types=1);
 
-namespace KatsarovDesign\CookieBanner\Domain;
+namespace KatsarovDesign\ConsentBanner\Domain;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

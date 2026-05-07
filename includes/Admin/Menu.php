@@ -2,21 +2,21 @@
 /**
  * Admin menu registration.
  *
- * @package KatsarovDesign\CookieBanner
+ * @package KatsarovDesign\ConsentBanner
  */
 
 declare(strict_types=1);
 
-namespace KatsarovDesign\CookieBanner\Admin;
+namespace KatsarovDesign\ConsentBanner\Admin;
 
-use KatsarovDesign\CookieBanner\Plugin;
+use KatsarovDesign\ConsentBanner\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 final class Menu {
-	public const PAGE_SLUG = 'kdcb-cookie-banner';
+	public const PAGE_SLUG = 'kdconsent-consent-banner';
 	public const DEFAULT_TAB = 'general';
 
 	/**
@@ -25,19 +25,19 @@ final class Menu {
 	public static function tabs(): array {
 		return array(
 			'general'          => array(
-				'label'   => __( 'General settings', 'cookie-banner' ),
+				'label'   => __( 'General settings', 'consent-banner' ),
 				'enabled' => true,
 			),
 			'appearance'       => array(
-				'label'   => __( 'Appearance', 'cookie-banner' ),
+				'label'   => __( 'Appearance', 'consent-banner' ),
 				'enabled' => true,
 			),
 			'external-scripts' => array(
-				'label'   => __( 'External scripts', 'cookie-banner' ),
+				'label'   => __( 'External scripts', 'consent-banner' ),
 				'enabled' => false,
 			),
 			'tcf'              => array(
-				'label'   => __( 'TCF', 'cookie-banner' ),
+				'label'   => __( 'TCF', 'consent-banner' ),
 				'enabled' => false,
 			),
 		);
@@ -61,8 +61,8 @@ final class Menu {
 
 	public static function register(): void {
 		add_options_page(
-			__( 'Cookie Banner', 'cookie-banner' ),
-			__( 'Cookie Banner', 'cookie-banner' ),
+			__( 'Consent Banner', 'consent-banner' ),
+			__( 'Consent Banner', 'consent-banner' ),
 			Plugin::CAPABILITY,
 			self::PAGE_SLUG,
 			array( SettingsPage::class, 'render' )
