@@ -1,7 +1,7 @@
 (function () {
-  var addButton = document.getElementById('kdcb-add-category');
-  var tableBody = document.querySelector('#kdcb-categories-table tbody');
-  var template = document.getElementById('kdcb-category-row-template');
+  var addButton = document.getElementById('kdconsent-add-category');
+  var tableBody = document.querySelector('#kdconsent-categories-table tbody');
+  var template = document.getElementById('kdconsent-category-row-template');
 
   if (!addButton || !tableBody || !template) {
     return;
@@ -23,7 +23,7 @@
 
   tableBody.addEventListener('click', function (event) {
     var target = event.target;
-    if (!target || !target.classList || !target.classList.contains('kdcb-remove-row')) {
+    if (!target || !target.classList || !target.classList.contains('kdconsent-remove-row')) {
       return;
     }
 

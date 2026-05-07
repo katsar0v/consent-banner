@@ -2,17 +2,17 @@
 /**
  * Public consent and admin settings REST controller.
  *
- * @package KatsarovDesign\CookieBanner
+ * @package KatsarovDesign\ConsentBanner
  */
 
 declare(strict_types=1);
 
-namespace KatsarovDesign\CookieBanner\Rest;
+namespace KatsarovDesign\ConsentBanner\Rest;
 
-use KatsarovDesign\CookieBanner\Installer;
-use KatsarovDesign\CookieBanner\Repository\SettingsRepository;
-use KatsarovDesign\CookieBanner\Service\ConsentService;
-use KatsarovDesign\CookieBanner\Service\Localization;
+use KatsarovDesign\ConsentBanner\Installer;
+use KatsarovDesign\ConsentBanner\Repository\SettingsRepository;
+use KatsarovDesign\ConsentBanner\Service\ConsentService;
+use KatsarovDesign\ConsentBanner\Service\Localization;
 use WP_Error;
 use WP_REST_Request;
 
@@ -54,8 +54,8 @@ final class ConsentController extends Controller {
 	public function save_consent( WP_REST_Request $request ): \WP_REST_Response|WP_Error {
 		if ( ! $this->rate_limit_ok() ) {
 			return new WP_Error(
-				'kdcb_rate_limited',
-				__( 'Too many consent requests. Please try again in a minute.', 'cookie-banner' ),
+				'kdconsent_rate_limited',
+				__( 'Too many consent requests. Please try again in a minute.', 'consent-banner' ),
 				array( 'status' => 429 )
 			);
 		}
@@ -97,8 +97,8 @@ final class ConsentController extends Controller {
 	}
 
 	private function rate_limit_ok(): bool {
-		$ip = isset( $_SERVER['REMOTE_ADDR'] ) ? (string) wp_unslash( $_SERVER['REMOTE_ADDR'] ) : 'unknown';
-		$key = 'kdcb_rl_' . md5( $ip );
+		$ip = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : 'unknown';
+		$key = 'kdconsent_rl_' . md5( $ip );
 		$count = (int) get_transient( $key );
 
 		if ( $count >= 60 ) {

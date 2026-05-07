@@ -2,14 +2,14 @@
 /**
  * Admin asset enqueuer.
  *
- * @package KatsarovDesign\CookieBanner
+ * @package KatsarovDesign\ConsentBanner
  */
 
 declare(strict_types=1);
 
-namespace KatsarovDesign\CookieBanner\Admin;
+namespace KatsarovDesign\ConsentBanner\Admin;
 
-use KatsarovDesign\CookieBanner\Plugin;
+use KatsarovDesign\ConsentBanner\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -21,15 +21,15 @@ final class Assets {
 			return;
 		}
 
-		wp_enqueue_style( 'kdcb-admin', KDCB_PLUGIN_URL . 'assets/css/admin.css', array(), KDCB_PLUGIN_VERSION );
-		wp_enqueue_script( 'kdcb-admin', KDCB_PLUGIN_URL . 'assets/js/admin.js', array(), KDCB_PLUGIN_VERSION, true );
+		wp_enqueue_style( 'kdconsent-admin', KDCONSENT_PLUGIN_URL . 'assets/css/admin.css', array(), KDCONSENT_PLUGIN_VERSION );
+		wp_enqueue_script( 'kdconsent-admin', KDCONSENT_PLUGIN_URL . 'assets/js/admin.js', array(), KDCONSENT_PLUGIN_VERSION, true );
 		wp_localize_script(
-			'kdcb-admin',
-			'kdcbAdmin',
+			'kdconsent-admin',
+			'kdconsentAdmin',
 			array(
-				'addCategoryLabel' => __( 'Add category', 'cookie-banner' ),
+				'addCategoryLabel' => __( 'Add category', 'consent-banner' ),
 			)
 		);
-		wp_set_script_translations( 'kdcb-admin', Plugin::TEXT_DOMAIN, KDCB_PLUGIN_DIR . 'languages' );
+		wp_set_script_translations( 'kdconsent-admin', Plugin::TEXT_DOMAIN, KDCONSENT_PLUGIN_DIR . 'languages' );
 	}
 }

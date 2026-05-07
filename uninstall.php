@@ -1,13 +1,13 @@
 <?php
 /**
- * Uninstall logic for Cookie Banner.
+ * Uninstall logic for Consent Banner.
  *
- * @package KatsarovDesign\CookieBanner
+ * @package KatsarovDesign\ConsentBanner
  */
 
 declare(strict_types=1);
 
-use KatsarovDesign\CookieBanner\Installer;
+use KatsarovDesign\ConsentBanner\Installer;
 
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	exit;

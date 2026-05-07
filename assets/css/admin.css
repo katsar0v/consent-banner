@@ -1,21 +1,21 @@
-.kdcb-settings-wrap .widefat input[type="text"],
-.kdcb-settings-wrap .widefat input[type="number"],
-.kdcb-settings-wrap .widefat input[type="color"],
-.kdcb-settings-wrap .widefat select {
+.kdconsent-settings-wrap .widefat input[type="text"],
+.kdconsent-settings-wrap .widefat input[type="number"],
+.kdconsent-settings-wrap .widefat input[type="color"],
+.kdconsent-settings-wrap .widefat select {
   width: 100%;
 }
 
-.kdcb-settings-wrap .kdcb-settings-tabs {
+.kdconsent-settings-wrap .kdconsent-settings-tabs {
   margin: 18px 0 12px;
 }
 
-.kdcb-settings-wrap .nav-tab-disabled {
+.kdconsent-settings-wrap .nav-tab-disabled {
   color: #a7aaad;
   cursor: not-allowed;
   pointer-events: none;
 }
 
-.kdcb-settings-wrap .kdcb-tab-badge {
+.kdconsent-settings-wrap .kdconsent-tab-badge {
   display: inline-block;
   margin-left: 6px;
   padding: 1px 6px;
@@ -28,25 +28,25 @@
   vertical-align: middle;
 }
 
-.kdcb-settings-wrap .kdcb-settings-panel {
+.kdconsent-settings-wrap .kdconsent-settings-panel {
   margin-top: 12px;
 }
 
-.kdcb-settings-wrap #kdcb-categories-table td,
-.kdcb-settings-wrap #kdcb-categories-table th,
-.kdcb-settings-wrap .kdcb-texts-table td,
-.kdcb-settings-wrap .kdcb-texts-table th,
-.kdcb-settings-wrap .kdcb-button-colors-table td,
-.kdcb-settings-wrap .kdcb-button-colors-table th {
+.kdconsent-settings-wrap #kdconsent-categories-table td,
+.kdconsent-settings-wrap #kdconsent-categories-table th,
+.kdconsent-settings-wrap .kdconsent-texts-table td,
+.kdconsent-settings-wrap .kdconsent-texts-table th,
+.kdconsent-settings-wrap .kdconsent-button-colors-table td,
+.kdconsent-settings-wrap .kdconsent-button-colors-table th {
   vertical-align: middle;
 }
 
-.kdcb-settings-wrap .form-table label {
+.kdconsent-settings-wrap .form-table label {
   display: inline-block;
   margin-bottom: 8px;
 }
 
-.kdcb-settings-wrap .kdcb-color-input {
+.kdconsent-settings-wrap .kdconsent-color-input {
   min-width: 74px;
   height: 36px;
   padding: 2px;

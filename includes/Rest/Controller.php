@@ -2,12 +2,12 @@
 /**
  * Shared REST controller helpers.
  *
- * @package KatsarovDesign\CookieBanner
+ * @package KatsarovDesign\ConsentBanner
  */
 
 declare(strict_types=1);
 
-namespace KatsarovDesign\CookieBanner\Rest;
+namespace KatsarovDesign\ConsentBanner\Rest;
 
 use WP_REST_Request;
 use WP_REST_Response;

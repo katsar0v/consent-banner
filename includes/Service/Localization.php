@@ -2,12 +2,12 @@
 /**
  * Locale and text helpers.
  *
- * @package KatsarovDesign\CookieBanner
+ * @package KatsarovDesign\ConsentBanner
  */
 
 declare(strict_types=1);
 
-namespace KatsarovDesign\CookieBanner\Service;
+namespace KatsarovDesign\ConsentBanner\Service;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -30,7 +30,7 @@ final class Localization {
 	 */
 	public function resolve_texts( array $settings ): array {
 		$texts      = is_array( $settings['texts'] ?? null ) ? $settings['texts'] : array();
-		$defaults   = \KatsarovDesign\CookieBanner\Installer::default_settings()['texts'];
+		$defaults   = \KatsarovDesign\ConsentBanner\Installer::default_settings()['texts'];
 		$locale     = $this->current_locale();
 		$fallback   = is_array( $defaults['en_US'] ?? null ) ? $defaults['en_US'] : array();
 		$localized  = is_array( $texts[ $locale ] ?? null ) ? $texts[ $locale ] : array();
@@ -53,7 +53,7 @@ final class Localization {
 			);
 		}
 
-		$defaults = \KatsarovDesign\CookieBanner\Installer::default_settings();
+		$defaults = \KatsarovDesign\ConsentBanner\Installer::default_settings();
 		$default_index = array();
 		foreach ( (array) ( $defaults['categories'] ?? array() ) as $default_category ) {
 			if ( ! is_array( $default_category ) ) {

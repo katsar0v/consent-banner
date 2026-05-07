@@ -2,19 +2,19 @@
 /**
  * Frontend asset registration.
  *
- * @package KatsarovDesign\CookieBanner
+ * @package KatsarovDesign\ConsentBanner
  */
 
 declare(strict_types=1);
 
-namespace KatsarovDesign\CookieBanner\Frontend;
+namespace KatsarovDesign\ConsentBanner\Frontend;
 
-use KatsarovDesign\CookieBanner\Installer;
-use KatsarovDesign\CookieBanner\Plugin;
-use KatsarovDesign\CookieBanner\Repository\SettingsRepository;
-use KatsarovDesign\CookieBanner\Rest\RestRouter;
-use KatsarovDesign\CookieBanner\Service\ConsentService;
-use KatsarovDesign\CookieBanner\Service\Localization;
+use KatsarovDesign\ConsentBanner\Installer;
+use KatsarovDesign\ConsentBanner\Plugin;
+use KatsarovDesign\ConsentBanner\Repository\SettingsRepository;
+use KatsarovDesign\ConsentBanner\Rest\RestRouter;
+use KatsarovDesign\ConsentBanner\Service\ConsentService;
+use KatsarovDesign\ConsentBanner\Service\Localization;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -32,16 +32,16 @@ final class Assets {
 
 		$settings = $settings_repository->get();
 		$consent  = $consent_service->current_from_request();
-		$style_path   = KDCB_PLUGIN_DIR . 'assets/css/banner.css';
-		$script_path  = KDCB_PLUGIN_DIR . 'assets/js/banner.js';
-		$style_ver    = is_readable( $style_path ) ? KDCB_PLUGIN_VERSION . '.' . (string) filemtime( $style_path ) : KDCB_PLUGIN_VERSION;
-		$script_ver   = is_readable( $script_path ) ? KDCB_PLUGIN_VERSION . '.' . (string) filemtime( $script_path ) : KDCB_PLUGIN_VERSION;
+		$style_path   = KDCONSENT_PLUGIN_DIR . 'assets/css/banner.css';
+		$script_path  = KDCONSENT_PLUGIN_DIR . 'assets/js/banner.js';
+		$style_ver    = is_readable( $style_path ) ? KDCONSENT_PLUGIN_VERSION . '.' . (string) filemtime( $style_path ) : KDCONSENT_PLUGIN_VERSION;
+		$script_ver   = is_readable( $script_path ) ? KDCONSENT_PLUGIN_VERSION . '.' . (string) filemtime( $script_path ) : KDCONSENT_PLUGIN_VERSION;
 
-		wp_enqueue_style( 'kdcb-banner', KDCB_PLUGIN_URL . 'assets/css/banner.css', array(), $style_ver );
-		wp_enqueue_script( 'kdcb-banner', KDCB_PLUGIN_URL . 'assets/js/banner.js', array(), $script_ver, true );
+		wp_enqueue_style( 'kdconsent-banner', KDCONSENT_PLUGIN_URL . 'assets/css/banner.css', array(), $style_ver );
+		wp_enqueue_script( 'kdconsent-banner', KDCONSENT_PLUGIN_URL . 'assets/js/banner.js', array(), $script_ver, true );
 		wp_localize_script(
-			'kdcb-banner',
-			'kdcbConfig',
+			'kdconsent-banner',
+			'kdconsentConfig',
 			array(
 				'restRoot'       => esc_url_raw( rest_url( RestRouter::NAMESPACE . '/' ) ),
 				'cookieName'     => ConsentService::COOKIE_NAME,
@@ -59,6 +59,6 @@ final class Assets {
 				'consent'        => null !== $consent ? $consent->to_array() : null,
 			)
 		);
-		wp_set_script_translations( 'kdcb-banner', Plugin::TEXT_DOMAIN, KDCB_PLUGIN_DIR . 'languages' );
+		wp_set_script_translations( 'kdconsent-banner', Plugin::TEXT_DOMAIN, KDCONSENT_PLUGIN_DIR . 'languages' );
 	}
 }

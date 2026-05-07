@@ -2,24 +2,25 @@
 /**
  * Consent state service.
  *
- * @package KatsarovDesign\CookieBanner
+ * @package KatsarovDesign\ConsentBanner
  */
 
 declare(strict_types=1);
 
-namespace KatsarovDesign\CookieBanner\Service;
+namespace KatsarovDesign\ConsentBanner\Service;
 
-use KatsarovDesign\CookieBanner\Domain\ConsentState;
-use KatsarovDesign\CookieBanner\Installer;
-use KatsarovDesign\CookieBanner\Repository\ConsentLogRepository;
-use KatsarovDesign\CookieBanner\Repository\SettingsRepository;
+use KatsarovDesign\ConsentBanner\Domain\ConsentState;
+use KatsarovDesign\ConsentBanner\Installer;
+use KatsarovDesign\ConsentBanner\LegacyCompat;
+use KatsarovDesign\ConsentBanner\Repository\ConsentLogRepository;
+use KatsarovDesign\ConsentBanner\Repository\SettingsRepository;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 final class ConsentService {
-	public const COOKIE_NAME = 'kdcb_consent';
+	public const COOKIE_NAME = 'kdconsent_consent';
 
 	public function __construct(
 		private ?SettingsRepository $settings_repository = null,
@@ -69,18 +70,37 @@ final class ConsentService {
 			$this->consent_log_repository->insert( $state );
 		}
 
-		do_action( 'kdcb_consent_recorded', $state );
+		do_action( 'kdconsent_consent_recorded', $state );
+		do_action( LegacyCompat::CONSENT_RECORDED_ACTION, $state );
+		$this->clear_cookie( LegacyCompat::COOKIE_NAME );
 
 		return $state;
 	}
 
 	public function current_from_request(): ?ConsentState {
-		if ( empty( $_COOKIE[ self::COOKIE_NAME ] ) ) {
+		if ( ! empty( $_COOKIE[ self::COOKIE_NAME ] ) ) {
+			$raw   = sanitize_text_field( wp_unslash( $_COOKIE[ self::COOKIE_NAME ] ) );
+			$state = $this->parse_cookie( $raw );
+			if ( null !== $state ) {
+				return $state;
+			}
+		}
+
+		if ( empty( $_COOKIE[ LegacyCompat::COOKIE_NAME ] ) ) {
 			return null;
 		}
 
-		$raw = (string) wp_unslash( $_COOKIE[ self::COOKIE_NAME ] );
-		return $this->parse_cookie( $raw );
+		$legacy_raw = sanitize_text_field( wp_unslash( $_COOKIE[ LegacyCompat::COOKIE_NAME ] ) );
+		$state      = $this->parse_cookie( $legacy_raw );
+		if ( null === $state ) {
+			return null;
+		}
+
+		$settings = $this->settings_repository->get();
+		$this->set_cookie( $state, (int) ( $settings['consentLifetimeDays'] ?? 180 ) );
+		$this->clear_cookie( LegacyCompat::COOKIE_NAME );
+
+		return $state;
 	}
 
 	public function has_consent( string $category ): bool {
@@ -169,11 +189,33 @@ final class ConsentService {
 		$_COOKIE[ self::COOKIE_NAME ] = $value;
 	}
 
+	private function clear_cookie( string $cookie_name ): void {
+		if ( headers_sent() ) {
+			unset( $_COOKIE[ $cookie_name ] );
+			return;
+		}
+
+		setcookie(
+			$cookie_name,
+			'',
+			array(
+				'expires'  => time() - DAY_IN_SECONDS,
+				'path'     => COOKIEPATH ? COOKIEPATH : '/',
+				'domain'   => COOKIE_DOMAIN,
+				'secure'   => is_ssl(),
+				'httponly' => false,
+				'samesite' => 'Lax',
+			)
+		);
+
+		unset( $_COOKIE[ $cookie_name ] );
+	}
+
 	private function signing_key(): string {
 		if ( function_exists( 'wp_salt' ) ) {
 			return wp_salt( 'auth' );
 		}
 
-		return defined( 'AUTH_KEY' ) ? AUTH_KEY : 'kdcb-fallback-key';
+		return defined( 'AUTH_KEY' ) ? AUTH_KEY : 'kdconsent-fallback-key';
 	}
 }

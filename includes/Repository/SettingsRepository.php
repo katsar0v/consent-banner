@@ -2,15 +2,16 @@
 /**
  * Settings persistence layer.
  *
- * @package KatsarovDesign\CookieBanner
+ * @package KatsarovDesign\ConsentBanner
  */
 
 declare(strict_types=1);
 
-namespace KatsarovDesign\CookieBanner\Repository;
+namespace KatsarovDesign\ConsentBanner\Repository;
 
-use KatsarovDesign\CookieBanner\Domain\Category;
-use KatsarovDesign\CookieBanner\Installer;
+use KatsarovDesign\ConsentBanner\Domain\Category;
+use KatsarovDesign\ConsentBanner\Installer;
+use KatsarovDesign\ConsentBanner\LegacyCompat;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -116,8 +117,8 @@ final class SettingsRepository {
 		if ( ! isset( $categories['essential'] ) ) {
 			$categories['essential'] = array(
 				'id'               => 'essential',
-				'label'            => __( 'Essential', 'cookie-banner' ),
-				'description'      => __( 'Required for basic website functionality.', 'cookie-banner' ),
+				'label'            => __( 'Essential', 'consent-banner' ),
+				'description'      => __( 'Required for basic website functionality.', 'consent-banner' ),
 				'required'         => true,
 				'enabledByDefault' => true,
 			);
@@ -126,7 +127,8 @@ final class SettingsRepository {
 		$categories['essential']['required']         = true;
 		$categories['essential']['enabledByDefault'] = true;
 
-		$filtered = apply_filters( 'kdcb_categories', array_values( $categories ) );
+		$filtered = apply_filters( LegacyCompat::CATEGORIES_FILTER, array_values( $categories ) );
+		$filtered = apply_filters( 'kdconsent_categories', $filtered );
 		if ( ! is_array( $filtered ) ) {
 			$filtered = array_values( $categories );
 		}
@@ -149,8 +151,8 @@ final class SettingsRepository {
 		if ( ! isset( $normalized['essential'] ) ) {
 			$normalized['essential'] = array(
 				'id'               => 'essential',
-				'label'            => __( 'Essential', 'cookie-banner' ),
-				'description'      => __( 'Required for basic website functionality.', 'cookie-banner' ),
+				'label'            => __( 'Essential', 'consent-banner' ),
+				'description'      => __( 'Required for basic website functionality.', 'consent-banner' ),
 				'required'         => true,
 				'enabledByDefault' => true,
 			);
