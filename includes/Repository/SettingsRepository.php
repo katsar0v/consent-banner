@@ -35,12 +35,20 @@ final class SettingsRepository {
 	 * @return array<string,mixed>
 	 */
 	public function update( array $settings ): array {
-		$sanitized = $this->sanitize_settings( $settings );
+		$sanitized = $this->sanitize( $settings );
 
 		update_option( Installer::OPTION_SETTINGS, $sanitized, false );
 		update_option( Installer::OPTION_REMOVE_ON_UNINSTALL, (bool) $sanitized['removeOnUninstall'], false );
 
 		return $sanitized;
+	}
+
+	/**
+	 * @param array<string,mixed> $settings Raw settings payload.
+	 * @return array<string,mixed>
+	 */
+	public function sanitize( array $settings ): array {
+		return $this->sanitize_settings( $settings );
 	}
 
 	/**

@@ -12,6 +12,7 @@ namespace KatsarovDesign\ConsentBanner;
 use KatsarovDesign\ConsentBanner\Admin\Assets as AdminAssets;
 use KatsarovDesign\ConsentBanner\Admin\Menu;
 use KatsarovDesign\ConsentBanner\Admin\SettingsPage;
+use KatsarovDesign\ConsentBanner\Cli\SettingsCommand;
 use KatsarovDesign\ConsentBanner\Frontend\Assets as FrontendAssets;
 use KatsarovDesign\ConsentBanner\Frontend\BannerRenderer;
 use KatsarovDesign\ConsentBanner\Frontend\Shortcode;
@@ -48,6 +49,10 @@ final class Plugin {
 		add_action( 'wp_footer', array( BannerRenderer::class, 'render_container' ) );
 		add_action( 'rest_api_init', array( RestRouter::class, 'register_routes' ) );
 		add_action( 'init', array( Shortcode::class, 'register' ) );
+
+		if ( defined( 'WP_CLI' ) && WP_CLI ) {
+			\WP_CLI::add_command( 'consent-banner', SettingsCommand::class );
+		}
 
 		LegacyCompat::register();
 		Installer::maybe_upgrade();

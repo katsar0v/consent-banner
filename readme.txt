@@ -19,6 +19,7 @@ Consent Banner provides:
 - Admin-adjustable categories.
 - Locale-aware EN/BG texts.
 - Consent version bump support for re-prompting users.
+- WP-CLI JSON settings import/export support.
 - Optional hashed consent logging.
 
 == Installation ==
@@ -41,6 +42,7 @@ Yes. Use shortcode `[kdconsent_preferences]` or trigger `.kdconsent-open-prefere
 
 = 0.2.0 =
 
+- Added WP-CLI JSON settings import/export support.
 - Renamed plugin, package, and public APIs to Consent Banner.
 - Added migration and compatibility shims for legacy data and integrations.
 

@@ -25,6 +25,7 @@ This version records consent decisions and exposes a JS/PHP API for integrations
 | Category model | Essential category is enforced as required; custom categories can be added in admin. |
 | Admin settings | Categories, EN/BG texts, lifetime, position, theme, uninstall behavior, and version bumping. |
 | REST API | Public consent submission/config endpoint + admin settings endpoint. |
+| WP-CLI | JSON settings import/export for deployments and backups. |
 | Integrations | JS API (`window.kdconsent`) + PHP helper (`kdconsent_has_consent`) + WP hooks/filters. |
 | Internationalization | English and Bulgarian text packs (site locale based). |
 | Audit option | Optional hashed consent logging for proof records. |
@@ -89,6 +90,50 @@ Namespace:
 | `PUT`, `PATCH` | `/settings` | Admin-only settings update. |
 
 Admin endpoints require `X-WP-Nonce` and `manage_options` capability.
+
+## WP-CLI
+
+Export the same JSON payload available in the admin GUI:
+
+```bash
+docker exec -w /var/www/html php wp consent-banner export /tmp/consent-banner-settings.json --allow-root
+```
+
+Overwrite an existing export:
+
+```bash
+docker exec -w /var/www/html php wp consent-banner export /tmp/consent-banner-settings.json --force --allow-root
+```
+
+Print the export to stdout:
+
+```bash
+docker exec -w /var/www/html php wp consent-banner export - --allow-root
+```
+
+Import and merge settings. By default this bumps the consent version, matching the GUI:
+
+```bash
+docker exec -w /var/www/html php wp consent-banner import /tmp/consent-banner-settings.json --allow-root
+```
+
+Replace all settings instead of merging:
+
+```bash
+docker exec -w /var/www/html php wp consent-banner import /tmp/consent-banner-settings.json --replace --allow-root
+```
+
+Validate an import without changing settings or the consent version:
+
+```bash
+docker exec -w /var/www/html php wp consent-banner import /tmp/consent-banner-settings.json --dry-run --allow-root
+```
+
+Import without asking users for consent again:
+
+```bash
+docker exec -w /var/www/html php wp consent-banner import /tmp/consent-banner-settings.json --no-bump-version --allow-root
+```
 
 ## Hooks and Helpers
 
