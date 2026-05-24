@@ -1,0 +1,461 @@
+# Copyright (C) 2026 Katsarov Design
+# This file is distributed under the GPL-2.0-or-later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Consent Banner 0.2.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/consent-banner\n"
+"Last-Translator: Katsarov Design\n"
+"Language-Team: Bulgarian\n"
+"Language: bg_BG\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"PO-Revision-Date: 2026-05-24 09:33+0300\n"
+"X-Generator: Codex\n"
+"X-Domain: consent-banner\n"
+
+#. Plugin Name of the plugin
+#: consent-banner.php
+#: includes/Admin/Menu.php:68
+#: includes/Admin/Menu.php:69
+msgid "Consent Banner"
+msgstr "Банер за съгласие"
+
+#. Description of the plugin
+#: consent-banner.php
+msgid "GDPR/ePrivacy consent banner with configurable categories."
+msgstr "GDPR/ePrivacy банер за съгласие с конфигурируеми категории."
+
+#. Author of the plugin
+#: consent-banner.php
+msgid "Katsarov Design"
+msgstr "Katsarov Design"
+
+#: includes/Admin/Assets.php:30
+#: views/tabs/general.php:69
+msgid "Add category"
+msgstr "Добавяне на категория"
+
+#: includes/Admin/Menu.php:28
+#: views/settings.php:31
+msgid "General settings"
+msgstr "Основни настройки"
+
+#: includes/Admin/Menu.php:32
+msgid "Appearance"
+msgstr "Външен вид"
+
+#: includes/Admin/Menu.php:36
+msgid "Export / Import"
+msgstr "Експорт / Импорт"
+
+#: includes/Admin/Menu.php:40
+msgid "External scripts"
+msgstr "Външни скриптове"
+
+#: includes/Admin/Menu.php:44
+msgid "TCF"
+msgstr "TCF"
+
+#: includes/Admin/SettingsPage.php:46
+msgid "You are not allowed to view this page."
+msgstr "Нямате право да преглеждате тази страница."
+
+#: includes/Admin/SettingsPage.php:65
+msgid "View not found."
+msgstr "Изгледът не е намерен."
+
+#: includes/Admin/SettingsPage.php:73
+#: views/settings.php:44
+msgid "You are not allowed to manage this page."
+msgstr "Нямате право да управлявате тази страница."
+
+#: includes/Frontend/Shortcode.php:30
+msgid "Cookie settings"
+msgstr "Настройки за бисквитки"
+
+#. translators: 1: deprecated shortcode, 2: replacement shortcode.
+#: includes/LegacyCompat.php:80
+#, php-format
+msgid "%1$s is deprecated. Use %2$s instead."
+msgstr "%1$s е остарял. Използвайте %2$s вместо него."
+
+#: includes/Repository/SettingsRepository.php:120
+#: includes/Repository/SettingsRepository.php:154
+msgid "Essential"
+msgstr "Съществени"
+
+#: includes/Repository/SettingsRepository.php:121
+#: includes/Repository/SettingsRepository.php:155
+msgid "Required for basic website functionality."
+msgstr "Необходими за основната функционалност на сайта."
+
+#: includes/Rest/ConsentController.php:58
+msgid "Too many consent requests. Please try again in a minute."
+msgstr "Твърде много заявки за съгласие. Моля, опитайте отново след минута."
+
+#: includes/Rest/RestRouter.php:78
+msgid "A valid REST nonce is required."
+msgstr "Изисква се валиден REST nonce."
+
+#: includes/Rest/RestRouter.php:86
+msgid "You are not allowed to manage consent banner settings."
+msgstr "Нямате право да управлявате настройките на банера за съгласие."
+
+#: views/settings.php:36
+msgid "Settings saved."
+msgstr "Настройките са запазени."
+
+#: views/settings.php:40
+msgid "Settings imported."
+msgstr "Настройките са импортирани."
+
+#: views/settings.php:48
+msgid "Security check failed. Please try again."
+msgstr "Проверката за сигурност е неуспешна. Моля, опитайте отново."
+
+#: views/settings.php:52
+msgid "Choose a JSON file to import."
+msgstr "Изберете JSON файл за импорт."
+
+#: views/settings.php:56
+msgid "The import file could not be uploaded."
+msgstr "Файлът за импорт не можа да бъде качен."
+
+#: views/settings.php:60
+msgid "The import file is too large. Use a JSON file up to 1 MB."
+msgstr "Файлът за импорт е твърде голям. Използвайте JSON файл до 1 MB."
+
+#: views/settings.php:64
+msgid "The import file is not valid JSON."
+msgstr "Файлът за импорт не е валиден JSON."
+
+#: views/settings.php:68
+msgid "The import file does not contain plugin settings."
+msgstr "Файлът за импорт не съдържа настройки на плъгина."
+
+#: views/settings.php:72
+msgid "Settings could not be exported."
+msgstr "Настройките не можаха да бъдат експортирани."
+
+#: views/settings.php:78
+msgid "Consent Banner Settings"
+msgstr "Настройки на банера за съгласие"
+
+#. translators: %s: Plugin version number.
+#: views/settings.php:81
+#, php-format
+msgid "Version %s"
+msgstr "Версия %s"
+
+#: views/settings.php:97
+msgid "Consent Banner settings sections"
+msgstr "Секции с настройки на банера за съгласие"
+
+#: views/settings.php:115
+#: views/settings.php:118
+msgid "Coming soon"
+msgstr "Очаквайте скоро"
+
+#: views/settings.php:117
+msgid "Soon"
+msgstr "Скоро"
+
+#: views/settings.php:143
+msgid "Save Settings"
+msgstr "Запазване на настройките"
+
+#: views/tabs/appearance.php:33
+msgid "Fade in"
+msgstr "Плавно появяване"
+
+#: views/tabs/appearance.php:34
+msgid "Slide in up"
+msgstr "Плъзгане нагоре"
+
+#: views/tabs/appearance.php:35
+msgid "Slide in left"
+msgstr "Плъзгане наляво"
+
+#: views/tabs/appearance.php:36
+msgid "Slide in right"
+msgstr "Плъзгане надясно"
+
+#: views/tabs/appearance.php:37
+msgid "Slide in down"
+msgstr "Плъзгане надолу"
+
+#: views/tabs/appearance.php:38
+msgid "Blur in"
+msgstr "Появяване с размазване"
+
+#: views/tabs/appearance.php:42
+msgid "Banner title"
+msgstr "Заглавие на банера"
+
+#: views/tabs/appearance.php:43
+msgid "Banner message"
+msgstr "Съобщение на банера"
+
+#: views/tabs/appearance.php:44
+msgid "Accept all label"
+msgstr "Етикет за приемане на всички"
+
+#: views/tabs/appearance.php:45
+msgid "Reject all label"
+msgstr "Етикет за отказ на всички"
+
+#: views/tabs/appearance.php:46
+msgid "Customize label"
+msgstr "Етикет за персонализиране"
+
+#: views/tabs/appearance.php:47
+msgid "Save preferences label"
+msgstr "Етикет за запазване на предпочитанията"
+
+#: views/tabs/appearance.php:48
+msgid "Close label"
+msgstr "Етикет за затваряне"
+
+#: views/tabs/appearance.php:49
+msgid "Preferences title"
+msgstr "Заглавие на предпочитанията"
+
+#: views/tabs/appearance.php:53
+msgid "Accept button"
+msgstr "Бутон за приемане"
+
+#: views/tabs/appearance.php:54
+msgid "Reject button"
+msgstr "Бутон за отказ"
+
+#: views/tabs/appearance.php:55
+msgid "Customize button"
+msgstr "Бутон за персонализиране"
+
+#: views/tabs/appearance.php:56
+msgid "Save preferences button"
+msgstr "Бутон за запазване на предпочитанията"
+
+#: views/tabs/appearance.php:57
+msgid "Close button"
+msgstr "Бутон за затваряне"
+
+#: views/tabs/appearance.php:61
+msgid "Background"
+msgstr "Фон"
+
+#: views/tabs/appearance.php:62
+msgid "Text"
+msgstr "Текст"
+
+#: views/tabs/appearance.php:63
+msgid "Border"
+msgstr "Рамка"
+
+#: views/tabs/appearance.php:64
+msgid "Hover background"
+msgstr "Фон при посочване"
+
+#: views/tabs/appearance.php:65
+msgid "Hover text"
+msgstr "Текст при посочване"
+
+#: views/tabs/appearance.php:66
+msgid "Hover border"
+msgstr "Рамка при посочване"
+
+#: views/tabs/appearance.php:69
+msgid "Banner layout"
+msgstr "Оформление на банера"
+
+#: views/tabs/appearance.php:73
+msgid "Banner position"
+msgstr "Позиция на банера"
+
+#: views/tabs/appearance.php:76
+msgid "Bottom bar"
+msgstr "Долна лента"
+
+#: views/tabs/appearance.php:77
+msgid "Centered modal"
+msgstr "Центриран модален прозорец"
+
+#: views/tabs/appearance.php:84
+msgid "Display behavior"
+msgstr "Поведение при показване"
+
+#: views/tabs/appearance.php:88
+msgid "Animation"
+msgstr "Анимация"
+
+#: views/tabs/appearance.php:100
+msgid "Show delay (ms)"
+msgstr "Забавяне при показване (ms)"
+
+#: views/tabs/appearance.php:111
+msgid "Delay before showing the banner on page load."
+msgstr "Забавяне преди показване на банера при зареждане на страницата."
+
+#: views/tabs/appearance.php:117
+msgid "Texts (EN / BG)"
+msgstr "Текстове (EN / BG)"
+
+#: views/tabs/appearance.php:121
+msgid "Field"
+msgstr "Поле"
+
+#: views/tabs/appearance.php:122
+msgid "English (en_US)"
+msgstr "Английски (en_US)"
+
+#: views/tabs/appearance.php:123
+msgid "Bulgarian (bg_BG)"
+msgstr "Български (bg_BG)"
+
+#: views/tabs/appearance.php:141
+msgid "Backdrop"
+msgstr "Затъмняване"
+
+#: views/tabs/appearance.php:145
+msgid "Backdrop color"
+msgstr "Цвят на затъмняването"
+
+#: views/tabs/appearance.php:157
+msgid "Backdrop opacity"
+msgstr "Прозрачност на затъмняването"
+
+#: views/tabs/appearance.php:168
+msgid "Use values from 0 to 1."
+msgstr "Използвайте стойности от 0 до 1."
+
+#: views/tabs/appearance.php:174
+msgid "Button colors"
+msgstr "Цветове на бутоните"
+
+#: views/tabs/appearance.php:178
+msgid "Button"
+msgstr "Бутон"
+
+#: views/tabs/export-import.php:14
+msgid "Export settings"
+msgstr "Експорт на настройки"
+
+#: views/tabs/export-import.php:15
+msgid "Download the current plugin configuration as a JSON file."
+msgstr "Изтеглете текущата конфигурация на плъгина като JSON файл."
+
+#: views/tabs/export-import.php:20
+msgid "Export JSON"
+msgstr "Експорт на JSON"
+
+#: views/tabs/export-import.php:25
+msgid "Import settings"
+msgstr "Импорт на настройки"
+
+#: views/tabs/export-import.php:26
+msgid "Upload a JSON export to merge or replace this plugin configuration."
+msgstr "Качете JSON експорт, за да слеете или замените тази конфигурация на плъгина."
+
+#: views/tabs/export-import.php:36
+msgid "JSON file"
+msgstr "JSON файл"
+
+#: views/tabs/export-import.php:46
+msgid "Maximum file size: 1 MB."
+msgstr "Максимален размер на файла: 1 MB."
+
+#: views/tabs/export-import.php:50
+msgid "Import mode"
+msgstr "Режим на импорт"
+
+#: views/tabs/export-import.php:54
+msgid "Replace all settings instead of merging"
+msgstr "Замяна на всички настройки вместо сливане"
+
+#: views/tabs/export-import.php:56
+msgid "By default, imported values merge into the current settings."
+msgstr "По подразбиране импортираните стойности се сливат с текущите настройки."
+
+#: views/tabs/export-import.php:60
+msgid "Consent version"
+msgstr "Версия на съгласието"
+
+#: views/tabs/export-import.php:64
+msgid "Bump consent version after import"
+msgstr "Увеличаване на версията на съгласието след импорт"
+
+#: views/tabs/export-import.php:66
+#: views/tabs/general.php:103
+msgid "Current consent version:"
+msgstr "Текуща версия на съгласието:"
+
+#: views/tabs/export-import.php:72
+msgid "Import JSON"
+msgstr "Импорт на JSON"
+
+#: views/tabs/general.php:17
+msgid "Categories"
+msgstr "Категории"
+
+#: views/tabs/general.php:18
+msgid "Essential cookies are always enabled and cannot be disabled."
+msgstr "Съществените бисквитки са винаги активни и не могат да бъдат изключени."
+
+#: views/tabs/general.php:23
+msgid "ID"
+msgstr "ID"
+
+#: views/tabs/general.php:24
+msgid "Label"
+msgstr "Етикет"
+
+#: views/tabs/general.php:25
+msgid "Description"
+msgstr "Описание"
+
+#: views/tabs/general.php:26
+msgid "Required"
+msgstr "Задължително"
+
+#: views/tabs/general.php:27
+msgid "Default enabled"
+msgstr "Включено по подразбиране"
+
+#: views/tabs/general.php:28
+msgid "Action"
+msgstr "Действие"
+
+#: views/tabs/general.php:61
+#: views/tabs/general.php:79
+msgid "Remove"
+msgstr "Премахване"
+
+#: views/tabs/general.php:83
+msgid "Behavior"
+msgstr "Поведение"
+
+#: views/tabs/general.php:87
+msgid "Consent lifetime (days)"
+msgstr "Срок на съгласието (дни)"
+
+#: views/tabs/general.php:91
+msgid "Options"
+msgstr "Опции"
+
+#: views/tabs/general.php:93
+msgid "Show \"Reject all\" button"
+msgstr "Показване на бутона \"Откажи всички\""
+
+#: views/tabs/general.php:94
+msgid "Enable consent proof logging (hashed IP/UA)"
+msgstr "Активиране на лог за доказателство на съгласие (хеширани IP/UA)"
+
+#: views/tabs/general.php:95
+msgid "Remove plugin data on uninstall"
+msgstr "Премахване на данните на плъгина при деинсталиране"
+
+#: views/tabs/general.php:96
+msgid "Bump consent version after save and ask everyone again"
+msgstr "Увеличаване на версията на съгласието след запазване и повторно питане на всички"
