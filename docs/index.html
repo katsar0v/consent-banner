@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consent Banner - WordPress GDPR/ePrivacy Plugin</title>
+    <meta name="description" content="Detailed single-page documentation for the Consent Banner WordPress plugin by Katsarov Design.">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="theme-consent" data-lang-storage="kdconsent-docs-lang" data-default-lang="en">
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a class="logo" href="#top" aria-label="Consent Banner">
+                    <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"></path>
+                        <path d="m9 12 2 2 4-5"></path>
+                    </svg>
+                    <span class="logo-text">Consent Banner</span>
+                </a>
+                <nav class="nav">
+                    <a href="#features" data-en="Features" data-bg="Функции">Features</a>
+                    <a href="#setup" data-en="Setup" data-bg="Настройка">Setup</a>
+                    <a href="#frontend" data-en="Frontend" data-bg="Frontend">Frontend</a>
+                    <a href="#api" data-en="REST API" data-bg="REST API">REST API</a>
+                    <a href="https://github.com/katsar0v/consent-banner" target="_blank" rel="noopener" class="nav-github" aria-label="GitHub repository">
+                        <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.79 8.21 11.39.6.11.79-.26.79-.58v-2.23c-3.34.73-4.03-1.42-4.03-1.42-.55-1.39-1.33-1.76-1.33-1.76-1.09-.75.08-.73.08-.73 1.21.08 1.84 1.24 1.84 1.24 1.07 1.83 2.81 1.3 3.49.99.11-.77.42-1.3.76-1.6-2.67-.31-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23.96-.27 1.98-.4 3-.4s2.05.13 3.01.4c2.29-1.55 3.3-1.23 3.3-1.23.65 1.66.24 2.88.12 3.18.77.84 1.23 1.91 1.23 3.22 0 4.61-2.81 5.62-5.48 5.92.43.37.82 1.1.82 2.22v3.29c0 .32.19.69.8.58A12.01 12.01 0 0 0 24 12c0-6.63-5.37-12-12-12z"></path>
+                        </svg>
+                    </a>
+                    <button class="lang-switcher" id="langSwitcher" type="button" aria-label="Switch language">
+                        <span class="lang-current">EN</span>
+                    </button>
+                </nav>
+                <button class="mobile-menu-toggle" id="mobileMenuToggle" type="button" aria-label="Toggle menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main id="top">
+        <section class="hero">
+            <div class="container">
+                <div class="hero-grid">
+                    <div>
+                        <div class="badges">
+                            <span class="badge badge-primary">Version 0.2.0</span>
+                            <span class="badge">WordPress 6.4+</span>
+                            <span class="badge">PHP 8.1+</span>
+                            <span class="badge badge-warm">GPL-2.0-or-later</span>
+                        </div>
+                        <h1 data-en="GDPR/ePrivacy consent management for WordPress" data-bg="GDPR/ePrivacy управление на съгласие за WordPress">GDPR/ePrivacy consent management for WordPress</h1>
+                        <p class="hero-description" data-en="Consent Banner adds category-level consent controls, bilingual EN/BG text, optional proof logging, admin import/export, and integration APIs without forcing script auto-blocking in v0.2.0." data-bg="Consent Banner добавя контрол на съгласие по категории, двуезични EN/BG текстове, опционално логване за доказателство, админ import/export и API за интеграции без автоматично блокиране на скриптове във v0.2.0.">Consent Banner adds category-level consent controls, bilingual EN/BG text, optional proof logging, admin import/export, and integration APIs without forcing script auto-blocking in v0.2.0.</p>
+                        <div class="hero-actions">
+                            <a class="btn btn-primary" href="https://github.com/katsar0v/consent-banner/releases" target="_blank" rel="noopener" data-en="Download Latest Release" data-bg="Изтегли последната версия">Download Latest Release</a>
+                            <a class="btn btn-secondary" href="https://github.com/katsar0v/consent-banner" target="_blank" rel="noopener" data-en="View on GitHub" data-bg="Виж в GitHub">View on GitHub</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="quick-nav" aria-label="Page navigation">
+            <div class="container">
+                <div class="quick-nav-list">
+                    <a href="#overview" data-en="Overview" data-bg="Обзор">Overview</a>
+                    <a href="#features" data-en="Features" data-bg="Функции">Features</a>
+                    <a href="#admin" data-en="Admin Settings" data-bg="Админ настройки">Admin Settings</a>
+                    <a href="#setup" data-en="Setup" data-bg="Настройка">Setup</a>
+                    <a href="#frontend" data-en="Frontend" data-bg="Frontend">Frontend</a>
+                    <a href="#api" data-en="REST API" data-bg="REST API">REST API</a>
+                    <a href="#cli" data-en="WP-CLI" data-bg="WP-CLI">WP-CLI</a>
+                    <a href="#integrations" data-en="Integrations" data-bg="Интеграции">Integrations</a>
+                    <a href="#storage" data-en="Storage" data-bg="Съхранение">Storage</a>
+                    <a href="#development" data-en="Development" data-bg="Разработка">Development</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="overview">
+            <div class="container">
+                <h2 data-en="Overview" data-bg="Обзор">Overview</h2>
+                <p class="section-intro" data-en="Consent Banner renders a configurable consent interface in WordPress, keeps essential cookies always enabled, records consent decisions, and exposes APIs for themes, plugins, and deployment workflows." data-bg="Consent Banner показва конфигурируем интерфейс за съгласие в WordPress, държи essential бисквитките винаги активни, записва решения за съгласие и предоставя API за теми, плъгини и deployment процеси.">Consent Banner renders a configurable consent interface in WordPress, keeps essential cookies always enabled, records consent decisions, and exposes APIs for themes, plugins, and deployment workflows.</p>
+                <div class="grid grid-3">
+                    <div class="card">
+                        <h3 data-en="Consent choices" data-bg="Избори за съгласие">Consent choices</h3>
+                        <p data-en="Visitors can accept all, reject all, or customize consent at category level." data-bg="Посетителите могат да приемат всичко, да откажат всичко или да персонализират съгласието по категории.">Visitors can accept all, reject all, or customize consent at category level.</p>
+                    </div>
+                    <div class="card">
+                        <h3 data-en="Required essential category" data-bg="Задължителна essential категория">Required essential category</h3>
+                        <p data-en="The essential category is enforced as required, while custom categories can be managed in admin." data-bg="Essential категорията е задължителна, а собствените категории се управляват от администрацията.">The essential category is enforced as required, while custom categories can be managed in admin.</p>
+                    </div>
+                    <div class="card">
+                        <h3 data-en="Integration surface" data-bg="Повърхност за интеграции">Integration surface</h3>
+                        <p data-en="Use REST routes, a JavaScript API, a PHP helper, shortcodes, hooks, filters, and WP-CLI import/export." data-bg="Използвайте REST маршрути, JavaScript API, PHP helper, shortcode-и, hooks, filters и WP-CLI import/export.">Use REST routes, a JavaScript API, a PHP helper, shortcodes, hooks, filters, and WP-CLI import/export.</p>
+                    </div>
+                </div>
+                <div class="callout">
+                    <p data-en="Script auto-blocking is intentionally out of scope for version 0.2.0. This release records consent and exposes APIs/hooks so integrations can decide how to react." data-bg="Автоматичното блокиране на скриптове е извън обхвата на версия 0.2.0. Тази версия записва съгласие и предоставя API/hooks, за да могат интеграциите да решат как да реагират.">Script auto-blocking is intentionally out of scope for version 0.2.0. This release records consent and exposes APIs/hooks so integrations can decide how to react.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section section-alt" id="features">
+            <div class="container">
+                <h2 data-en="Key Features" data-bg="Основни функции">Key Features</h2>
+                <p class="section-intro" data-en="The plugin focuses on clear visitor consent flows, manageable admin settings, deployable configuration, and practical integration points." data-bg="Плъгинът се фокусира върху ясни процеси за съгласие, управляеми админ настройки, deployment на конфигурация и практични точки за интеграция.">The plugin focuses on clear visitor consent flows, manageable admin settings, deployable configuration, and practical integration points.</p>
+                <div class="grid grid-3">
+                    <div class="card">
+                        <span class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-5"></path><path d="M21 12a9 9 0 1 1-9-9"></path></svg></span>
+                        <h3 data-en="Consent UX" data-bg="Consent UX">Consent UX</h3>
+                        <p data-en="Accept all, reject all, and per-category customization inside a modal preferences flow." data-bg="Приемане на всичко, отказ на всичко и персонализиране по категории в modal preferences процес.">Accept all, reject all, and per-category customization inside a modal preferences flow.</p>
+                    </div>
+                    <div class="card">
+                        <span class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16"></path><path d="M4 12h16"></path><path d="M4 17h10"></path></svg></span>
+                        <h3 data-en="Category model" data-bg="Модел на категории">Category model</h3>
+                        <p data-en="Essential cookies stay enabled by design; categories are adjustable and localized." data-bg="Essential бисквитките остават активни по дизайн; категориите са регулируеми и локализирани.">Essential cookies stay enabled by design; categories are adjustable and localized.</p>
+                    </div>
+                    <div class="card">
+                        <span class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg></span>
+                        <h3 data-en="Bilingual text" data-bg="Двуезичен текст">Bilingual text</h3>
+                        <p data-en="English and Bulgarian text packs are selected from the active site locale." data-bg="Английски и български текстове се избират според активния locale на сайта.">English and Bulgarian text packs are selected from the active site locale.</p>
+                    </div>
+                    <div class="card">
+                        <span class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><path d="M7 10l5 5 5-5"></path><path d="M12 15V3"></path></svg></span>
+                        <h3 data-en="Import and export" data-bg="Import и export">Import and export</h3>
+                        <p data-en="Move JSON settings through the admin UI or WP-CLI, with optional version bumping." data-bg="Прехвърляйте JSON настройки през админ интерфейса или WP-CLI, с опционално bump-ване на версията.">Move JSON settings through the admin UI or WP-CLI, with optional version bumping.</p>
+                    </div>
+                    <div class="card">
+                        <span class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 2 7l10 5 10-5-10-5Z"></path><path d="m2 17 10 5 10-5"></path><path d="m2 12 10 5 10-5"></path></svg></span>
+                        <h3 data-en="REST endpoints" data-bg="REST endpoint-и">REST endpoints</h3>
+                        <p data-en="Public config and consent submission routes plus admin-only settings routes." data-bg="Публични маршрути за config и запис на съгласие плюс admin-only маршрути за настройки.">Public config and consent submission routes plus admin-only settings routes.</p>
+                    </div>
+                    <div class="card">
+                        <span class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"></path></svg></span>
+                        <h3 data-en="Audit option" data-bg="Опция за audit">Audit option</h3>
+                        <p data-en="Optional hashed consent logging can store proof entries without keeping raw visitor identifiers." data-bg="Опционалното хеширано логване може да пази proof записи без сурови идентификатори на посетители.">Optional hashed consent logging can store proof entries without keeping raw visitor identifiers.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="admin">
+            <div class="container">
+                <h2 data-en="Admin Settings" data-bg="Админ настройки">Admin Settings</h2>
+                <p class="section-intro" data-en="The settings page lives under Settings -> Consent Banner and currently exposes three enabled tabs." data-bg="Страницата с настройки е в Settings -> Consent Banner и в момента показва три активни таба.">The settings page lives under Settings -> Consent Banner and currently exposes three enabled tabs.</p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th data-en="Tab" data-bg="Таб">Tab</th>
+                                <th data-en="Status" data-bg="Статус">Status</th>
+                                <th data-en="Purpose" data-bg="Предназначение">Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td data-en="General settings" data-bg="Основни настройки">General settings</td><td data-en="Enabled" data-bg="Активен">Enabled</td><td data-en="Categories, texts, lifetime, consent version, and uninstall behavior." data-bg="Категории, текстове, lifetime, версия на съгласие и поведение при деинсталиране.">Categories, texts, lifetime, consent version, and uninstall behavior.</td></tr>
+                            <tr><td data-en="Appearance" data-bg="Външен вид">Appearance</td><td data-en="Enabled" data-bg="Активен">Enabled</td><td data-en="Banner position, theme, and visual behavior." data-bg="Позиция на банера, тема и визуално поведение.">Banner position, theme, and visual behavior.</td></tr>
+                            <tr><td data-en="Export / Import" data-bg="Export / Import">Export / Import</td><td data-en="Enabled" data-bg="Активен">Enabled</td><td data-en="Download or restore JSON settings from the admin UI." data-bg="Сваляне или възстановяване на JSON настройки от админ интерфейса.">Download or restore JSON settings from the admin UI.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="callout">
+                    <p data-en="External scripts and TCF tabs exist in code but are disabled in version 0.2.0, so they should not be described as active user-facing features." data-bg="External scripts и TCF табовете съществуват в кода, но са изключени във версия 0.2.0, затова не трябва да се описват като активни функции за потребители.">External scripts and TCF tabs exist in code but are disabled in version 0.2.0, so they should not be described as active user-facing features.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section section-alt" id="setup">
+            <div class="container">
+                <h2 data-en="Requirements and Installation" data-bg="Изисквания и инсталация">Requirements and Installation</h2>
+                <div class="grid grid-2">
+                    <div>
+                        <p class="section-intro" data-en="Install the plugin in WordPress, install Composer dependencies when using source code, then configure categories and text from the settings page." data-bg="Инсталирайте плъгина в WordPress, инсталирайте Composer зависимостите при работа с изходен код и настройте категориите и текстовете от страницата с настройки.">Install the plugin in WordPress, install Composer dependencies when using source code, then configure categories and text from the settings page.</p>
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th data-en="Requirement" data-bg="Изискване">Requirement</th>
+                                        <th data-en="Version" data-bg="Версия">Version</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>WordPress</td><td>6.4+</td></tr>
+                                    <tr><td>PHP</td><td>8.1+</td></tr>
+                                    <tr><td data-en="License" data-bg="Лиценз">License</td><td>GPL-2.0-or-later</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3 data-en="Install and activate" data-bg="Инсталиране и активиране">Install and activate</h3>
+                        <pre class="code-block"><code>wp-content/plugins/consent-banner
+composer install --no-dev
+wp plugin activate consent-banner</code></pre>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 34px;" data-en="First-Time Setup" data-bg="Първоначална настройка">First-Time Setup</h3>
+                <div class="steps">
+                    <div class="step"><span class="step-number">1</span><p data-en="Open Settings -> Consent Banner in wp-admin." data-bg="Отворете Settings -> Consent Banner в wp-admin.">Open Settings -> Consent Banner in wp-admin.</p></div>
+                    <div class="step"><span class="step-number">2</span><p data-en="Confirm categories and keep essential required." data-bg="Потвърдете категориите и оставете essential задължителна.">Confirm categories and keep essential required.</p></div>
+                    <div class="step"><span class="step-number">3</span><p data-en="Review English and Bulgarian texts for the banner and preferences modal." data-bg="Прегледайте английските и българските текстове за банера и preferences модала.">Review English and Bulgarian texts for the banner and preferences modal.</p></div>
+                    <div class="step"><span class="step-number">4</span><p data-en="Set banner position, visual theme, and consent lifetime." data-bg="Задайте позиция на банера, визуална тема и lifetime на съгласието.">Set banner position, visual theme, and consent lifetime.</p></div>
+                    <div class="step"><span class="step-number">5</span><p data-en="Save settings. Optionally bump consent version when users must choose again." data-bg="Запазете настройките. По желание bump-нете версията на съгласието, когато потребителите трябва да изберат отново.">Save settings. Optionally bump consent version when users must choose again.</p></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="frontend">
+            <div class="container">
+                <h2 data-en="Frontend Behavior" data-bg="Frontend поведение">Frontend Behavior</h2>
+                <p class="section-intro" data-en="The frontend renderer mounts the banner in wp_footer and hides it when a valid consent cookie exists for the current consent version." data-bg="Frontend renderer-ът монтира банера в wp_footer и го скрива, когато има валидна consent бисквитка за текущата версия на съгласие.">The frontend renderer mounts the banner in wp_footer and hides it when a valid consent cookie exists for the current consent version.</p>
+                <div class="grid grid-3">
+                    <div class="card">
+                        <h3 data-en="Accept all" data-bg="Приеми всичко">Accept all</h3>
+                        <p data-en="Enables all configured categories." data-bg="Активира всички конфигурирани категории.">Enables all configured categories.</p>
+                    </div>
+                    <div class="card">
+                        <h3 data-en="Reject all" data-bg="Откажи всичко">Reject all</h3>
+                        <p data-en="Enables only required categories." data-bg="Активира само задължителните категории.">Enables only required categories.</p>
+                    </div>
+                    <div class="card">
+                        <h3 data-en="Customize" data-bg="Персонализирай">Customize</h3>
+                        <p data-en="Opens category toggles; essential is locked on." data-bg="Отваря превключватели за категориите; essential остава заключена включена.">Opens category toggles; essential is locked on.</p>
+                    </div>
+                </div>
+                <div class="table-wrap" style="margin-top: 22px;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th data-en="Trigger" data-bg="Тригер">Trigger</th>
+                                <th data-en="Purpose" data-bg="Предназначение">Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><code>[kdconsent_preferences]</code></td><td data-en="Renders a button that reopens consent preferences." data-bg="Показва бутон, който отваря отново настройките за съгласие.">Renders a button that reopens consent preferences.</td></tr>
+                            <tr><td><code>.kdconsent-open-preferences</code></td><td data-en="Any element with this class reopens preferences." data-bg="Всеки елемент с този клас отваря отново preferences.">Any element with this class reopens preferences.</td></tr>
+                            <tr><td><code>window.kdconsent</code></td><td data-en="JavaScript API exposed for integrations." data-bg="JavaScript API за интеграции.">JavaScript API exposed for integrations.</td></tr>
+                            <tr><td><code>kdconsent_has_consent( string $category ): bool</code></td><td data-en="PHP helper for checking category consent in templates or plugin code." data-bg="PHP helper за проверка на съгласие по категория в templates или plugin код.">PHP helper for checking category consent in templates or plugin code.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section class="section section-alt" id="api">
+            <div class="container">
+                <h2 data-en="REST API" data-bg="REST API">REST API</h2>
+                <p class="section-intro" data-en="The primary namespace is /wp-json/kdconsent/v1. Legacy compatibility also registers /wp-json/kdcb/v1 for older integrations." data-bg="Основният namespace е /wp-json/kdconsent/v1. За съвместимост се регистрира и /wp-json/kdcb/v1 за по-стари интеграции.">The primary namespace is /wp-json/kdconsent/v1. Legacy compatibility also registers /wp-json/kdcb/v1 for older integrations.</p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th data-en="Methods" data-bg="Методи">Methods</th>
+                                <th data-en="Endpoint" data-bg="Endpoint">Endpoint</th>
+                                <th data-en="Access" data-bg="Достъп">Access</th>
+                                <th data-en="Purpose" data-bg="Предназначение">Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><code>GET</code></td><td><code>/config</code></td><td data-en="Public" data-bg="Публичен">Public</td><td data-en="Runtime config, texts, categories, behavior, and current consent state." data-bg="Runtime config, текстове, категории, поведение и текущо consent състояние.">Runtime config, texts, categories, behavior, and current consent state.</td></tr>
+                            <tr><td><code>POST</code></td><td><code>/consent</code></td><td data-en="Public, rate-limited" data-bg="Публичен, rate-limited">Public, rate-limited</td><td data-en="Submit and persist a consent decision." data-bg="Изпращане и записване на решение за съгласие.">Submit and persist a consent decision.</td></tr>
+                            <tr><td><code>GET</code></td><td><code>/settings</code></td><td data-en="Admin only" data-bg="Само админ">Admin only</td><td data-en="Read plugin settings." data-bg="Преглед на настройките на плъгина.">Read plugin settings.</td></tr>
+                            <tr><td><code>PUT</code>, <code>PATCH</code></td><td><code>/settings</code></td><td data-en="Admin only" data-bg="Само админ">Admin only</td><td data-en="Update plugin settings." data-bg="Обновяване на настройките на плъгина.">Update plugin settings.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="callout">
+                    <p data-en="Admin REST requests require X-WP-Nonce and the manage_options capability." data-bg="Админ REST заявките изискват X-WP-Nonce и правото manage_options.">Admin REST requests require X-WP-Nonce and the manage_options capability.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="cli">
+            <div class="container">
+                <h2 data-en="WP-CLI Import and Export" data-bg="WP-CLI import и export">WP-CLI Import and Export</h2>
+                <p class="section-intro" data-en="Use WP-CLI for deployment backups, environment sync, and dry-run validation of settings JSON." data-bg="Използвайте WP-CLI за deployment backups, синхронизация между среди и dry-run валидиране на JSON настройки.">Use WP-CLI for deployment backups, environment sync, and dry-run validation of settings JSON.</p>
+                <div class="grid grid-2">
+                    <div class="card">
+                        <h3 data-en="Export" data-bg="Export">Export</h3>
+                        <pre class="code-block"><code>wp consent-banner export /tmp/consent-banner-settings.json
+wp consent-banner export /tmp/consent-banner-settings.json --force
+wp consent-banner export -</code></pre>
+                    </div>
+                    <div class="card">
+                        <h3 data-en="Import" data-bg="Import">Import</h3>
+                        <pre class="code-block"><code>wp consent-banner import /tmp/consent-banner-settings.json
+wp consent-banner import /tmp/consent-banner-settings.json --replace
+wp consent-banner import /tmp/consent-banner-settings.json --dry-run
+wp consent-banner import /tmp/consent-banner-settings.json --no-bump-version</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section section-alt" id="integrations">
+            <div class="container">
+                <h2 data-en="Hooks, Helpers, and Legacy Compatibility" data-bg="Hooks, helpers и legacy съвместимост">Hooks, Helpers, and Legacy Compatibility</h2>
+                <div class="grid grid-2">
+                    <div>
+                        <h3 data-en="Current integration points" data-bg="Текущи точки за интеграция">Current integration points</h3>
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th data-en="Type" data-bg="Тип">Type</th>
+                                        <th data-en="Name" data-bg="Име">Name</th>
+                                        <th data-en="Purpose" data-bg="Предназначение">Purpose</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>Filter</td><td><code>kdconsent_default_categories</code></td><td data-en="Override install-time category defaults." data-bg="Промяна на категориите по подразбиране при инсталация.">Override install-time category defaults.</td></tr>
+                                    <tr><td>Filter</td><td><code>kdconsent_categories</code></td><td data-en="Adjust runtime categories before render/use." data-bg="Промяна на runtime категориите преди render/use.">Adjust runtime categories before render/use.</td></tr>
+                                    <tr><td>Action</td><td><code>kdconsent_consent_recorded</code></td><td data-en="Runs when consent is persisted." data-bg="Изпълнява се при записване на съгласие.">Runs when consent is persisted.</td></tr>
+                                    <tr><td data-en="PHP helper" data-bg="PHP helper">PHP helper</td><td><code>kdconsent_has_consent()</code></td><td data-en="Check category consent in PHP." data-bg="Проверка на съгласие по категория в PHP.">Check category consent in PHP.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 data-en="Legacy shims" data-bg="Legacy shims">Legacy shims</h3>
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th data-en="Legacy" data-bg="Legacy">Legacy</th>
+                                        <th data-en="Current replacement" data-bg="Текущ заместител">Current replacement</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td><code>/wp-json/kdcb/v1</code></td><td><code>/wp-json/kdconsent/v1</code></td></tr>
+                                    <tr><td><code>[kdcb_preferences]</code></td><td><code>[kdconsent_preferences]</code></td></tr>
+                                    <tr><td><code>.kdcb-open-preferences</code></td><td><code>.kdconsent-open-preferences</code></td></tr>
+                                    <tr><td><code>kdcb_has_consent()</code></td><td><code>kdconsent_has_consent()</code></td></tr>
+                                    <tr><td><code>kdcb_settings</code></td><td><code>kdconsent_settings</code></td></tr>
+                                    <tr><td><code>kdcb_consent</code></td><td><code>kdconsent_consent</code></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="storage">
+            <div class="container">
+                <h2 data-en="Data Storage and Privacy" data-bg="Съхранение и поверителност">Data Storage and Privacy</h2>
+                <div class="grid grid-2">
+                    <div>
+                        <h3 data-en="Storage keys" data-bg="Ключове за съхранение">Storage keys</h3>
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th data-en="Key" data-bg="Ключ">Key</th>
+                                        <th data-en="Purpose" data-bg="Предназначение">Purpose</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td><code>kdconsent_settings</code></td><td data-en="Main plugin settings payload." data-bg="Основен payload с настройки.">Main plugin settings payload.</td></tr>
+                                    <tr><td><code>kdconsent_consent_version</code></td><td data-en="Consent schema/version for re-prompting users." data-bg="Схема/версия на съгласие за повторно питане на потребителите.">Consent schema/version for re-prompting users.</td></tr>
+                                    <tr><td><code>kdconsent_db_version</code></td><td data-en="Plugin database version state." data-bg="Състояние на версията на базата за плъгина.">Plugin database version state.</td></tr>
+                                    <tr><td><code>kdconsent_remove_on_uninstall</code></td><td data-en="Opt-in uninstall cleanup flag." data-bg="Флаг за почистване при деинсталиране.">Opt-in uninstall cleanup flag.</td></tr>
+                                    <tr><td><code>kdconsent_consent</code></td><td data-en="Signed client consent cookie with v, t, and c fields." data-bg="Подписана клиентска consent бисквитка с v, t и c полета.">Signed client consent cookie with v, t, and c fields.</td></tr>
+                                    <tr><td><code>{prefix}kdconsent_consent_log</code></td><td data-en="Optional hashed consent proof entries." data-bg="Опционални хеширани proof записи за съгласие.">Optional hashed consent proof entries.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 data-en="Privacy and security notes" data-bg="Бележки за поверителност и сигурност">Privacy and security notes</h3>
+                        <div class="grid">
+                            <div class="card">
+                                <h3 data-en="Public consent route" data-bg="Публичен consent маршрут">Public consent route</h3>
+                                <p data-en="The consent submission endpoint is public and rate-limited to reduce abuse." data-bg="Endpoint-ът за запис на съгласие е публичен и rate-limited, за да се намали злоупотреба.">The consent submission endpoint is public and rate-limited to reduce abuse.</p>
+                            </div>
+                            <div class="card">
+                                <h3 data-en="Admin settings route" data-bg="Админ маршрут за настройки">Admin settings route</h3>
+                                <p data-en="Settings endpoints require a valid REST nonce and manage_options capability." data-bg="Endpoint-ите за настройки изискват валиден REST nonce и manage_options право.">Settings endpoints require a valid REST nonce and manage_options capability.</p>
+                            </div>
+                            <div class="card">
+                                <h3 data-en="Optional proof log" data-bg="Опционален proof log">Optional proof log</h3>
+                                <p data-en="Consent logs are optional and designed around hashed proof records." data-bg="Consent logs са опционални и са проектирани около хеширани proof записи.">Consent logs are optional and designed around hashed proof records.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section section-alt" id="development">
+            <div class="container">
+                <h2 data-en="Development, Architecture, and Uninstall" data-bg="Разработка, архитектура и деинсталиране">Development, Architecture, and Uninstall</h2>
+                <p class="section-intro" data-en="Consent Banner is organized around admin settings, frontend rendering, REST controllers, repositories, services, domain objects, WP-CLI, localization, and legacy compatibility." data-bg="Consent Banner е организиран около админ настройки, frontend rendering, REST controllers, repositories, services, domain objects, WP-CLI, localization и legacy compatibility.">Consent Banner is organized around admin settings, frontend rendering, REST controllers, repositories, services, domain objects, WP-CLI, localization, and legacy compatibility.</p>
+                <div class="grid grid-2">
+                    <div class="card">
+                        <h3 data-en="Useful commands" data-bg="Полезни команди">Useful commands</h3>
+                        <pre class="code-block"><code>composer lint:syntax
+composer lint:phpcs</code></pre>
+                    </div>
+                    <div class="card">
+                        <h3 data-en="Architecture map" data-bg="Архитектурна карта">Architecture map</h3>
+                        <div class="architecture">
+                            <span>Admin</span>
+                            <span>Frontend</span>
+                            <span>REST</span>
+                            <span>Repository</span>
+                            <span>Service</span>
+                            <span>Domain</span>
+                            <span>CLI</span>
+                            <span>LegacyCompat</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="callout">
+                    <p data-en="By default, plugin data is preserved on uninstall. If Remove plugin data on uninstall is enabled, uninstall removes plugin options and the consent log table." data-bg="По подразбиране данните на плъгина се запазват при деинсталиране. Ако Remove plugin data on uninstall е включено, деинсталирането премахва опциите на плъгина и таблицата с consent log.">By default, plugin data is preserved on uninstall. If Remove plugin data on uninstall is enabled, uninstall removes plugin options and the consent log table.</p>
+                </div>
+                <div class="callout">
+                    <p data-en="License: Consent Banner is licensed under GPL-2.0-or-later. Copyright (C) 2026 Katsarov Design." data-bg="Лиценз: Consent Banner е лицензиран под GPL-2.0-or-later. Copyright (C) 2026 Katsarov Design.">License: Consent Banner is licensed under GPL-2.0-or-later. Copyright (C) 2026 Katsarov Design.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="logo">
+                        <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"></path>
+                            <path d="m9 12 2 2 4-5"></path>
+                        </svg>
+                        <span>Consent Banner</span>
+                    </div>
+                    <p data-en="GDPR/ePrivacy consent management for WordPress, built by Katsarov Design." data-bg="GDPR/ePrivacy управление на съгласие за WordPress, създадено от Katsarov Design.">GDPR/ePrivacy consent management for WordPress, built by Katsarov Design.</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4 data-en="Resources" data-bg="Ресурси">Resources</h4>
+                        <a href="https://github.com/katsar0v/consent-banner" target="_blank" rel="noopener">GitHub</a>
+                        <a href="https://github.com/katsar0v/consent-banner/releases" target="_blank" rel="noopener" data-en="Releases" data-bg="Версии">Releases</a>
+                        <a href="https://github.com/katsar0v/consent-banner/issues" target="_blank" rel="noopener" data-en="Issues" data-bg="Проблеми">Issues</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4 data-en="Documentation" data-bg="Документация">Documentation</h4>
+                        <a href="#setup" data-en="Setup" data-bg="Настройка">Setup</a>
+                        <a href="#frontend" data-en="Frontend" data-bg="Frontend">Frontend</a>
+                        <a href="#api" data-en="REST API" data-bg="REST API">REST API</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4 data-en="Author" data-bg="Автор">Author</h4>
+                        <a href="https://katsarov.design" target="_blank" rel="noopener">Katsarov Design</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p data-en="Licensed under GPL-2.0-or-later" data-bg="Лицензиран под GPL-2.0-or-later">Licensed under GPL-2.0-or-later</p>
+                <p>&copy; 2026 Katsarov Design</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
