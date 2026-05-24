@@ -334,6 +334,19 @@
     padding: 14px;
   }
 
+  .kdconsent-banner-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .kdconsent-banner-actions .kdconsent-btn {
+    width: 100%;
+  }
+
+  .kdconsent-banner-actions .kdconsent-btn-customize {
+    grid-column: 1 / -1;
+  }
+
   .kdconsent-modal {
     padding: 16px;
   }
