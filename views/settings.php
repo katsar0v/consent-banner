@@ -79,7 +79,7 @@ $notice_messages  = array(
 		<?php if ( '' !== $plugin_version ) : ?>
 			<?php /* translators: %s: Plugin version number. */ ?>
 			<span class="kdconsent-version-badge" aria-label="<?php echo esc_attr( sprintf( __( 'Version %s', 'consent-banner' ), $plugin_version ) ); ?>">
-				<?php echo esc_html( 'v' . $plugin_version ); ?>
+				<?php echo esc_html( $plugin_version ); ?>
 			</span>
 		<?php endif; ?>
 	</h1>
