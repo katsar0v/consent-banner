@@ -41,6 +41,8 @@ final class Plugin {
 		add_action( 'init', array( $this, 'load_textdomain' ) );
 		add_action( 'admin_menu', array( Menu::class, 'register' ) );
 		add_action( 'admin_post_kdconsent_save_settings', array( SettingsPage::class, 'handle_save' ) );
+		add_action( 'admin_post_kdconsent_export_settings', array( SettingsPage::class, 'handle_export' ) );
+		add_action( 'admin_post_kdconsent_import_settings', array( SettingsPage::class, 'handle_import' ) );
 		add_action( 'admin_enqueue_scripts', array( AdminAssets::class, 'enqueue' ) );
 		add_action( 'wp_enqueue_scripts', array( FrontendAssets::class, 'enqueue' ) );
 		add_action( 'wp_footer', array( BannerRenderer::class, 'render_container' ) );

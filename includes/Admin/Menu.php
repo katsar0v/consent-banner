@@ -32,6 +32,10 @@ final class Menu {
 				'label'   => __( 'Appearance', 'consent-banner' ),
 				'enabled' => true,
 			),
+			'export-import'    => array(
+				'label'   => __( 'Export / Import', 'consent-banner' ),
+				'enabled' => true,
+			),
 			'external-scripts' => array(
 				'label'   => __( 'External scripts', 'consent-banner' ),
 				'enabled' => false,

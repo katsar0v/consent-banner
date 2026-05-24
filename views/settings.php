@@ -29,13 +29,68 @@ if ( ! isset( $tab_items[ $active_tab ] ) ) {
 }
 
 $active_tab_label = (string) ( $tab_items[ $active_tab ]['label'] ?? __( 'General settings', 'consent-banner' ) );
+$plugin_version   = defined( 'KDCONSENT_PLUGIN_VERSION' ) ? (string) KDCONSENT_PLUGIN_VERSION : '';
+$notice_messages  = array(
+	'saved'             => array(
+		'type'    => 'success',
+		'message' => __( 'Settings saved.', 'consent-banner' ),
+	),
+	'imported'          => array(
+		'type'    => 'success',
+		'message' => __( 'Settings imported.', 'consent-banner' ),
+	),
+	'permission-denied' => array(
+		'type'    => 'error',
+		'message' => __( 'You are not allowed to manage this page.', 'consent-banner' ),
+	),
+	'invalid-nonce'     => array(
+		'type'    => 'error',
+		'message' => __( 'Security check failed. Please try again.', 'consent-banner' ),
+	),
+	'missing-file'      => array(
+		'type'    => 'error',
+		'message' => __( 'Choose a JSON file to import.', 'consent-banner' ),
+	),
+	'upload-error'      => array(
+		'type'    => 'error',
+		'message' => __( 'The import file could not be uploaded.', 'consent-banner' ),
+	),
+	'file-too-large'    => array(
+		'type'    => 'error',
+		'message' => __( 'The import file is too large. Use a JSON file up to 1 MB.', 'consent-banner' ),
+	),
+	'invalid-json'      => array(
+		'type'    => 'error',
+		'message' => __( 'The import file is not valid JSON.', 'consent-banner' ),
+	),
+	'missing-settings'  => array(
+		'type'    => 'error',
+		'message' => __( 'The import file does not contain plugin settings.', 'consent-banner' ),
+	),
+	'export-failed'     => array(
+		'type'    => 'error',
+		'message' => __( 'Settings could not be exported.', 'consent-banner' ),
+	),
+);
 ?>
 <div class="wrap kdconsent-settings-wrap">
-	<h1><?php echo esc_html__( 'Consent Banner Settings', 'consent-banner' ); ?></h1>
+	<h1 class="kdconsent-settings-title">
+		<?php echo esc_html__( 'Consent Banner Settings', 'consent-banner' ); ?>
+		<?php if ( '' !== $plugin_version ) : ?>
+			<?php /* translators: %s: Plugin version number. */ ?>
+			<span class="kdconsent-version-badge" aria-label="<?php echo esc_attr( sprintf( __( 'Version %s', 'consent-banner' ), $plugin_version ) ); ?>">
+				<?php echo esc_html( 'v' . $plugin_version ); ?>
+			</span>
+		<?php endif; ?>
+	</h1>
 
-	<?php if ( 'saved' === $notice ) : ?>
-		<div class="notice notice-success is-dismissible">
-			<p><?php echo esc_html__( 'Settings saved.', 'consent-banner' ); ?></p>
+	<?php if ( isset( $notice_messages[ $notice ] ) ) : ?>
+		<?php
+		$notice_type    = 'success' === $notice_messages[ $notice ]['type'] ? 'success' : 'error';
+		$notice_message = (string) $notice_messages[ $notice ]['message'];
+		?>
+		<div class="notice notice-<?php echo esc_attr( $notice_type ); ?> is-dismissible">
+			<p><?php echo esc_html( $notice_message ); ?></p>
 		</div>
 	<?php endif; ?>
 
@@ -66,21 +121,27 @@ $active_tab_label = (string) ( $tab_items[ $active_tab ]['label'] ?? __( 'Genera
 		<?php endforeach; ?>
 	</nav>
 
-	<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" id="kdconsent-settings-form">
-		<?php wp_nonce_field( 'kdconsent_save_settings', 'kdconsent_settings_nonce' ); ?>
-		<input type="hidden" name="action" value="kdconsent_save_settings">
-		<input type="hidden" name="kdconsent_current_tab" value="<?php echo esc_attr( $active_tab ); ?>">
-
+	<?php if ( 'export-import' === $active_tab ) : ?>
 		<div class="kdconsent-settings-panel" role="region" aria-label="<?php echo esc_attr( $active_tab_label ); ?>">
-			<?php if ( 'appearance' === $active_tab ) : ?>
-				<?php require KDCONSENT_PLUGIN_DIR . 'views/tabs/appearance.php'; ?>
-			<?php else : ?>
-				<?php require KDCONSENT_PLUGIN_DIR . 'views/tabs/general.php'; ?>
-			<?php endif; ?>
+			<?php require KDCONSENT_PLUGIN_DIR . 'views/tabs/export-import.php'; ?>
 		</div>
+	<?php else : ?>
+		<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" id="kdconsent-settings-form">
+			<?php wp_nonce_field( 'kdconsent_save_settings', 'kdconsent_settings_nonce' ); ?>
+			<input type="hidden" name="action" value="kdconsent_save_settings">
+			<input type="hidden" name="kdconsent_current_tab" value="<?php echo esc_attr( $active_tab ); ?>">
 
-		<?php if ( ! empty( $tab_items[ $active_tab ]['enabled'] ) ) : ?>
-			<?php submit_button( __( 'Save Settings', 'consent-banner' ) ); ?>
-		<?php endif; ?>
-	</form>
+			<div class="kdconsent-settings-panel" role="region" aria-label="<?php echo esc_attr( $active_tab_label ); ?>">
+				<?php if ( 'appearance' === $active_tab ) : ?>
+					<?php require KDCONSENT_PLUGIN_DIR . 'views/tabs/appearance.php'; ?>
+				<?php else : ?>
+					<?php require KDCONSENT_PLUGIN_DIR . 'views/tabs/general.php'; ?>
+				<?php endif; ?>
+			</div>
+
+			<?php if ( ! empty( $tab_items[ $active_tab ]['enabled'] ) ) : ?>
+				<?php submit_button( __( 'Save Settings', 'consent-banner' ) ); ?>
+			<?php endif; ?>
+		</form>
+	<?php endif; ?>
 </div>
