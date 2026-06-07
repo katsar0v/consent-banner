@@ -2,9 +2,44 @@
   var config = window.kdconsentConfig || {};
   var root = document.getElementById('kdconsent-banner-root');
   var categories = Array.isArray(config.categories) ? config.categories : [];
-  var consent = config.consent && Number(config.consent.v) === Number(config.consentVersion) ? config.consent : null;
   var listeners = [];
   var categoryInputs = {};
+  var consentVersion = Number(config.consentVersion) || 1;
+
+  function readCookieConsent() {
+    var cookieNames = [config.cookieName || 'kdconsent_consent', 'kdcb_consent'];
+    for (var i = 0; i < cookieNames.length; i++) {
+      var name = cookieNames[i];
+      var match = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]*)'));
+      if (!match) continue;
+      try {
+        var raw = decodeURIComponent(match[1]);
+        var parts = raw.split('.');
+        if (parts.length !== 2) continue;
+        var base64 = parts[0].replace(/-/g, '+').replace(/_/g, '/');
+        var json = atob(base64);
+        var data = JSON.parse(json);
+        if (data && typeof data.v === 'number' && typeof data.c === 'object') {
+          return data;
+        }
+      } catch (e) {
+        // Ignore parsing errors
+      }
+    }
+    return null;
+  }
+
+  var cookieConsent = readCookieConsent();
+  var consent = null;
+  var needsVerification = false;
+
+  if (cookieConsent) {
+    if (Number(cookieConsent.v) === consentVersion) {
+      consent = cookieConsent;
+    } else {
+      needsVerification = true;
+    }
+  }
 
   if (!root || categories.length === 0) {
     return;
@@ -229,7 +264,48 @@
     return !!category.enabledByDefault;
   }
 
+  function verifyConsentAsync() {
+    fetch(String(config.restRoot || '') + 'config', {
+      method: 'GET',
+      credentials: 'same-origin',
+      cache: 'no-store'
+    })
+      .then(function (response) {
+        if (!response.ok) {
+          throw new Error('Request failed');
+        }
+        return response.json();
+      })
+      .then(function (data) {
+        if (data && data.consent && Number(data.consent.v) === Number(data.consentVersion)) {
+          consent = data.consent;
+          consentVersion = Number(data.consentVersion);
+          wrapper.hidden = true;
+          setBannerBackdropVisibility(false);
+        } else {
+          consent = null;
+          showBanner();
+        }
+      })
+      .catch(function () {
+        if (cookieConsent) {
+          consent = cookieConsent;
+          wrapper.hidden = true;
+          setBannerBackdropVisibility(false);
+        } else {
+          showBanner();
+        }
+      });
+  }
+
   function initializeBannerVisibility() {
+    if (needsVerification) {
+      wrapper.hidden = true;
+      setBannerBackdropVisibility(false);
+      verifyConsentAsync();
+      return;
+    }
+
     if (consent) {
       wrapper.hidden = true;
       setBannerBackdropVisibility(false);
@@ -467,7 +543,7 @@
       })
       .catch(function () {
         applyConsent({
-          v: Number(config.consentVersion) || 1,
+          v: consentVersion,
           t: Math.floor(Date.now() / 1000),
           c: nextCategories
         });

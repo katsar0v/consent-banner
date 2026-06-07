@@ -35,7 +35,7 @@ final class ConsentController extends Controller {
 		$settings      = $this->settings_repository->get();
 		$current_state = $this->consent_service->current_from_request();
 
-		return $this->response(
+		$response = $this->response(
 			array(
 				'locale'         => $this->localization->current_locale(),
 				'texts'          => $this->localization->resolve_texts( $settings ),
@@ -49,6 +49,11 @@ final class ConsentController extends Controller {
 				'consent'        => null !== $current_state ? $current_state->to_array() : null,
 			)
 		);
+
+		$response->header( 'Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0' );
+		$response->header( 'Pragma', 'no-cache' );
+
+		return $response;
 	}
 
 	public function save_consent( WP_REST_Request $request ): \WP_REST_Response|WP_Error {
@@ -64,7 +69,11 @@ final class ConsentController extends Controller {
 		$categories = isset( $data['categories'] ) && is_array( $data['categories'] ) ? $data['categories'] : array();
 		$state      = $this->consent_service->record( $categories );
 
-		return $this->response( $state->to_array() );
+		$response = $this->response( $state->to_array() );
+		$response->header( 'Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0' );
+		$response->header( 'Pragma', 'no-cache' );
+
+		return $response;
 	}
 
 	public function get_settings(): \WP_REST_Response {
