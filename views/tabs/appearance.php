@@ -11,9 +11,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$texts    = is_array( $settings['texts'] ?? null ) ? $settings['texts'] : array();
-$texts_en = is_array( $texts['en_US'] ?? null ) ? $texts['en_US'] : array();
-$texts_bg = is_array( $texts['bg_BG'] ?? null ) ? $texts['bg_BG'] : array();
+$texts        = is_array( $settings['texts'] ?? null ) ? $settings['texts'] : array();
+$text_locales = array(
+	'en_US' => __( 'English (en_US)', 'consent-banner' ),
+	'bg_BG' => __( 'Bulgarian (bg_BG)', 'consent-banner' ),
+	'de_DE' => __( 'German (de_DE)', 'consent-banner' ),
+);
 
 $default_settings          = \KatsarovDesign\ConsentBanner\Installer::default_settings();
 $default_styles            = is_array( $default_settings['styles'] ?? null ) ? $default_settings['styles'] : array();
@@ -114,25 +117,26 @@ $button_color_fields = array(
 	</tbody>
 </table>
 
-<h2><?php echo esc_html__( 'Texts (EN / BG)', 'consent-banner' ); ?></h2>
+<h2><?php echo esc_html__( 'Texts (EN / BG / DE)', 'consent-banner' ); ?></h2>
 <table class="widefat fixed striped kdconsent-texts-table">
 	<thead>
 		<tr>
 			<th><?php echo esc_html__( 'Field', 'consent-banner' ); ?></th>
-			<th><?php echo esc_html__( 'English (en_US)', 'consent-banner' ); ?></th>
-			<th><?php echo esc_html__( 'Bulgarian (bg_BG)', 'consent-banner' ); ?></th>
+			<?php foreach ( $text_locales as $locale_label ) : ?>
+				<th><?php echo esc_html( $locale_label ); ?></th>
+			<?php endforeach; ?>
 		</tr>
 	</thead>
 	<tbody>
 		<?php foreach ( $fields as $key => $label ) : ?>
 			<tr>
 				<td><?php echo esc_html( $label ); ?></td>
-				<td>
-					<input type="text" name="texts[en_US][<?php echo esc_attr( $key ); ?>]" value="<?php echo esc_attr( (string) ( $texts_en[ $key ] ?? '' ) ); ?>">
-				</td>
-				<td>
-					<input type="text" name="texts[bg_BG][<?php echo esc_attr( $key ); ?>]" value="<?php echo esc_attr( (string) ( $texts_bg[ $key ] ?? '' ) ); ?>">
-				</td>
+				<?php foreach ( array_keys( $text_locales ) as $locale ) : ?>
+					<?php $locale_texts = is_array( $texts[ $locale ] ?? null ) ? $texts[ $locale ] : array(); ?>
+					<td>
+						<input type="text" name="texts[<?php echo esc_attr( $locale ); ?>][<?php echo esc_attr( $key ); ?>]" value="<?php echo esc_attr( (string) ( $locale_texts[ $key ] ?? '' ) ); ?>">
+					</td>
+				<?php endforeach; ?>
 			</tr>
 		<?php endforeach; ?>
 	</tbody>

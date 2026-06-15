@@ -12,7 +12,7 @@ namespace KatsarovDesign\ConsentBanner\Rest;
 use KatsarovDesign\ConsentBanner\Installer;
 use KatsarovDesign\ConsentBanner\Repository\SettingsRepository;
 use KatsarovDesign\ConsentBanner\Service\ConsentService;
-use KatsarovDesign\ConsentBanner\Service\Localization;
+use KatsarovDesign\ConsentBanner\Service\PublicConfig;
 use WP_Error;
 use WP_REST_Request;
 
@@ -23,32 +23,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 final class ConsentController extends Controller {
 	private SettingsRepository $settings_repository;
 	private ConsentService $consent_service;
-	private Localization $localization;
+	private PublicConfig $public_config;
 
 	public function __construct() {
 		$this->settings_repository = new SettingsRepository();
-		$this->consent_service     = new ConsentService();
-		$this->localization        = new Localization();
+		$this->consent_service     = new ConsentService( $this->settings_repository );
+		$this->public_config       = new PublicConfig( $this->settings_repository, $this->consent_service );
 	}
 
 	public function config(): \WP_REST_Response {
-		$settings      = $this->settings_repository->get();
-		$current_state = $this->consent_service->current_from_request();
-
-		$response = $this->response(
-			array(
-				'locale'         => $this->localization->current_locale(),
-				'texts'          => $this->localization->resolve_texts( $settings ),
-				'categories'     => $this->localization->resolve_categories( $settings ),
-				'behavior'       => array(
-					'consentLifetimeDays' => (int) $settings['consentLifetimeDays'],
-					'position'            => (string) $settings['position'],
-					'showRejectButton'    => (bool) $settings['showRejectButton'],
-				),
-				'consentVersion' => $this->consent_service->consent_version(),
-				'consent'        => null !== $current_state ? $current_state->to_array() : null,
-			)
-		);
+		$response = $this->response( $this->public_config->build() );
 
 		$response->header( 'Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0' );
 		$response->header( 'Pragma', 'no-cache' );

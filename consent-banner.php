@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Consent Banner
  * Description: GDPR/ePrivacy consent banner with configurable categories.
- * Version: 0.2.0
+ * Version: 0.3.0
  * Requires at least: 6.4
  * Requires PHP: 8.1
  * Author: Katsarov Design
@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'KDCONSENT_PLUGIN_VERSION', '0.2.0' );
+define( 'KDCONSENT_PLUGIN_VERSION', '0.3.0' );
 define( 'KDCONSENT_DB_VERSION', '0.2.0' );
 define( 'KDCONSENT_PLUGIN_FILE', __FILE__ );
 define( 'KDCONSENT_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );

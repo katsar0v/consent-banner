@@ -4,14 +4,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Consent Banner 0.3.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/consent-banner\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"Last-Translator: Katsarov Design\n"
+"Language-Team: German\n"
+"Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-05-24T06:33:08+00:00\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.12.0\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"PO-Revision-Date: 2026-06-15 00:00+0300\n"
+"X-Generator: Codex\n"
 "X-Domain: consent-banner\n"
 
 #. Plugin Name of the plugin
@@ -19,446 +20,446 @@ msgstr ""
 #: includes/Admin/Menu.php:68
 #: includes/Admin/Menu.php:69
 msgid "Consent Banner"
-msgstr ""
+msgstr "Einwilligungsbanner"
 
 #. Description of the plugin
 #: consent-banner.php
 msgid "GDPR/ePrivacy consent banner with configurable categories."
-msgstr ""
+msgstr "DSGVO/ePrivacy-Einwilligungsbanner mit konfigurierbaren Kategorien."
 
 #. Author of the plugin
 #: consent-banner.php
 msgid "Katsarov Design"
-msgstr ""
+msgstr "Katsarov Design"
 
 #: includes/Admin/Assets.php:30
 #: views/tabs/general.php:69
 msgid "Add category"
-msgstr ""
+msgstr "Kategorie hinzufügen"
 
 #: includes/Admin/Menu.php:28
 #: views/settings.php:31
 msgid "General settings"
-msgstr ""
+msgstr "Allgemeine Einstellungen"
 
 #: includes/Admin/Menu.php:32
 msgid "Appearance"
-msgstr ""
+msgstr "Erscheinungsbild"
 
 #: includes/Admin/Menu.php:36
 msgid "Export / Import"
-msgstr ""
+msgstr "Export / Import"
 
 #: includes/Admin/Menu.php:40
 msgid "External scripts"
-msgstr ""
+msgstr "Externe Skripte"
 
 #: includes/Admin/Menu.php:44
 msgid "TCF"
-msgstr ""
+msgstr "TCF"
 
 #: includes/Admin/SettingsPage.php:46
 msgid "You are not allowed to view this page."
-msgstr ""
+msgstr "Sie dürfen diese Seite nicht anzeigen."
 
 #: includes/Admin/SettingsPage.php:65
 msgid "View not found."
-msgstr ""
+msgstr "Ansicht nicht gefunden."
 
 #: includes/Admin/SettingsPage.php:73
 #: views/settings.php:44
 msgid "You are not allowed to manage this page."
-msgstr ""
+msgstr "Sie dürfen diese Seite nicht verwalten."
 
 #: includes/Frontend/Shortcode.php:30
 msgid "Cookie settings"
-msgstr ""
+msgstr "Cookie-Einstellungen"
 
 #. translators: 1: deprecated shortcode, 2: replacement shortcode.
 #: includes/LegacyCompat.php:80
 #, php-format
 msgid "%1$s is deprecated. Use %2$s instead."
-msgstr ""
+msgstr "%1$s ist veraltet. Verwenden Sie stattdessen %2$s."
 
 #: includes/Repository/SettingsRepository.php:120
 #: includes/Repository/SettingsRepository.php:154
 msgid "Essential"
-msgstr ""
+msgstr "Essenziell"
 
 #: includes/Repository/SettingsRepository.php:121
 #: includes/Repository/SettingsRepository.php:155
 msgid "Required for basic website functionality."
-msgstr ""
+msgstr "Für die grundlegende Funktionalität der Website erforderlich."
 
 #: includes/Rest/ConsentController.php:58
 msgid "Too many consent requests. Please try again in a minute."
-msgstr ""
+msgstr "Zu viele Einwilligungsanfragen. Bitte versuchen Sie es in einer Minute erneut."
 
 #: includes/Rest/RestRouter.php:78
 msgid "A valid REST nonce is required."
-msgstr ""
+msgstr "Eine gültige REST-Nonce ist erforderlich."
 
 #: includes/Rest/RestRouter.php:86
 msgid "You are not allowed to manage consent banner settings."
-msgstr ""
+msgstr "Sie dürfen die Einstellungen des Einwilligungsbanners nicht verwalten."
 
 #: views/settings.php:36
 msgid "Settings saved."
-msgstr ""
+msgstr "Einstellungen gespeichert."
 
 #: views/settings.php:40
 msgid "Settings imported."
-msgstr ""
+msgstr "Einstellungen importiert."
 
 #: views/settings.php:48
 msgid "Security check failed. Please try again."
-msgstr ""
+msgstr "Sicherheitsprüfung fehlgeschlagen. Bitte versuchen Sie es erneut."
 
 #: views/settings.php:52
 msgid "Choose a JSON file to import."
-msgstr ""
+msgstr "Wählen Sie eine JSON-Datei für den Import aus."
 
 #: views/settings.php:56
 msgid "The import file could not be uploaded."
-msgstr ""
+msgstr "Die Importdatei konnte nicht hochgeladen werden."
 
 #: views/settings.php:60
 msgid "The import file is too large. Use a JSON file up to 1 MB."
-msgstr ""
+msgstr "Die Importdatei ist zu groß. Verwenden Sie eine JSON-Datei bis 1 MB."
 
 #: views/settings.php:64
 msgid "The import file is not valid JSON."
-msgstr ""
+msgstr "Die Importdatei ist kein gültiges JSON."
 
 #: views/settings.php:68
 msgid "The import file does not contain plugin settings."
-msgstr ""
+msgstr "Die Importdatei enthält keine Plugin-Einstellungen."
 
 #: views/settings.php:72
 msgid "Settings could not be exported."
-msgstr ""
+msgstr "Einstellungen konnten nicht exportiert werden."
 
 #: views/settings.php:78
 msgid "Consent Banner Settings"
-msgstr ""
+msgstr "Einstellungen des Einwilligungsbanners"
 
 #. translators: %s: Plugin version number.
 #: views/settings.php:81
 #, php-format
 msgid "Version %s"
-msgstr ""
+msgstr "Version %s"
 
 #: views/settings.php:97
 msgid "Consent Banner settings sections"
-msgstr ""
+msgstr "Einstellungsbereiche des Einwilligungsbanners"
 
 #: views/settings.php:115
 #: views/settings.php:118
 msgid "Coming soon"
-msgstr ""
+msgstr "Demnächst verfügbar"
 
 #: views/settings.php:117
 msgid "Soon"
-msgstr ""
+msgstr "Demnächst"
 
 #: views/settings.php:143
 msgid "Save Settings"
-msgstr ""
+msgstr "Einstellungen speichern"
 
 #: views/tabs/appearance.php:33
 msgid "Fade in"
-msgstr ""
+msgstr "Einblenden"
 
 #: views/tabs/appearance.php:34
 msgid "Slide in up"
-msgstr ""
+msgstr "Nach oben gleiten"
 
 #: views/tabs/appearance.php:35
 msgid "Slide in left"
-msgstr ""
+msgstr "Nach links gleiten"
 
 #: views/tabs/appearance.php:36
 msgid "Slide in right"
-msgstr ""
+msgstr "Nach rechts gleiten"
 
 #: views/tabs/appearance.php:37
 msgid "Slide in down"
-msgstr ""
+msgstr "Nach unten gleiten"
 
 #: views/tabs/appearance.php:38
 msgid "Blur in"
-msgstr ""
+msgstr "Mit Unschärfe einblenden"
 
 #: views/tabs/appearance.php:42
 msgid "Banner title"
-msgstr ""
+msgstr "Banner-Titel"
 
 #: views/tabs/appearance.php:43
 msgid "Banner message"
-msgstr ""
+msgstr "Banner-Nachricht"
 
 #: views/tabs/appearance.php:44
 msgid "Accept all label"
-msgstr ""
+msgstr "Beschriftung \"Alle akzeptieren\""
 
 #: views/tabs/appearance.php:45
 msgid "Reject all label"
-msgstr ""
+msgstr "Beschriftung \"Alle ablehnen\""
 
 #: views/tabs/appearance.php:46
 msgid "Customize label"
-msgstr ""
+msgstr "Beschriftung \"Anpassen\""
 
 #: views/tabs/appearance.php:47
 msgid "Save preferences label"
-msgstr ""
+msgstr "Beschriftung \"Einstellungen speichern\""
 
 #: views/tabs/appearance.php:48
 msgid "Close label"
-msgstr ""
+msgstr "Beschriftung \"Schließen\""
 
 #: views/tabs/appearance.php:49
 msgid "Preferences title"
-msgstr ""
+msgstr "Titel der Einstellungen"
 
 #: views/tabs/appearance.php:53
 msgid "Accept button"
-msgstr ""
+msgstr "Button \"Akzeptieren\""
 
 #: views/tabs/appearance.php:54
 msgid "Reject button"
-msgstr ""
+msgstr "Button \"Ablehnen\""
 
 #: views/tabs/appearance.php:55
 msgid "Customize button"
-msgstr ""
+msgstr "Button \"Anpassen\""
 
 #: views/tabs/appearance.php:56
 msgid "Save preferences button"
-msgstr ""
+msgstr "Button \"Einstellungen speichern\""
 
 #: views/tabs/appearance.php:57
 msgid "Close button"
-msgstr ""
+msgstr "Button \"Schließen\""
 
 #: views/tabs/appearance.php:61
 msgid "Background"
-msgstr ""
+msgstr "Hintergrund"
 
 #: views/tabs/appearance.php:62
 msgid "Text"
-msgstr ""
+msgstr "Text"
 
 #: views/tabs/appearance.php:63
 msgid "Border"
-msgstr ""
+msgstr "Rahmen"
 
 #: views/tabs/appearance.php:64
 msgid "Hover background"
-msgstr ""
+msgstr "Hover-Hintergrund"
 
 #: views/tabs/appearance.php:65
 msgid "Hover text"
-msgstr ""
+msgstr "Hover-Text"
 
 #: views/tabs/appearance.php:66
 msgid "Hover border"
-msgstr ""
+msgstr "Hover-Rahmen"
 
 #: views/tabs/appearance.php:69
 msgid "Banner layout"
-msgstr ""
+msgstr "Banner-Layout"
 
 #: views/tabs/appearance.php:73
 msgid "Banner position"
-msgstr ""
+msgstr "Banner-Position"
 
 #: views/tabs/appearance.php:76
 msgid "Bottom bar"
-msgstr ""
+msgstr "Leiste unten"
 
 #: views/tabs/appearance.php:77
 msgid "Centered modal"
-msgstr ""
+msgstr "Zentriertes Modal"
 
 #: views/tabs/appearance.php:84
 msgid "Display behavior"
-msgstr ""
+msgstr "Anzeigeverhalten"
 
 #: views/tabs/appearance.php:88
 msgid "Animation"
-msgstr ""
+msgstr "Animation"
 
 #: views/tabs/appearance.php:100
 msgid "Show delay (ms)"
-msgstr ""
+msgstr "Anzeigeverzögerung (ms)"
 
 #: views/tabs/appearance.php:111
 msgid "Delay before showing the banner on page load."
-msgstr ""
+msgstr "Verzögerung vor dem Anzeigen des Banners beim Laden der Seite."
 
 #: views/tabs/appearance.php:117
 msgid "Texts (EN / BG / DE)"
-msgstr ""
+msgstr "Texte (EN / BG / DE)"
 
 #: views/tabs/appearance.php:121
 msgid "Field"
-msgstr ""
+msgstr "Feld"
 
 #: views/tabs/appearance.php:122
 msgid "English (en_US)"
-msgstr ""
+msgstr "Englisch (en_US)"
 
 #: views/tabs/appearance.php:123
 msgid "Bulgarian (bg_BG)"
-msgstr ""
+msgstr "Bulgarisch (bg_BG)"
 
 #: views/tabs/appearance.php:18
 msgid "German (de_DE)"
-msgstr ""
+msgstr "Deutsch (de_DE)"
 
 #: views/tabs/appearance.php:141
 msgid "Backdrop"
-msgstr ""
+msgstr "Hintergrundüberlagerung"
 
 #: views/tabs/appearance.php:145
 msgid "Backdrop color"
-msgstr ""
+msgstr "Farbe der Hintergrundüberlagerung"
 
 #: views/tabs/appearance.php:157
 msgid "Backdrop opacity"
-msgstr ""
+msgstr "Deckkraft der Hintergrundüberlagerung"
 
 #: views/tabs/appearance.php:168
 msgid "Use values from 0 to 1."
-msgstr ""
+msgstr "Verwenden Sie Werte von 0 bis 1."
 
 #: views/tabs/appearance.php:174
 msgid "Button colors"
-msgstr ""
+msgstr "Button-Farben"
 
 #: views/tabs/appearance.php:178
 msgid "Button"
-msgstr ""
+msgstr "Button"
 
 #: views/tabs/export-import.php:14
 msgid "Export settings"
-msgstr ""
+msgstr "Einstellungen exportieren"
 
 #: views/tabs/export-import.php:15
 msgid "Download the current plugin configuration as a JSON file."
-msgstr ""
+msgstr "Aktuelle Plugin-Konfiguration als JSON-Datei herunterladen."
 
 #: views/tabs/export-import.php:20
 msgid "Export JSON"
-msgstr ""
+msgstr "JSON exportieren"
 
 #: views/tabs/export-import.php:25
 msgid "Import settings"
-msgstr ""
+msgstr "Einstellungen importieren"
 
 #: views/tabs/export-import.php:26
 msgid "Upload a JSON export to merge or replace this plugin configuration."
-msgstr ""
+msgstr "Laden Sie einen JSON-Export hoch, um diese Plugin-Konfiguration zusammenzuführen oder zu ersetzen."
 
 #: views/tabs/export-import.php:36
 msgid "JSON file"
-msgstr ""
+msgstr "JSON-Datei"
 
 #: views/tabs/export-import.php:46
 msgid "Maximum file size: 1 MB."
-msgstr ""
+msgstr "Maximale Dateigröße: 1 MB."
 
 #: views/tabs/export-import.php:50
 msgid "Import mode"
-msgstr ""
+msgstr "Importmodus"
 
 #: views/tabs/export-import.php:54
 msgid "Replace all settings instead of merging"
-msgstr ""
+msgstr "Alle Einstellungen ersetzen, statt sie zusammenzuführen"
 
 #: views/tabs/export-import.php:56
 msgid "By default, imported values merge into the current settings."
-msgstr ""
+msgstr "Standardmäßig werden importierte Werte mit den aktuellen Einstellungen zusammengeführt."
 
 #: views/tabs/export-import.php:60
 msgid "Consent version"
-msgstr ""
+msgstr "Einwilligungsversion"
 
 #: views/tabs/export-import.php:64
 msgid "Bump consent version after import"
-msgstr ""
+msgstr "Einwilligungsversion nach dem Import erhöhen"
 
 #: views/tabs/export-import.php:66
 #: views/tabs/general.php:103
 msgid "Current consent version:"
-msgstr ""
+msgstr "Aktuelle Einwilligungsversion:"
 
 #: views/tabs/export-import.php:72
 msgid "Import JSON"
-msgstr ""
+msgstr "JSON importieren"
 
 #: views/tabs/general.php:17
 msgid "Categories"
-msgstr ""
+msgstr "Kategorien"
 
 #: views/tabs/general.php:18
 msgid "Essential cookies are always enabled and cannot be disabled."
-msgstr ""
+msgstr "Essenzielle Cookies sind immer aktiviert und können nicht deaktiviert werden."
 
 #: views/tabs/general.php:23
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #: views/tabs/general.php:24
 msgid "Label"
-msgstr ""
+msgstr "Beschriftung"
 
 #: views/tabs/general.php:25
 msgid "Description"
-msgstr ""
+msgstr "Beschreibung"
 
 #: views/tabs/general.php:26
 msgid "Required"
-msgstr ""
+msgstr "Erforderlich"
 
 #: views/tabs/general.php:27
 msgid "Default enabled"
-msgstr ""
+msgstr "Standardmäßig aktiviert"
 
 #: views/tabs/general.php:28
 msgid "Action"
-msgstr ""
+msgstr "Aktion"
 
 #: views/tabs/general.php:61
 #: views/tabs/general.php:79
 msgid "Remove"
-msgstr ""
+msgstr "Entfernen"
 
 #: views/tabs/general.php:83
 msgid "Behavior"
-msgstr ""
+msgstr "Verhalten"
 
 #: views/tabs/general.php:87
 msgid "Consent lifetime (days)"
-msgstr ""
+msgstr "Einwilligungsdauer (Tage)"
 
 #: views/tabs/general.php:91
 msgid "Options"
-msgstr ""
+msgstr "Optionen"
 
 #: views/tabs/general.php:93
 msgid "Show \"Reject all\" button"
-msgstr ""
+msgstr "Button \"Alle ablehnen\" anzeigen"
 
 #: views/tabs/general.php:94
 msgid "Enable consent proof logging (hashed IP/UA)"
-msgstr ""
+msgstr "Protokollierung des Einwilligungsnachweises aktivieren (gehashte IP/UA)"
 
 #: views/tabs/general.php:95
 msgid "Remove plugin data on uninstall"
-msgstr ""
+msgstr "Plugin-Daten bei der Deinstallation entfernen"
 
 #: views/tabs/general.php:96
 msgid "Bump consent version after save and ask everyone again"
-msgstr ""
+msgstr "Einwilligungsversion nach dem Speichern erhöhen und alle erneut fragen"

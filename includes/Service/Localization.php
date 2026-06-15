@@ -21,6 +21,10 @@ final class Localization {
 			return 'bg_BG';
 		}
 
+		if ( 0 === strpos( $locale, 'de' ) ) {
+			return 'de_DE';
+		}
+
 		return 'en_US';
 	}
 
@@ -44,7 +48,10 @@ final class Localization {
 	 */
 	public function resolve_categories( array $settings ): array {
 		$categories = is_array( $settings['categories'] ?? null ) ? $settings['categories'] : array();
-		if ( 'bg_BG' !== $this->current_locale() ) {
+		$locale     = $this->current_locale();
+		$defaults   = $this->category_defaults( $locale );
+
+		if ( array() === $defaults ) {
 			return array_values(
 				array_filter(
 					$categories,
@@ -53,9 +60,9 @@ final class Localization {
 			);
 		}
 
-		$defaults = \KatsarovDesign\ConsentBanner\Installer::default_settings();
+		$default_settings = \KatsarovDesign\ConsentBanner\Installer::default_settings();
 		$default_index = array();
-		foreach ( (array) ( $defaults['categories'] ?? array() ) as $default_category ) {
+		foreach ( (array) ( $default_settings['categories'] ?? array() ) as $default_category ) {
 			if ( ! is_array( $default_category ) ) {
 				continue;
 			}
@@ -68,25 +75,6 @@ final class Localization {
 			$default_index[ $id ] = $default_category;
 		}
 
-		$bg_defaults = array(
-			'essential' => array(
-				'label'       => 'Съществени',
-				'description' => 'Необходими за базовата функционалност на сайта.',
-			),
-			'analytics' => array(
-				'label'       => 'Аналитични',
-				'description' => 'Помагат ни да разберем трафика и използването на сайта.',
-			),
-			'marketing' => array(
-				'label'       => 'Маркетинг',
-				'description' => 'Използват се за персонализирани реклами и кампании.',
-			),
-			'functional' => array(
-				'label'       => 'Функционални',
-				'description' => 'Запазват предпочитанията ви за по-добро изживяване.',
-			),
-		);
-
 		$localized = array();
 		foreach ( $categories as $category ) {
 			if ( ! is_array( $category ) ) {
@@ -94,7 +82,7 @@ final class Localization {
 			}
 
 			$id = sanitize_key( (string) ( $category['id'] ?? '' ) );
-			if ( '' === $id || ! isset( $bg_defaults[ $id ] ) ) {
+			if ( '' === $id || ! isset( $defaults[ $id ] ) ) {
 				$localized[] = $category;
 				continue;
 			}
@@ -105,16 +93,62 @@ final class Localization {
 			$current_desc  = isset( $category['description'] ) ? (string) $category['description'] : '';
 
 			if ( '' === $current_label || $current_label === $default_label ) {
-				$category['label'] = $bg_defaults[ $id ]['label'];
+				$category['label'] = $defaults[ $id ]['label'];
 			}
 
 			if ( '' === $current_desc || $current_desc === $default_desc ) {
-				$category['description'] = $bg_defaults[ $id ]['description'];
+				$category['description'] = $defaults[ $id ]['description'];
 			}
 
 			$localized[] = $category;
 		}
 
 		return $localized;
+	}
+
+	/**
+	 * @return array<string,array{label:string,description:string}>
+	 */
+	private function category_defaults( string $locale ): array {
+		$localized_defaults = array(
+			'bg_BG' => array(
+				'essential'  => array(
+					'label'       => 'Съществени',
+					'description' => 'Необходими за базовата функционалност на сайта.',
+				),
+				'analytics'  => array(
+					'label'       => 'Аналитични',
+					'description' => 'Помагат ни да разберем трафика и използването на сайта.',
+				),
+				'marketing'  => array(
+					'label'       => 'Маркетинг',
+					'description' => 'Използват се за персонализирани реклами и кампании.',
+				),
+				'functional' => array(
+					'label'       => 'Функционални',
+					'description' => 'Запазват предпочитанията ви за по-добро изживяване.',
+				),
+			),
+			'de_DE' => array(
+				'essential'  => array(
+					'label'       => 'Essenziell',
+					'description' => 'Für die grundlegende Funktionalität der Website erforderlich.',
+				),
+				'analytics'  => array(
+					'label'       => 'Analyse',
+					'description' => 'Hilft uns, Website-Traffic und Nutzung zu verstehen.',
+				),
+				'marketing'  => array(
+					'label'       => 'Marketing',
+					'description' => 'Wird verwendet, um Werbung und Kampagnen zu personalisieren.',
+				),
+				'functional' => array(
+					'label'       => 'Funktional',
+					'description' => 'Speichert Ihre Präferenzen für ein besseres Nutzererlebnis.',
+				),
+			),
+		);
+
+		return is_array( $localized_defaults[ $locale ] ?? null ) ? $localized_defaults[ $locale ] : array();
 	}
 }

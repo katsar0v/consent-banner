@@ -1,11 +1,11 @@
 <h1 align="center">Consent Banner</h1>
 
 <p align="center">
-  GDPR/ePrivacy consent management for WordPress with category-level controls, essential cookies always on, and bilingual EN/BG support.
+  GDPR/ePrivacy consent management for WordPress with category-level controls, essential cookies always on, and EN/BG/DE support.
 </p>
 
 <p align="center">
-  <img alt="Version 0.2.0" src="https://img.shields.io/badge/version-0.2.0-1f6feb?style=for-the-badge">
+  <img alt="Version 0.3.0" src="https://img.shields.io/badge/version-0.3.0-1f6feb?style=for-the-badge">
   <img alt="WordPress 6.4+" src="https://img.shields.io/badge/WordPress-6.4%2B-21759b?style=for-the-badge&logo=wordpress&logoColor=white">
   <img alt="PHP 8.1+" src="https://img.shields.io/badge/PHP-8.1%2B-777bb4?style=for-the-badge&logo=php&logoColor=white">
   <img alt="License GPL-2.0-or-later" src="https://img.shields.io/badge/license-GPL--2.0--or--later-0f766e?style=for-the-badge">
@@ -15,7 +15,7 @@
 
 Consent Banner adds a configurable consent banner to WordPress with **Accept all**, **Reject all**, and **Customize** flows. Categories are managed in admin, essential cookies stay enabled by design, and consent can be revisited from a shortcode or theme trigger.
 
-This version records consent decisions and exposes a JS/PHP API for integrations. Script auto-blocking is intentionally out of scope for v0.2.0.
+This version records consent decisions and exposes a JS/PHP API for integrations. Script auto-blocking is intentionally out of scope for v0.3.0.
 
 ## Highlights
 
@@ -23,11 +23,11 @@ This version records consent decisions and exposes a JS/PHP API for integrations
 | --- | --- |
 | Consent UX | Accept all, reject all, and per-category customization in a modal. |
 | Category model | Essential category is enforced as required; custom categories can be added in admin. |
-| Admin settings | Categories, EN/BG texts, lifetime, position, theme, uninstall behavior, and version bumping. |
+| Admin settings | Categories, EN/BG/DE texts, lifetime, position, theme, uninstall behavior, and version bumping. |
 | REST API | Public consent submission/config endpoint + admin settings endpoint. |
 | WP-CLI | JSON settings import/export for deployments and backups. |
 | Integrations | JS API (`window.kdconsent`) + PHP helper (`kdconsent_has_consent`) + WP hooks/filters. |
-| Internationalization | English and Bulgarian text packs (site locale based). |
+| Internationalization | English, Bulgarian, and German text packs (site locale based). |
 | Audit option | Optional hashed consent logging for proof records. |
 
 ## Requirements
@@ -61,13 +61,13 @@ docker exec -w /var/www/html php wp plugin activate consent-banner --allow-root
 
 1. Open `Settings -> Consent Banner` in wp-admin.
 2. Confirm categories and keep `essential` required.
-3. Review EN/BG texts.
+3. Review EN/BG/DE texts.
 4. Set banner behavior (position, theme, lifetime).
 5. Save. Optionally bump consent version to force re-consent.
 
 ## Frontend Behavior
 
-- Banner is rendered in `wp_footer` and hidden when valid consent exists for the current consent version.
+- A deferred loader checks the consent cookie first; full config, CSS, and UI load only when consent is missing, stale, or preferences are opened.
 - `Accept all`: enables all categories.
 - `Reject all`: enables only required categories.
 - `Customize`: opens modal with category toggles (essential locked on).

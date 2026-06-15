@@ -1,13 +1,15 @@
 (function () {
-  var config = window.kdconsentConfig || {};
-  var root = document.getElementById('kdconsent-banner-root');
+  window.kdconsentInitBanner = function (loadedConfig, runtime) {
+  var config = loadedConfig || window.kdconsentConfig || {};
+  runtime = runtime || {};
+  var root = ensureRoot();
   var categories = Array.isArray(config.categories) ? config.categories : [];
-  var listeners = [];
+  var listeners = Array.isArray(runtime.listeners) ? runtime.listeners : [];
   var categoryInputs = {};
   var consentVersion = Number(config.consentVersion) || 1;
 
   function readCookieConsent() {
-    var cookieNames = [config.cookieName || 'kdconsent_consent', 'kdcb_consent'];
+    var cookieNames = [config.cookieName || 'kdconsent_consent', config.legacyCookieName || 'kdcb_consent'];
     for (var i = 0; i < cookieNames.length; i++) {
       var name = cookieNames[i];
       var match = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]*)'));
@@ -32,17 +34,22 @@
   var cookieConsent = readCookieConsent();
   var consent = null;
   var needsVerification = false;
+  var runtimeConsent = typeof runtime.getConsent === 'function' ? runtime.getConsent() : null;
 
-  if (cookieConsent) {
+  if (config.consent && Number(config.consent.v) === consentVersion) {
+    consent = config.consent;
+  } else if (runtimeConsent && Number(runtimeConsent.v) === consentVersion) {
+    consent = runtimeConsent;
+  } else if (cookieConsent) {
     if (Number(cookieConsent.v) === consentVersion) {
       consent = cookieConsent;
     } else {
-      needsVerification = true;
+      needsVerification = config.loadedFromRest !== true;
     }
   }
 
   if (!root || categories.length === 0) {
-    return;
+    return window.kdconsent || null;
   }
 
   var texts = config.texts || {};
@@ -552,6 +559,10 @@
 
   function applyConsent(nextConsent) {
     consent = nextConsent;
+    if (typeof runtime.setConsent === 'function') {
+      runtime.setConsent(consent);
+    }
+
     wrapper.hidden = true;
     setBannerBackdropVisibility(false);
     closePreferences();
@@ -574,5 +585,24 @@
         detail: consent
       })
     );
+  }
+  return window.kdconsent;
+  };
+
+  function ensureRoot() {
+    var existing = document.getElementById('kdconsent-banner-root');
+    if (existing) {
+      return existing;
+    }
+
+    if (!document.body) {
+      return null;
+    }
+
+    var root = document.createElement('div');
+    root.id = 'kdconsent-banner-root';
+    document.body.appendChild(root);
+
+    return root;
   }
 })();

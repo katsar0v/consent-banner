@@ -19,15 +19,26 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 final class SettingsRepository {
 	/**
+	 * @var array<string,mixed>|null
+	 */
+	private static ?array $cached_settings = null;
+
+	/**
 	 * @return array<string,mixed>
 	 */
 	public function get(): array {
+		if ( null !== self::$cached_settings ) {
+			return self::$cached_settings;
+		}
+
 		$defaults = Installer::default_settings();
 		$saved    = get_option( Installer::OPTION_SETTINGS, array() );
 		$saved    = is_array( $saved ) ? $saved : array();
 		$merged   = array_merge( $defaults, $saved );
 
-		return $this->sanitize_settings( $merged );
+		self::$cached_settings = $this->sanitize_settings( $merged );
+
+		return self::$cached_settings;
 	}
 
 	/**
@@ -39,6 +50,8 @@ final class SettingsRepository {
 
 		update_option( Installer::OPTION_SETTINGS, $sanitized, false );
 		update_option( Installer::OPTION_REMOVE_ON_UNINSTALL, (bool) $sanitized['removeOnUninstall'], false );
+
+		self::$cached_settings = $sanitized;
 
 		return $sanitized;
 	}
@@ -196,7 +209,7 @@ final class SettingsRepository {
 		$source   = is_array( $raw ) ? $raw : array();
 		$result   = array();
 
-		foreach ( array( 'en_US', 'bg_BG' ) as $locale ) {
+		foreach ( array( 'en_US', 'bg_BG', 'de_DE' ) as $locale ) {
 			$locale_defaults = is_array( $defaults[ $locale ] ?? null ) ? $defaults[ $locale ] : array();
 			$locale_source   = is_array( $source[ $locale ] ?? null ) ? $source[ $locale ] : array();
 			$values          = array();

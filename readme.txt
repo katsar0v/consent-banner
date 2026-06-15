@@ -4,11 +4,11 @@ Tags: cookies, gdpr, consent, privacy
 Requires at least: 6.4
 Tested up to: 6.8
 Requires PHP: 8.1
-Stable tag: 0.2.0
+Stable tag: 0.3.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-GDPR/ePrivacy consent banner with categories, essential cookies always required, and EN/BG support.
+GDPR/ePrivacy consent banner with categories, essential cookies always required, and EN/BG/DE support.
 
 == Description ==
 
@@ -17,7 +17,7 @@ Consent Banner provides:
 - Accept all / Reject all / Customize consent flow.
 - Essential category always enabled.
 - Admin-adjustable categories.
-- Locale-aware EN/BG texts.
+- Locale-aware EN/BG/DE texts.
 - Consent version bump support for re-prompting users.
 - WP-CLI JSON settings import/export support.
 - Optional hashed consent logging.
@@ -32,13 +32,18 @@ Consent Banner provides:
 
 = Does this block scripts automatically? =
 
-No. Version 0.2.0 records consent and exposes APIs/hooks. Script auto-blocking is planned for a later version.
+No. Version 0.3.0 records consent and exposes APIs/hooks. Script auto-blocking is planned for a later version.
 
 = Can users change consent later? =
 
 Yes. Use shortcode `[kdconsent_preferences]` or trigger `.kdconsent-open-preferences` to reopen preferences.
 
 == Changelog ==
+
+= 0.3.0 =
+
+- Optimized frontend loading with a deferred lazy loader for config, CSS, and UI assets.
+- Added German banner/admin translations and German site-locale support.
 
 = 0.2.0 =
 

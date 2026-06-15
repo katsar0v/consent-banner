@@ -168,6 +168,16 @@ final class Installer {
 					'closeLabel'       => 'Затвори',
 					'preferencesTitle' => 'Предпочитания за бисквитки',
 				),
+				'de_DE' => array(
+					'bannerTitle'      => 'Wir verwenden Cookies',
+					'bannerBody'       => 'Wir verwenden Cookies, um Ihr Nutzererlebnis zu verbessern. Sie können alle akzeptieren, nicht notwendige Cookies ablehnen oder Ihre Auswahl anpassen.',
+					'acceptAllLabel'   => 'Alle akzeptieren',
+					'rejectAllLabel'   => 'Alle ablehnen',
+					'customizeLabel'   => 'Anpassen',
+					'saveLabel'        => 'Einstellungen speichern',
+					'closeLabel'       => 'Schließen',
+					'preferencesTitle' => 'Cookie-Einstellungen',
+				),
 			),
 			'styles'              => array(
 				'backdrop' => array(

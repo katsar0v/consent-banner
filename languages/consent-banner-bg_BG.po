@@ -2,7 +2,7 @@
 # This file is distributed under the GPL-2.0-or-later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Consent Banner 0.2.0\n"
+"Project-Id-Version: Consent Banner 0.3.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/consent-banner\n"
 "Last-Translator: Katsarov Design\n"
 "Language-Team: Bulgarian\n"
@@ -299,8 +299,8 @@ msgid "Delay before showing the banner on page load."
 msgstr "Забавяне преди показване на банера при зареждане на страницата."
 
 #: views/tabs/appearance.php:117
-msgid "Texts (EN / BG)"
-msgstr "Текстове (EN / BG)"
+msgid "Texts (EN / BG / DE)"
+msgstr "Текстове (EN / BG / DE)"
 
 #: views/tabs/appearance.php:121
 msgid "Field"
@@ -313,6 +313,10 @@ msgstr "Английски (en_US)"
 #: views/tabs/appearance.php:123
 msgid "Bulgarian (bg_BG)"
 msgstr "Български (bg_BG)"
+
+#: views/tabs/appearance.php:18
+msgid "German (de_DE)"
+msgstr "Немски (de_DE)"
 
 #: views/tabs/appearance.php:141
 msgid "Backdrop"
