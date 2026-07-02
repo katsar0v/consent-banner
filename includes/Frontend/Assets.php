@@ -13,6 +13,7 @@ use KatsarovDesign\ConsentBanner\Installer;
 use KatsarovDesign\ConsentBanner\LegacyCompat;
 use KatsarovDesign\ConsentBanner\Rest\RestRouter;
 use KatsarovDesign\ConsentBanner\Service\ConsentService;
+use KatsarovDesign\ConsentBanner\Service\PublicConfig;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -24,15 +25,30 @@ final class Assets {
 			return;
 		}
 
-		$loader_path = KDCONSENT_PLUGIN_DIR . 'assets/js/loader.js';
-		$ui_path     = KDCONSENT_PLUGIN_DIR . 'assets/js/banner-ui.js';
-		$style_path  = KDCONSENT_PLUGIN_DIR . 'assets/css/banner.css';
-		$loader_ver  = self::asset_version( $loader_path );
+		$storage_path  = KDCONSENT_PLUGIN_DIR . 'assets/js/consent-storage.js';
+		$loader_path   = KDCONSENT_PLUGIN_DIR . 'assets/js/loader.js';
+		$ui_path       = KDCONSENT_PLUGIN_DIR . 'assets/js/banner-ui.js';
+		$style_path    = KDCONSENT_PLUGIN_DIR . 'assets/css/banner.css';
+		$storage_ver   = self::asset_version( $storage_path );
+		$loader_ver    = self::asset_version( $loader_path );
+		$public_config = ( new PublicConfig() )->build();
+		$public_config['consent'] = null;
+
+		wp_enqueue_script(
+			'kdconsent-storage',
+			KDCONSENT_PLUGIN_URL . 'assets/js/consent-storage.js',
+			array(),
+			$storage_ver,
+			array(
+				'in_footer' => true,
+				'strategy'  => 'defer',
+			)
+		);
 
 		wp_enqueue_script(
 			'kdconsent-loader',
 			KDCONSENT_PLUGIN_URL . 'assets/js/loader.js',
-			array(),
+			array( 'kdconsent-storage' ),
 			$loader_ver,
 			array(
 				'in_footer' => true,
@@ -44,7 +60,9 @@ final class Assets {
 			'restRoot'         => esc_url_raw( rest_url( RestRouter::NAMESPACE . '/' ) ),
 			'cookieName'       => ConsentService::COOKIE_NAME,
 			'legacyCookieName' => LegacyCompat::COOKIE_NAME,
+			'storageKey'       => 'kdconsent_consent_state',
 			'consentVersion'   => max( 1, (int) get_option( Installer::OPTION_CONSENT_VERSION, 1 ) ),
+			'config'           => $public_config,
 			'assets'           => array(
 				'script' => esc_url_raw(
 					add_query_arg(

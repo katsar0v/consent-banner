@@ -33,9 +33,7 @@ final class ConsentController extends Controller {
 
 	public function config(): \WP_REST_Response {
 		$response = $this->response( $this->public_config->build() );
-
-		$response->header( 'Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0' );
-		$response->header( 'Pragma', 'no-cache' );
+		$this->add_no_store_headers( $response );
 
 		return $response;
 	}
@@ -54,8 +52,7 @@ final class ConsentController extends Controller {
 		$state      = $this->consent_service->record( $categories );
 
 		$response = $this->response( $state->to_array() );
-		$response->header( 'Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0' );
-		$response->header( 'Pragma', 'no-cache' );
+		$this->add_no_store_headers( $response );
 
 		return $response;
 	}
@@ -100,5 +97,13 @@ final class ConsentController extends Controller {
 
 		set_transient( $key, $count + 1, MINUTE_IN_SECONDS );
 		return true;
+	}
+
+	private function add_no_store_headers( \WP_REST_Response $response ): void {
+		$response->header( 'Cache-Control', 'private, no-store, no-cache, must-revalidate, max-age=0' );
+		$response->header( 'Pragma', 'no-cache' );
+		$response->header( 'Expires', 'Wed, 11 Jan 1984 05:00:00 GMT' );
+		$response->header( 'Vary', 'Cookie', false );
+		$response->header( 'X-Accel-Expires', '0' );
 	}
 }

@@ -25,6 +25,7 @@
   "scripts": {
     "lint:phpcs": "phpcs",
     "lint:syntax": "find . -path ./vendor -prune -o -path ./node_modules -prune -o -name '*.php' -print0 | xargs -0 -n1 php -l",
+    "test:js": "node tests/js/consent-storage.test.js",
     "make-zip": "zip -r consent-banner.zip . -x '.git/*' -x 'node_modules/*' -x 'vendor/*' -x 'consent-banner.zip'"
   }
 }

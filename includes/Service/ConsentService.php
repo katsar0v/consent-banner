@@ -176,14 +176,7 @@ final class ConsentService {
 		setcookie(
 			self::COOKIE_NAME,
 			$value,
-			array(
-				'expires'  => $expires,
-				'path'     => COOKIEPATH ? COOKIEPATH : '/',
-				'domain'   => COOKIE_DOMAIN,
-				'secure'   => is_ssl(),
-				'httponly' => false,
-				'samesite' => 'Lax',
-			)
+			$this->cookie_options( $expires )
 		);
 
 		$_COOKIE[ self::COOKIE_NAME ] = $value;
@@ -198,17 +191,39 @@ final class ConsentService {
 		setcookie(
 			$cookie_name,
 			'',
-			array(
-				'expires'  => time() - DAY_IN_SECONDS,
-				'path'     => COOKIEPATH ? COOKIEPATH : '/',
-				'domain'   => COOKIE_DOMAIN,
-				'secure'   => is_ssl(),
-				'httponly' => false,
-				'samesite' => 'Lax',
-			)
+			$this->cookie_options( time() - DAY_IN_SECONDS )
 		);
 
 		unset( $_COOKIE[ $cookie_name ] );
+	}
+
+	/**
+	 * @return array<string,mixed>
+	 */
+	private function cookie_options( int $expires ): array {
+		$options = array(
+			'expires'  => $expires,
+			'path'     => $this->cookie_path(),
+			'secure'   => is_ssl(),
+			'httponly' => false,
+			'samesite' => 'Lax',
+		);
+
+		$domain = defined( 'COOKIE_DOMAIN' ) ? (string) COOKIE_DOMAIN : '';
+		if ( '' !== $domain ) {
+			$options['domain'] = $domain;
+		}
+
+		return $options;
+	}
+
+	private function cookie_path(): string {
+		$path = defined( 'SITECOOKIEPATH' ) ? (string) SITECOOKIEPATH : '';
+		if ( '' === $path && defined( 'COOKIEPATH' ) ) {
+			$path = (string) COOKIEPATH;
+		}
+
+		return '' !== $path ? $path : '/';
 	}
 
 	private function signing_key(): string {

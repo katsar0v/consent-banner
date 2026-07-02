@@ -4,7 +4,8 @@
   var configPromise = null;
   var uiPromise = null;
   var consentVersion = Number(bootstrap.consentVersion) || 1;
-  var consent = null;
+  var storage = window.kdconsentStorage || null;
+  var consent = readStoredConsent({ consentVersion: consentVersion });
 
   var runtime = {
     listeners: listeners,
@@ -15,11 +16,6 @@
       consent = nextConsent || null;
     }
   };
-
-  var cookieConsent = readCookieConsent();
-  if (cookieConsent && Number(cookieConsent.v) === consentVersion) {
-    consent = cookieConsent;
-  }
 
   installApi();
   bindPreferenceTriggers();
@@ -90,6 +86,12 @@
   function maybeShowBanner() {
     loadConfig()
       .then(function (config) {
+        var storedConsent = readStoredConsent(config);
+        if (storedConsent) {
+          runtime.setConsent(storedConsent);
+          return null;
+        }
+
         if (hasCurrentConsent(config.consent, config.consentVersion)) {
           runtime.setConsent(config.consent);
           return null;
@@ -107,8 +109,12 @@
       return configPromise;
     }
 
-    configPromise = fetch(String(bootstrap.restRoot || '') + 'config', {
+    configPromise = fetch(configEndpoint(), {
       method: 'GET',
+      headers: {
+        'Cache-Control': 'no-cache',
+        Pragma: 'no-cache'
+      },
       credentials: 'same-origin',
       cache: 'no-store'
     })
@@ -119,9 +125,15 @@
 
         return response.json();
       })
-      .then(prepareConfig)
+      .then(function (config) {
+        config = config && typeof config === 'object' ? config : {};
+        config.loadedFromRest = true;
+        return prepareConfig(config);
+      })
       .catch(function () {
-        return prepareConfig(fallbackConfig());
+        var config = fallbackConfig();
+        config.loadedFromRest = false;
+        return prepareConfig(config);
       });
 
     return configPromise;
@@ -132,11 +144,14 @@
     config.restRoot = bootstrap.restRoot || config.restRoot || '';
     config.cookieName = bootstrap.cookieName || config.cookieName || 'kdconsent_consent';
     config.legacyCookieName = bootstrap.legacyCookieName || config.legacyCookieName || 'kdcb_consent';
-    config.loadedFromRest = true;
+    config.storageKey = bootstrap.storageKey || config.storageKey || 'kdconsent_consent_state';
     config.consentVersion = Number(config.consentVersion) || consentVersion;
     consentVersion = config.consentVersion;
 
-    if (hasCurrentConsent(config.consent, config.consentVersion)) {
+    var storedConsent = readStoredConsent(config);
+    if (storedConsent) {
+      runtime.setConsent(storedConsent);
+    } else if (hasCurrentConsent(config.consent, config.consentVersion)) {
       runtime.setConsent(config.consent);
     }
 
@@ -211,40 +226,6 @@
     });
   }
 
-  function readCookieConsent() {
-    var cookieNames = [
-      bootstrap.cookieName || 'kdconsent_consent',
-      bootstrap.legacyCookieName || 'kdcb_consent'
-    ];
-
-    for (var i = 0; i < cookieNames.length; i++) {
-      var name = cookieNames[i];
-      var match = document.cookie.match(new RegExp('(?:^|; )' + escapeRegExp(name) + '=([^;]*)'));
-      if (!match) {
-        continue;
-      }
-
-      try {
-        var raw = decodeURIComponent(match[1]);
-        var parts = raw.split('.');
-        if (parts.length !== 2) {
-          continue;
-        }
-
-        var base64 = parts[0].replace(/-/g, '+').replace(/_/g, '/');
-        var json = atob(base64);
-        var data = JSON.parse(json);
-        if (data && typeof data.v === 'number' && typeof data.c === 'object') {
-          return data;
-        }
-      } catch (e) {
-        // Ignore malformed consent cookies.
-      }
-    }
-
-    return null;
-  }
-
   function hasCurrentConsent(candidate, version) {
     return !!(
       candidate &&
@@ -254,7 +235,45 @@
     );
   }
 
+  function readStoredConsent(config) {
+    if (!storage || typeof storage.getCurrentConsent !== 'function') {
+      return null;
+    }
+
+    return storage.getCurrentConsent(storageOptions(config));
+  }
+
+  function storageOptions(config) {
+    var source = config && typeof config === 'object' ? config : {};
+    var bootstrapConfig = bootstrap.config && typeof bootstrap.config === 'object' ? bootstrap.config : {};
+    var behavior = source.behavior && typeof source.behavior === 'object' ? source.behavior : {};
+    var bootstrapBehavior =
+      bootstrapConfig.behavior && typeof bootstrapConfig.behavior === 'object' ? bootstrapConfig.behavior : {};
+
+    return {
+      cookieName: source.cookieName || bootstrap.cookieName || 'kdconsent_consent',
+      legacyCookieName: source.legacyCookieName || bootstrap.legacyCookieName || 'kdcb_consent',
+      storageKey: source.storageKey || bootstrap.storageKey || 'kdconsent_consent_state',
+      version: Number(source.consentVersion) || consentVersion || 1,
+      consentLifetimeDays:
+        Number(behavior.consentLifetimeDays) || Number(bootstrapBehavior.consentLifetimeDays) || 180
+    };
+  }
+
+  function configEndpoint() {
+    return cacheBust(String(bootstrap.restRoot || '') + 'config');
+  }
+
+  function cacheBust(url) {
+    var separator = url.indexOf('?') === -1 ? '?' : '&';
+    return url + separator + '_kdconsent=' + String(Date.now());
+  }
+
   function fallbackConfig() {
+    if (bootstrap.config && typeof bootstrap.config === 'object') {
+      return bootstrap.config;
+    }
+
     return {
       locale: 'en_US',
       texts: {},
@@ -280,7 +299,4 @@
     };
   }
 
-  function escapeRegExp(value) {
-    return String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  }
 })();

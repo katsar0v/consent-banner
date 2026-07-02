@@ -7,45 +7,18 @@
   var listeners = Array.isArray(runtime.listeners) ? runtime.listeners : [];
   var categoryInputs = {};
   var consentVersion = Number(config.consentVersion) || 1;
-
-  function readCookieConsent() {
-    var cookieNames = [config.cookieName || 'kdconsent_consent', config.legacyCookieName || 'kdcb_consent'];
-    for (var i = 0; i < cookieNames.length; i++) {
-      var name = cookieNames[i];
-      var match = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]*)'));
-      if (!match) continue;
-      try {
-        var raw = decodeURIComponent(match[1]);
-        var parts = raw.split('.');
-        if (parts.length !== 2) continue;
-        var base64 = parts[0].replace(/-/g, '+').replace(/_/g, '/');
-        var json = atob(base64);
-        var data = JSON.parse(json);
-        if (data && typeof data.v === 'number' && typeof data.c === 'object') {
-          return data;
-        }
-      } catch (e) {
-        // Ignore parsing errors
-      }
-    }
-    return null;
-  }
-
-  var cookieConsent = readCookieConsent();
+  var storage = window.kdconsentStorage || null;
+  var storageOptions = buildStorageOptions();
+  var storedConsent = readStoredConsent();
   var consent = null;
-  var needsVerification = false;
   var runtimeConsent = typeof runtime.getConsent === 'function' ? runtime.getConsent() : null;
 
-  if (config.consent && Number(config.consent.v) === consentVersion) {
+  if (hasCurrentConsent(config.consent)) {
     consent = config.consent;
-  } else if (runtimeConsent && Number(runtimeConsent.v) === consentVersion) {
+  } else if (hasCurrentConsent(runtimeConsent)) {
     consent = runtimeConsent;
-  } else if (cookieConsent) {
-    if (Number(cookieConsent.v) === consentVersion) {
-      consent = cookieConsent;
-    } else {
-      needsVerification = config.loadedFromRest !== true;
-    }
+  } else if (storedConsent) {
+    consent = storedConsent;
   }
 
   if (!root || categories.length === 0) {
@@ -271,48 +244,7 @@
     return !!category.enabledByDefault;
   }
 
-  function verifyConsentAsync() {
-    fetch(String(config.restRoot || '') + 'config', {
-      method: 'GET',
-      credentials: 'same-origin',
-      cache: 'no-store'
-    })
-      .then(function (response) {
-        if (!response.ok) {
-          throw new Error('Request failed');
-        }
-        return response.json();
-      })
-      .then(function (data) {
-        if (data && data.consent && Number(data.consent.v) === Number(data.consentVersion)) {
-          consent = data.consent;
-          consentVersion = Number(data.consentVersion);
-          wrapper.hidden = true;
-          setBannerBackdropVisibility(false);
-        } else {
-          consent = null;
-          showBanner();
-        }
-      })
-      .catch(function () {
-        if (cookieConsent) {
-          consent = cookieConsent;
-          wrapper.hidden = true;
-          setBannerBackdropVisibility(false);
-        } else {
-          showBanner();
-        }
-      });
-  }
-
   function initializeBannerVisibility() {
-    if (needsVerification) {
-      wrapper.hidden = true;
-      setBannerBackdropVisibility(false);
-      verifyConsentAsync();
-      return;
-    }
-
     if (consent) {
       wrapper.hidden = true;
       setBannerBackdropVisibility(false);
@@ -532,7 +464,9 @@
     fetch(String(config.restRoot || '') + 'consent', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache',
+        Pragma: 'no-cache'
       },
       credentials: 'same-origin',
       body: JSON.stringify({
@@ -546,21 +480,25 @@
         return response.json();
       })
       .then(function (payload) {
-        applyConsent(payload);
+        applyConsent(payload, true);
       })
       .catch(function () {
         applyConsent({
           v: consentVersion,
           t: Math.floor(Date.now() / 1000),
           c: nextCategories
-        });
+        }, false);
       });
   }
 
-  function applyConsent(nextConsent) {
+  function applyConsent(nextConsent, shouldPersistLocalFallback) {
     consent = nextConsent;
     if (typeof runtime.setConsent === 'function') {
       runtime.setConsent(consent);
+    }
+
+    if (shouldPersistLocalFallback) {
+      saveStoredConsent(consent);
     }
 
     wrapper.hidden = true;
@@ -585,6 +523,47 @@
         detail: consent
       })
     );
+  }
+
+  function hasCurrentConsent(candidate) {
+    if (storage && typeof storage.hasCurrentConsent === 'function') {
+      return storage.hasCurrentConsent(candidate, storageOptions);
+    }
+
+    return !!(
+      candidate &&
+      typeof candidate === 'object' &&
+      candidate.c &&
+      Number(candidate.v) === consentVersion
+    );
+  }
+
+  function readStoredConsent() {
+    if (!storage || typeof storage.getCurrentConsent !== 'function') {
+      return null;
+    }
+
+    return storage.getCurrentConsent(storageOptions);
+  }
+
+  function saveStoredConsent(nextConsent) {
+    if (!storage || typeof storage.saveLocalConsent !== 'function') {
+      return false;
+    }
+
+    return storage.saveLocalConsent(nextConsent, storageOptions);
+  }
+
+  function buildStorageOptions() {
+    var behavior = config.behavior && typeof config.behavior === 'object' ? config.behavior : {};
+
+    return {
+      cookieName: config.cookieName || 'kdconsent_consent',
+      legacyCookieName: config.legacyCookieName || 'kdcb_consent',
+      storageKey: config.storageKey || 'kdconsent_consent_state',
+      version: consentVersion,
+      consentLifetimeDays: Number(behavior.consentLifetimeDays) || 180
+    };
   }
   return window.kdconsent;
   };
