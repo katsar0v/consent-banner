@@ -29,8 +29,8 @@ final class Category {
 		$id               = sanitize_key( (string) ( $data['id'] ?? '' ) );
 		$label            = sanitize_text_field( (string) ( $data['label'] ?? '' ) );
 		$description      = sanitize_text_field( (string) ( $data['description'] ?? '' ) );
-		$required         = ! empty( $data['required'] );
-		$enabled_by_default = ! empty( $data['enabledByDefault'] );
+		$required           = false;
+		$enabled_by_default = false;
 
 		if ( '' === $id ) {
 			$id = 'custom';

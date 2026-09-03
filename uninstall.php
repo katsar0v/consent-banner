@@ -7,12 +7,11 @@
 
 declare(strict_types=1);
 
-use KatsarovDesign\ConsentBanner\Installer;
-
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	exit;
 }
 
+require_once __DIR__ . '/includes/LegacyCompat.php';
 require_once __DIR__ . '/includes/Installer.php';
 
-Installer::uninstall();
+\KatsarovDesign\ConsentBanner\Installer::uninstall();

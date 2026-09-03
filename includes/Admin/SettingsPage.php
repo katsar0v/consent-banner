@@ -106,11 +106,12 @@ final class SettingsPage {
 				: (string) ( $settings['position'] ?? 'bottom' );
 		}
 
+		$previous_version = (int) get_option( Installer::OPTION_CONSENT_VERSION, 1 );
 		$settings_repository->update( $settings );
 
-		if ( ! empty( $_POST['bumpConsentVersion'] ) ) {
-			$current_version = (int) get_option( Installer::OPTION_CONSENT_VERSION, 1 );
-			update_option( Installer::OPTION_CONSENT_VERSION, $current_version + 1, false );
+		if ( ! empty( $_POST['bumpConsentVersion'] )
+			&& (int) get_option( Installer::OPTION_CONSENT_VERSION, 1 ) === $previous_version ) {
+			update_option( Installer::OPTION_CONSENT_VERSION, $previous_version + 1, false );
 		}
 
 		wp_safe_redirect(

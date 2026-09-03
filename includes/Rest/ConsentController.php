@@ -33,7 +33,7 @@ final class ConsentController extends Controller {
 
 	public function config(): \WP_REST_Response {
 		$response = $this->response( $this->public_config->build() );
-		$this->add_no_store_headers( $response );
+		$response->header( 'Cache-Control', 'public, max-age=300, stale-while-revalidate=60' );
 
 		return $response;
 	}
@@ -71,11 +71,14 @@ final class ConsentController extends Controller {
 	public function update_settings( WP_REST_Request $request ): \WP_REST_Response {
 		$data     = $this->request_data( $request );
 		$settings = isset( $data['settings'] ) && is_array( $data['settings'] ) ? $data['settings'] : array();
-		$updated  = $this->settings_repository->update( $settings );
+		$previous_version = (int) get_option( Installer::OPTION_CONSENT_VERSION, 1 );
+		$updated          = 'PATCH' === strtoupper( $request->get_method() )
+			? $this->settings_repository->patch( $settings )
+			: $this->settings_repository->update( $settings );
 
-		if ( ! empty( $data['bumpConsentVersion'] ) ) {
-			$current_version = (int) get_option( Installer::OPTION_CONSENT_VERSION, 1 );
-			update_option( Installer::OPTION_CONSENT_VERSION, $current_version + 1, false );
+		if ( ! empty( $data['bumpConsentVersion'] )
+			&& (int) get_option( Installer::OPTION_CONSENT_VERSION, 1 ) === $previous_version ) {
+			update_option( Installer::OPTION_CONSENT_VERSION, $previous_version + 1, false );
 		}
 
 		return $this->response(
