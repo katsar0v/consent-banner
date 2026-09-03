@@ -5,8 +5,8 @@
 </p>
 
 <p align="center">
-  <img alt="Version 0.3.0" src="https://img.shields.io/badge/version-0.3.0-1f6feb?style=for-the-badge">
-  <img alt="WordPress 6.4+" src="https://img.shields.io/badge/WordPress-6.4%2B-21759b?style=for-the-badge&logo=wordpress&logoColor=white">
+  <img alt="Version 0.4.0" src="https://img.shields.io/badge/version-0.4.0-1f6feb?style=for-the-badge">
+  <img alt="WordPress 6.8+" src="https://img.shields.io/badge/WordPress-6.8%2B-21759b?style=for-the-badge&logo=wordpress&logoColor=white">
   <img alt="PHP 8.1+" src="https://img.shields.io/badge/PHP-8.1%2B-777bb4?style=for-the-badge&logo=php&logoColor=white">
   <img alt="License GPL-2.0-or-later" src="https://img.shields.io/badge/license-GPL--2.0--or--later-0f766e?style=for-the-badge">
 </p>
@@ -15,7 +15,7 @@
 
 Consent Banner adds a configurable consent banner to WordPress with **Accept all**, **Reject all**, and **Customize** flows. Categories are managed in admin, essential cookies stay enabled by design, and consent can be revisited from a shortcode or theme trigger.
 
-This version records consent decisions and exposes a JS/PHP API for integrations. Script auto-blocking is intentionally out of scope for v0.3.0.
+Version 0.4.0 adds a synchronous Consent Mode v2 bootstrap, an allowlisted service registry, teardown on revocation, accessible preferences, and data-minimal twelve-month receipts.
 
 ## Highlights
 
@@ -28,13 +28,14 @@ This version records consent decisions and exposes a JS/PHP API for integrations
 | WP-CLI | JSON settings import/export for deployments and backups. |
 | Integrations | JS API (`window.kdconsent`) + PHP helper (`kdconsent_has_consent`) + WP hooks/filters. |
 | Internationalization | English, Bulgarian, and German text packs (site locale based). |
-| Audit option | Optional hashed consent logging for proof records. |
+| Audit option | Optional pseudonymous receipts without IP, user agent, or PII. |
+| Service control | Purpose-gated URL allowlists with cookie/storage teardown on revocation. |
 
 ## Requirements
 
 | Requirement | Version |
 | --- | --- |
-| WordPress | 6.4 or newer |
+| WordPress | 6.8 or newer |
 | PHP | 8.1 or newer |
 
 ## Installation
