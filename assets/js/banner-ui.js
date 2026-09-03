@@ -200,6 +200,9 @@
   });
 
   window.kdconsent = {
+	isReady: true,
+	_listeners: listeners,
+	_setConsent: typeof runtime.setConsent === 'function' ? runtime.setConsent : function () {},
     getConsent: function () {
       return consent ? JSON.parse(JSON.stringify(consent)) : null;
     },
@@ -514,6 +517,11 @@
     });
 
     document.dispatchEvent(
+	  new CustomEvent('kdconsent:changed', {
+		detail: consent
+	  })
+	);
+	  document.dispatchEvent(
       new CustomEvent('kdconsent:consent-changed', {
         detail: consent
       })
