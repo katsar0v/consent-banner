@@ -10,13 +10,14 @@ define( 'MINUTE_IN_SECONDS', 60 );
 define( 'DAY_IN_SECONDS', 86400 );
 
 $GLOBALS['kdconsent_test_options'] = array();
+$GLOBALS['kdconsent_test_filters'] = array();
 
 function __( string $text, string $domain = 'default' ): string {
 	return $text;
 }
 
 function sanitize_key( string $key ): string {
-	return strtolower( (string) preg_replace( '/[^a-z0-9_\-]/', '', $key ) );
+	return (string) preg_replace( '/[^a-z0-9_\-]/', '', strtolower( $key ) );
 }
 
 function sanitize_text_field( string $text ): string {
@@ -27,7 +28,21 @@ function sanitize_hex_color( mixed $color ): ?string {
 	return is_string( $color ) && preg_match( '/^#[0-9a-f]{6}$/i', $color ) ? $color : null;
 }
 
-function apply_filters( string $hook, mixed $value ): mixed {
+function esc_url_raw( string $url, ?array $protocols = null ): string {
+	$scheme = parse_url( $url, PHP_URL_SCHEME );
+	return in_array( $scheme, $protocols ?? array( 'http', 'https' ), true ) ? $url : '';
+}
+
+function add_filter( string $hook, callable $callback ): bool {
+	$GLOBALS['kdconsent_test_filters'][ $hook ][] = $callback;
+	return true;
+}
+
+function apply_filters( string $hook, mixed $value, mixed ...$args ): mixed {
+	foreach ( $GLOBALS['kdconsent_test_filters'][ $hook ] ?? array() as $callback ) {
+		$value = $callback( $value, ...$args );
+	}
+
 	return $value;
 }
 
@@ -59,3 +74,4 @@ require_once dirname( __DIR__ ) . '/includes/Domain/Category.php';
 require_once dirname( __DIR__ ) . '/includes/Domain/ConsentState.php';
 require_once dirname( __DIR__ ) . '/includes/Repository/SettingsRepository.php';
 require_once dirname( __DIR__ ) . '/includes/Service/ConsentService.php';
+require_once dirname( __DIR__ ) . '/includes/Service/ServiceRegistry.php';
