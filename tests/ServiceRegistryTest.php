@@ -21,7 +21,15 @@ final class ServiceRegistryTest extends TestCase {
 			static fn(): array => array(
 				array(
 					'id'            => 'Clarity<script>',
+					'name'          => 'Microsoft Clarity',
+					'provider'      => 'Microsoft Ireland Operations Ltd.',
 					'purpose'       => 'Analytics',
+					'purposeDescription' => 'Anonymous usage analysis',
+					'data'          => array( 'Clicks', 'Device type' ),
+					'duration'      => '13 months',
+					'recipients'    => array( 'Microsoft' ),
+					'thirdCountryTransfer' => 'United States (SCC)',
+					'privacyUrl'    => 'https://privacy.microsoft.com/',
 					'allowedUrls'   => array( 'https://cdn.example.test/clarity.js' ),
 					'scriptHandles' => array( 'Clarity Loader' ),
 					'scripts'       => array(
@@ -44,6 +52,9 @@ final class ServiceRegistryTest extends TestCase {
 		self::assertCount( 1, $services );
 		self::assertSame( 'clarityscript', $services[0]['id'] );
 		self::assertSame( 'analytics', $services[0]['purpose'] );
+		self::assertSame( 'Microsoft Ireland Operations Ltd.', $services[0]['provider'] );
+		self::assertSame( array( 'Clicks', 'Device type' ), $services[0]['data'] );
+		self::assertSame( 'https://privacy.microsoft.com/', $services[0]['privacyUrl'] );
 		self::assertCount( 1, $services[0]['scripts'] );
 		self::assertSame( 'https://cdn.example.test/clarity.js', $services[0]['scripts'][0]['src'] );
 		self::assertSame( array( '_clck', 'bad' ), $services[0]['cookies'] );

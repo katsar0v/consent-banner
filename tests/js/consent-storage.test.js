@@ -215,6 +215,16 @@ test('saves only current-version localStorage fallback', () => {
   assert.deepStrictEqual(JSON.parse(storage.dump()[storageKey]), state);
 });
 
+test('preserves a valid pseudonymous receipt id', () => {
+	const receipt = 'a'.repeat(64);
+	const state = { v: 1, t: now, c: { essential: true }, r: receipt };
+	const { api } = loadHelper({
+	  cookie: `kdconsent_consent=${cookieValue(state)}`
+	});
+
+	assert.strictEqual(api.getCurrentConsent(options).r, receipt);
+});
+
 for (const { name, callback } of tests) {
   callback();
   console.log(`ok - ${name}`);

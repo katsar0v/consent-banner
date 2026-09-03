@@ -17,25 +17,51 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 final class ConsentLogRepository {
+	public const RETENTION_DAYS = 365;
+
+	/**
+	 * @param array<string,bool> $categories Consent choices.
+	 */
+	public function generate_receipt_id( array $categories, int $version, int $timestamp ): string {
+		$entropy = function_exists( 'wp_generate_uuid4' ) ? wp_generate_uuid4() : bin2hex( random_bytes( 16 ) );
+		$payload = wp_json_encode( array( $categories, $version, $timestamp ) );
+		return hash( 'sha256', $entropy . '|' . ( false === $payload ? '' : $payload ) );
+	}
+
 	public function insert( ConsentState $state ): void {
 		global $wpdb;
 
-		$ip         = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
-		$user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : '';
-		$payload    = wp_json_encode( $state->to_array() );
-		$payload    = false === $payload ? '' : $payload;
+		$receipt_id = $state->receipt_id();
+		if ( null === $receipt_id ) {
+			return;
+		}
 
 		$wpdb->insert(
 			Installer::consent_log_table_name(),
 			array(
-				'consent_hash'    => hash( 'sha256', $payload . '|' . (string) microtime( true ) ),
-				'ip_hash'         => hash( 'sha256', $ip . '|' . wp_salt( 'nonce' ) ),
-				'user_agent_hash' => hash( 'sha256', $user_agent . '|' . wp_salt( 'auth' ) ),
+				'consent_hash'    => $receipt_id,
 				'categories_json' => wp_json_encode( $state->categories() ),
 				'consent_version' => $state->version(),
 				'created_at'      => current_time( 'mysql', true ),
+				'expires_at'      => gmdate( 'Y-m-d H:i:s', $state->timestamp() + self::RETENTION_DAYS * DAY_IN_SECONDS ),
 			),
-			array( '%s', '%s', '%s', '%s', '%d', '%s' )
+			array( '%s', '%s', '%d', '%s', '%s' )
 		);
+	}
+
+	public static function purge_expired(): void {
+		global $wpdb;
+
+		if ( get_transient( 'kdconsent_receipt_cleanup' ) ) {
+			return;
+		}
+
+		$wpdb->query(
+			$wpdb->prepare(
+				'DELETE FROM ' . Installer::consent_log_table_name() . ' WHERE expires_at < %s', // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+				current_time( 'mysql', true )
+			)
+		);
+		set_transient( 'kdconsent_receipt_cleanup', 1, DAY_IN_SECONDS );
 	}
 }

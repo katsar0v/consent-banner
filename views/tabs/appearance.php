@@ -50,6 +50,15 @@ $fields = array(
 	'saveLabel'        => __( 'Save preferences label', 'consent-banner' ),
 	'closeLabel'       => __( 'Close label', 'consent-banner' ),
 	'preferencesTitle' => __( 'Preferences title', 'consent-banner' ),
+	'servicesTitle'     => __( 'Services title', 'consent-banner' ),
+	'providerLabel'     => __( 'Provider label', 'consent-banner' ),
+	'purposeLabel'      => __( 'Purpose label', 'consent-banner' ),
+	'dataLabel'         => __( 'Data label', 'consent-banner' ),
+	'cookiesLabel'      => __( 'Cookies label', 'consent-banner' ),
+	'durationLabel'     => __( 'Duration label', 'consent-banner' ),
+	'recipientsLabel'   => __( 'Recipients label', 'consent-banner' ),
+	'transferLabel'     => __( 'Third-country transfer label', 'consent-banner' ),
+	'privacyLabel'      => __( 'Privacy policy label', 'consent-banner' ),
 );
 
 $button_labels = array(
