@@ -56,9 +56,15 @@ final class ConsentLogRepository {
 			return;
 		}
 
+		$table_name = Installer::consent_log_table_name();
+		$table      = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name ) );
+		if ( $table_name !== $table ) {
+			return;
+		}
+
 		$wpdb->query(
 			$wpdb->prepare(
-				'DELETE FROM ' . Installer::consent_log_table_name() . ' WHERE expires_at < %s', // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+				'DELETE FROM ' . $table_name . ' WHERE expires_at < %s', // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 				current_time( 'mysql', true )
 			)
 		);

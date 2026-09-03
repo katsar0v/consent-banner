@@ -40,8 +40,18 @@ function createStorage(initialValues) {
   };
 }
 
-function loadHelper({ cookie = '', storage = createStorage(), disabledStorage = false } = {}) {
+function loadHelper({ cookie = '', storage = createStorage(), disabledStorage = false, disabledCookie = false } = {}) {
   const browserWindow = {};
+	const document = {};
+	if (disabledCookie) {
+	  Object.defineProperty(document, 'cookie', {
+		get() {
+		  throw new Error('cookie access denied');
+		}
+	  });
+	} else {
+	  document.cookie = cookie;
+	}
 
   if (disabledStorage) {
     Object.defineProperty(browserWindow, 'localStorage', {
@@ -55,7 +65,7 @@ function loadHelper({ cookie = '', storage = createStorage(), disabledStorage = 
 
   const context = {
     window: browserWindow,
-    document: { cookie },
+	document,
     atob(value) {
       return Buffer.from(value, 'base64').toString('binary');
     },
@@ -202,6 +212,11 @@ test('handles disabled localStorage without throwing', () => {
 
   assert.strictEqual(api.getCurrentConsent(options), null);
   assert.strictEqual(api.saveLocalConsent({ v: 1, t: now, c: { essential: true } }, options), false);
+});
+
+test('handles denied cookie access without throwing', () => {
+	const { api } = loadHelper({ disabledCookie: true });
+	assert.strictEqual(api.getCurrentConsent(options), null);
 });
 
 test('saves only current-version localStorage fallback', () => {

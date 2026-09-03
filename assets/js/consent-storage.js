@@ -218,11 +218,22 @@
   }
 
   function readCookie(name) {
-    if (typeof document === 'undefined' || typeof document.cookie !== 'string') {
+	var cookies;
+	if (typeof document === 'undefined') {
       return null;
     }
 
-    var match = document.cookie.match(new RegExp('(?:^|; )' + escapeRegExp(name) + '=([^;]*)'));
+	try {
+	  cookies = document.cookie;
+	} catch (e) {
+	  return null;
+	}
+
+	if (typeof cookies !== 'string') {
+	  return null;
+	}
+
+	var match = cookies.match(new RegExp('(?:^|; )' + escapeRegExp(name) + '=([^;]*)'));
     if (!match) {
       return null;
     }
