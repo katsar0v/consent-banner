@@ -1,6 +1,9 @@
 # Dependencies
 vendor/
 node_modules/
+dist/
+test-results/
+playwright-report/
 
 # OS/Editor specific
 .DS_Store
@@ -22,4 +25,3 @@ Thumbs.db
 # Environment
 .env
 .env.local
-

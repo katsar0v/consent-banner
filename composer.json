@@ -12,10 +12,11 @@
     }
   },
   "require-dev": {
-    "phpunit/phpunit": "^10.5",
+    "phpunit/phpunit": "^9.6",
     "wp-coding-standards/wpcs": "^3.1",
     "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
-    "phpcompatibility/phpcompatibility-wp": "^2.1"
+    "phpcompatibility/phpcompatibility-wp": "^2.1",
+    "yoast/phpunit-polyfills": "^2.0"
   },
   "autoload": {
     "psr-4": {
@@ -26,6 +27,7 @@
     "lint:phpcs": "phpcs",
     "lint:syntax": "find . -path ./vendor -prune -o -path ./node_modules -prune -o -name '*.php' -print0 | xargs -0 -n1 php -l",
     "test:js": "node tests/js/consent-storage.test.js && node tests/js/consent-mode-v2.test.js && node tests/js/service-registry.test.js && node tests/js/accessibility-contract.test.js",
+    "test:gtm": "node tests/js/gtm-template.test.js",
     "make-zip": "zip -r consent-banner.zip . -x '.git/*' -x 'node_modules/*' -x 'vendor/*' -x 'consent-banner.zip'"
   }
 }

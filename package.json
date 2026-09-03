@@ -1,0 +1,14 @@
+{
+  "name": "consent-banner-tests",
+  "private": true,
+  "version": "0.4.0",
+  "scripts": {
+    "test": "npm run test:unit && npm run test:gtm",
+    "test:unit": "node tests/js/consent-storage.test.js && node tests/js/consent-mode-v2.test.js && node tests/js/service-registry.test.js && node tests/js/accessibility-contract.test.js",
+    "test:gtm": "node tests/js/gtm-template.test.js",
+    "test:e2e": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.55.0"
+  }
+}

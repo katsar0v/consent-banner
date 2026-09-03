@@ -1,0 +1,86 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  php:
+    name: PHP ${{ matrix.php }} / WP ${{ matrix.wordpress }} / Woo 11
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.1', '8.2', '8.3', '8.4']
+        wordpress: ['6.8', '6.9', '7.0', '7.1']
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: wordpress_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --host=127.0.0.1 --user=root --password=root"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+          tools: composer:v2
+      - name: Install PHP dependencies
+        run: composer install --no-interaction --prefer-dist
+      - name: Static PHP checks
+        run: |
+          composer validate --strict
+          composer lint:syntax
+          composer lint:phpcs
+          vendor/bin/phpunit
+      - name: Install WordPress test matrix
+        env:
+          WP_VERSION: ${{ matrix.wordpress }}
+        run: |
+          bash bin/install-wp-tests.sh wordpress_test root root 127.0.0.1 "${WP_VERSION}" true
+          curl --fail --silent --show-error --location https://downloads.wordpress.org/plugin/woocommerce.11.0.1.zip -o /tmp/woocommerce.zip
+          unzip -q /tmp/woocommerce.zip -d /tmp/wordpress/wp-content/plugins
+      - name: WordPress REST and WooCommerce integration
+        env:
+          WP_TESTS_DIR: /tmp/wordpress-tests-lib
+        run: vendor/bin/phpunit -c phpunit.integration.xml.dist
+
+  javascript:
+    name: JavaScript, GTM, and Playwright
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+
+  release-artifact:
+    name: Reproducible release ZIP
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Build twice and compare
+        run: |
+          bash bin/create-release.sh /tmp/consent-banner-a.zip
+          bash bin/create-release.sh /tmp/consent-banner-b.zip
+          cmp /tmp/consent-banner-a.zip /tmp/consent-banner-b.zip
+          unzip -l /tmp/consent-banner-a.zip
