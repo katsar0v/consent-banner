@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace KatsarovDesign\ConsentBanner\Service;
 
-use KatsarovDesign\ConsentBanner\Domain\ConsentState;
 use KatsarovDesign\ConsentBanner\Repository\SettingsRepository;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -30,12 +29,8 @@ final class PublicConfig {
 	/**
 	 * @return array<string,mixed>
 	 */
-	public function build( ?ConsentState $current_state = null ): array {
+	public function build(): array {
 		$settings = $this->settings_repository->get();
-
-		if ( null === $current_state ) {
-			$current_state = $this->consent_service->current_from_request();
-		}
 
 		return array(
 			'locale'         => $this->localization->current_locale(),
@@ -50,7 +45,7 @@ final class PublicConfig {
 				'styles'              => is_array( $settings['styles'] ?? null ) ? $settings['styles'] : array(),
 			),
 			'consentVersion' => $this->consent_service->consent_version(),
-			'consent'        => null !== $current_state ? $current_state->to_array() : null,
+			'consent'        => null,
 		);
 	}
 }

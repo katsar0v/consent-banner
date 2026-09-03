@@ -46,6 +46,7 @@ final class SettingsRepository {
 	 * @return array<string,mixed>
 	 */
 	public function update( array $settings ): array {
+		$previous  = $this->get();
 		$sanitized = $this->sanitize( $settings );
 
 		update_option( Installer::OPTION_SETTINGS, $sanitized, false );
@@ -53,7 +54,21 @@ final class SettingsRepository {
 
 		self::$cached_settings = $sanitized;
 
+		if ( $this->consent_fingerprint( $previous ) !== $this->consent_fingerprint( $sanitized ) ) {
+			$this->bump_consent_version();
+		}
+
 		return $sanitized;
+	}
+
+	/**
+	 * Merge a REST PATCH payload into current settings without erasing omitted keys.
+	 *
+	 * @param array<string,mixed> $settings Partial incoming settings payload.
+	 * @return array<string,mixed>
+	 */
+	public function patch( array $settings ): array {
+		return $this->update( $this->merge_patch( $this->get(), $settings ) );
 	}
 
 	/**
@@ -107,7 +122,7 @@ final class SettingsRepository {
 			'animation'           => $animation,
 			'showDelayMs'         => $show_delay,
 			'theme'               => (string) $defaults['theme'],
-			'showRejectButton'    => ! empty( $settings['showRejectButton'] ),
+			'showRejectButton'    => true,
 			'enableConsentLog'    => ! empty( $settings['enableConsentLog'] ),
 			'removeOnUninstall'   => ! empty( $settings['removeOnUninstall'] ),
 		);
@@ -286,5 +301,44 @@ final class SettingsRepository {
 		$color = sanitize_hex_color( (string) $value );
 
 		return null !== $color ? strtoupper( $color ) : $default_color;
+	}
+
+	/**
+	 * @param array<string,mixed> $settings Sanitized settings.
+	 */
+	private function consent_fingerprint( array $settings ): string {
+		$material = array(
+			'categories'          => $settings['categories'] ?? array(),
+			'texts'               => $settings['texts'] ?? array(),
+			'consentLifetimeDays' => $settings['consentLifetimeDays'] ?? null,
+			'showRejectButton'    => true,
+		);
+
+		return hash( 'sha256', (string) wp_json_encode( $material ) );
+	}
+
+	private function bump_consent_version(): void {
+		$current = max( 1, (int) get_option( Installer::OPTION_CONSENT_VERSION, 1 ) );
+		update_option( Installer::OPTION_CONSENT_VERSION, $current + 1, false );
+	}
+
+	/**
+	 * Apply JSON Merge Patch semantics to associative arrays. Lists are replaced.
+	 *
+	 * @param array<string,mixed> $current Current value.
+	 * @param array<string,mixed> $patch Patch value.
+	 * @return array<string,mixed>
+	 */
+	private function merge_patch( array $current, array $patch ): array {
+		foreach ( $patch as $key => $value ) {
+			if ( is_array( $value ) && ! array_is_list( $value ) && isset( $current[ $key ] ) && is_array( $current[ $key ] ) ) {
+				$current[ $key ] = $this->merge_patch( $current[ $key ], $value );
+				continue;
+			}
+
+			$current[ $key ] = $value;
+		}
+
+		return $current;
 	}
 }

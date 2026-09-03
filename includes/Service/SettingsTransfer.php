@@ -85,7 +85,7 @@ final class SettingsTransfer {
 		$result             = $this->prepare_import_result( $json, $replace_all, $bump_consent_version, false );
 		$result['settings'] = $this->settings_repository->update( $result['settings'] );
 
-		if ( $bump_consent_version ) {
+		if ( $bump_consent_version && (int) $result['previousConsentVersion'] === $this->consent_version() ) {
 			update_option( Installer::OPTION_CONSENT_VERSION, (int) $result['previousConsentVersion'] + 1, false );
 		}
 

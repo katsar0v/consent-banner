@@ -84,6 +84,8 @@ final class ConsentService {
 			if ( null !== $state ) {
 				return $state;
 			}
+
+			$this->clear_cookie( self::COOKIE_NAME );
 		}
 
 		if ( empty( $_COOKIE[ LegacyCompat::COOKIE_NAME ] ) ) {
@@ -146,7 +148,11 @@ final class ConsentService {
 		$timestamp  = isset( $data['t'] ) ? (int) $data['t'] : 0;
 		$categories = isset( $data['c'] ) && is_array( $data['c'] ) ? $data['c'] : array();
 
-		if ( $version !== $this->consent_version() || $timestamp <= 0 ) {
+		$settings      = $this->settings_repository->get();
+		$lifetime_days = (int) ( $settings['consentLifetimeDays'] ?? 180 );
+
+		if ( $version !== $this->consent_version()
+			|| self::is_expired( $timestamp, $lifetime_days ) ) {
 			return null;
 		}
 
@@ -160,6 +166,13 @@ final class ConsentService {
 		}
 
 		return new ConsentState( $normalized, $version, $timestamp );
+	}
+
+	public static function is_expired( int $timestamp, int $lifetime_days, ?int $now = null ): bool {
+		$now = $now ?? time();
+		return $timestamp <= 0
+			|| $timestamp > $now + 5 * MINUTE_IN_SECONDS
+			|| $now >= $timestamp + max( 1, $lifetime_days ) * DAY_IN_SECONDS;
 	}
 
 	private function set_cookie( ConsentState $state, int $lifetime_days ): void {

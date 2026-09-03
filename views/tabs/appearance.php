@@ -131,10 +131,10 @@ $button_color_fields = array(
 		<?php foreach ( $fields as $key => $label ) : ?>
 			<tr>
 				<td><?php echo esc_html( $label ); ?></td>
-				<?php foreach ( array_keys( $text_locales ) as $locale ) : ?>
-					<?php $locale_texts = is_array( $texts[ $locale ] ?? null ) ? $texts[ $locale ] : array(); ?>
+				<?php foreach ( array_keys( $text_locales ) as $text_locale ) : ?>
+					<?php $locale_texts = is_array( $texts[ $text_locale ] ?? null ) ? $texts[ $text_locale ] : array(); ?>
 					<td>
-						<input type="text" name="texts[<?php echo esc_attr( $locale ); ?>][<?php echo esc_attr( $key ); ?>]" value="<?php echo esc_attr( (string) ( $locale_texts[ $key ] ?? '' ) ); ?>">
+						<input type="text" name="texts[<?php echo esc_attr( $text_locale ); ?>][<?php echo esc_attr( $key ); ?>]" value="<?php echo esc_attr( (string) ( $locale_texts[ $key ] ?? '' ) ); ?>">
 					</td>
 				<?php endforeach; ?>
 			</tr>

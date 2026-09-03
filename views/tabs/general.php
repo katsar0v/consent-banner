@@ -24,7 +24,7 @@ $categories = is_array( $settings['categories'] ?? null ) ? $settings['categorie
 			<th><?php echo esc_html__( 'Label', 'consent-banner' ); ?></th>
 			<th><?php echo esc_html__( 'Description', 'consent-banner' ); ?></th>
 			<th><?php echo esc_html__( 'Required', 'consent-banner' ); ?></th>
-			<th><?php echo esc_html__( 'Default enabled', 'consent-banner' ); ?></th>
+			<th><?php echo esc_html__( 'Initial state', 'consent-banner' ); ?></th>
 			<th><?php echo esc_html__( 'Action', 'consent-banner' ); ?></th>
 		</tr>
 	</thead>
@@ -46,13 +46,13 @@ $categories = is_array( $settings['categories'] ?? null ) ? $settings['categorie
 					<input type="text" name="categories[<?php echo esc_attr( (string) $index ); ?>][description]" value="<?php echo esc_attr( (string) ( $category['description'] ?? '' ) ); ?>">
 				</td>
 				<td>
-					<input type="checkbox" name="categories[<?php echo esc_attr( (string) $index ); ?>][required]" value="1" <?php checked( $is_required ); ?> <?php disabled( 'essential' === $category_id ); ?>>
+					<input type="checkbox" value="1" <?php checked( $is_required ); ?> disabled>
 					<?php if ( 'essential' === $category_id ) : ?>
 						<input type="hidden" name="categories[<?php echo esc_attr( (string) $index ); ?>][required]" value="1">
 					<?php endif; ?>
 				</td>
 				<td>
-					<input type="checkbox" name="categories[<?php echo esc_attr( (string) $index ); ?>][enabledByDefault]" value="1" <?php checked( $is_enabled ); ?> <?php disabled( 'essential' === $category_id ); ?>>
+					<input type="checkbox" value="1" <?php checked( $is_enabled ); ?> disabled>
 					<?php if ( 'essential' === $category_id ) : ?>
 						<input type="hidden" name="categories[<?php echo esc_attr( (string) $index ); ?>][enabledByDefault]" value="1">
 					<?php endif; ?>
@@ -74,8 +74,8 @@ $categories = is_array( $settings['categories'] ?? null ) ? $settings['categorie
 		<td><input type="text" name="categories[__INDEX__][id]" value=""></td>
 		<td><input type="text" name="categories[__INDEX__][label]" value=""></td>
 		<td><input type="text" name="categories[__INDEX__][description]" value=""></td>
-		<td><input type="checkbox" name="categories[__INDEX__][required]" value="1"></td>
-		<td><input type="checkbox" name="categories[__INDEX__][enabledByDefault]" value="1"></td>
+		<td><input type="checkbox" value="1" disabled></td>
+		<td><input type="checkbox" value="1" disabled></td>
 		<td><button type="button" class="button kdconsent-remove-row"><?php echo esc_html__( 'Remove', 'consent-banner' ); ?></button></td>
 	</tr>
 </script>
@@ -90,7 +90,7 @@ $categories = is_array( $settings['categories'] ?? null ) ? $settings['categorie
 		<tr>
 			<th scope="row"><?php echo esc_html__( 'Options', 'consent-banner' ); ?></th>
 			<td>
-				<label><input type="checkbox" name="showRejectButton" value="1" <?php checked( ! empty( $settings['showRejectButton'] ) ); ?>> <?php echo esc_html__( 'Show "Reject all" button', 'consent-banner' ); ?></label><br>
+				<label><input type="checkbox" value="1" checked disabled> <?php echo esc_html__( 'Always show "Reject all" button', 'consent-banner' ); ?></label><br>
 				<label><input type="checkbox" name="enableConsentLog" value="1" <?php checked( ! empty( $settings['enableConsentLog'] ) ); ?>> <?php echo esc_html__( 'Enable consent proof logging (hashed IP/UA)', 'consent-banner' ); ?></label><br>
 				<label><input type="checkbox" name="removeOnUninstall" value="1" <?php checked( ! empty( $settings['removeOnUninstall'] ) ); ?>> <?php echo esc_html__( 'Remove plugin data on uninstall', 'consent-banner' ); ?></label><br>
 				<label><input type="checkbox" name="bumpConsentVersion" value="1"> <?php echo esc_html__( 'Bump consent version after save and ask everyone again', 'consent-banner' ); ?></label>
