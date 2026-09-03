@@ -28,6 +28,8 @@
 
   if (!consent) {
     maybeShowBanner();
+	} else {
+	prepareConfig(fallbackConfig());
   }
 
   function installApi() {
@@ -169,6 +171,12 @@
     }
 
     window.kdconsentConfig = config;
+
+	if (window.kdconsentServices && typeof window.kdconsentServices.init === 'function') {
+	  window.kdconsentServices.init(config.services || [], runtime.getConsent(), {
+		mode: bootstrap.serviceMode || 'live'
+	  });
+	}
 
     return config;
   }

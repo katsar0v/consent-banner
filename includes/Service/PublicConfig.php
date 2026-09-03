@@ -46,6 +46,7 @@ final class PublicConfig {
 			),
 			'consentVersion' => $this->consent_service->consent_version(),
 			'consent'        => null,
+			'services'       => ServiceRegistry::services(),
 		);
 	}
 }
