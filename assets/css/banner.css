@@ -317,6 +317,41 @@
   color: #6b7280;
 }
 
+.kdconsent-modal-item-label {
+  font-weight: 700;
+}
+
+.kdconsent-services-title {
+  margin: 20px 0 8px;
+}
+
+.kdconsent-service-details {
+  border-bottom: 1px solid #e5e7eb;
+  padding: 8px 0;
+}
+
+.kdconsent-service-details summary {
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.kdconsent-service-details dl {
+  display: grid;
+  grid-template-columns: minmax(110px, 0.35fr) 1fr;
+  gap: 4px 12px;
+  margin: 10px 0 4px;
+  font-size: 13px;
+}
+
+.kdconsent-service-details dt {
+  font-weight: 700;
+}
+
+.kdconsent-service-details dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
 .kdconsent-modal-actions {
   display: flex;
   justify-content: flex-end;

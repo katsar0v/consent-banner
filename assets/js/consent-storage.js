@@ -194,11 +194,17 @@
       normalizedCategories.essential = true;
     }
 
-    return {
+	var normalized = {
       v: Math.floor(version),
       t: Math.floor(timestamp),
       c: normalizedCategories
     };
+
+	if (typeof candidate.r === 'string' && /^[a-f0-9]{64}$/.test(candidate.r)) {
+	  normalized.r = candidate.r;
+	}
+
+	return normalized;
   }
 
   function isExpired(consent, options) {

@@ -68,6 +68,10 @@ function wp_json_encode( mixed $value, int $flags = 0 ): string|false {
 	return json_encode( $value, $flags );
 }
 
+function wp_generate_uuid4(): string {
+	return '0198f1dd-ec40-7000-8000-000000000001';
+}
+
 require_once dirname( __DIR__ ) . '/includes/LegacyCompat.php';
 require_once dirname( __DIR__ ) . '/includes/Installer.php';
 require_once dirname( __DIR__ ) . '/includes/Domain/Category.php';
@@ -75,3 +79,4 @@ require_once dirname( __DIR__ ) . '/includes/Domain/ConsentState.php';
 require_once dirname( __DIR__ ) . '/includes/Repository/SettingsRepository.php';
 require_once dirname( __DIR__ ) . '/includes/Service/ConsentService.php';
 require_once dirname( __DIR__ ) . '/includes/Service/ServiceRegistry.php';
+require_once dirname( __DIR__ ) . '/includes/Repository/ConsentLogRepository.php';
