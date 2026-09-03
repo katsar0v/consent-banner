@@ -53,6 +53,7 @@ final class Plugin {
 
 			LegacyCompat::register();
 		} else {
+			add_action( 'wp_head', array( FrontendAssets::class, 'bootstrap' ), -PHP_INT_MAX );
 			add_action( 'wp_enqueue_scripts', array( FrontendAssets::class, 'enqueue' ) );
 		}
 
