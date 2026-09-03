@@ -1,11 +1,14 @@
 (function () {
   var bootstrap = window.kdconsentLoaderConfig || {};
-  var listeners = [];
+  var bootstrapApi = window.kdconsent || {};
+  var listeners = Array.isArray(bootstrapApi._listeners) ? bootstrapApi._listeners : [];
   var configPromise = null;
   var uiPromise = null;
   var consentVersion = Number(bootstrap.consentVersion) || 1;
   var storage = window.kdconsentStorage || null;
-  var consent = readStoredConsent({ consentVersion: consentVersion });
+  var consent = typeof bootstrapApi.getConsent === 'function'
+    ? bootstrapApi.getConsent()
+    : readStoredConsent({ consentVersion: consentVersion });
 
   var runtime = {
     listeners: listeners,
@@ -14,6 +17,9 @@
     },
     setConsent: function (nextConsent) {
       consent = nextConsent || null;
+      if (typeof bootstrapApi._setConsent === 'function') {
+        bootstrapApi._setConsent(consent);
+      }
     }
   };
 
@@ -25,7 +31,10 @@
   }
 
   function installApi() {
-    window.kdconsent = {
+	window.kdconsent = {
+	  isReady: true,
+	  _listeners: listeners,
+	  _setConsent: runtime.setConsent,
       getConsent: function () {
         return consent ? JSON.parse(JSON.stringify(consent)) : null;
       },
@@ -57,6 +66,10 @@
   }
 
   function bindPreferenceTriggers() {
+	document.addEventListener('kdconsent:open-preferences', function () {
+	  openPreferences();
+	});
+
     document.addEventListener('click', function (event) {
       var target = event.target;
       if (!target || !target.closest) {
