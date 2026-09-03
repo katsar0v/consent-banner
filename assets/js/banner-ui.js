@@ -4,8 +4,10 @@
   runtime = runtime || {};
   var root = ensureRoot();
   var categories = Array.isArray(config.categories) ? config.categories : [];
+	var services = Array.isArray(config.services) ? config.services : [];
   var listeners = Array.isArray(runtime.listeners) ? runtime.listeners : [];
   var categoryInputs = {};
+	var lastFocusedElement = null;
   var consentVersion = Number(config.consentVersion) || 1;
   var storage = window.kdconsentStorage || null;
   var storageOptions = buildStorageOptions();
@@ -36,7 +38,16 @@
     customizeLabel: texts.customizeLabel || 'Customize',
     saveLabel: texts.saveLabel || 'Save preferences',
     closeLabel: texts.closeLabel || 'Close',
-    preferencesTitle: texts.preferencesTitle || 'Cookie preferences'
+	preferencesTitle: texts.preferencesTitle || 'Cookie preferences',
+	servicesTitle: texts.servicesTitle || 'Services',
+	providerLabel: texts.providerLabel || 'Provider',
+	purposeLabel: texts.purposeLabel || 'Purpose',
+	dataLabel: texts.dataLabel || 'Data',
+	cookiesLabel: texts.cookiesLabel || 'Cookies',
+	durationLabel: texts.durationLabel || 'Duration',
+	recipientsLabel: texts.recipientsLabel || 'Recipients',
+	transferLabel: texts.transferLabel || 'Third-country transfer',
+	privacyLabel: texts.privacyLabel || 'Privacy policy'
   };
 
   var behavior = config.behavior || {};
@@ -56,9 +67,13 @@
   var wrapper = document.createElement('div');
   wrapper.className =
     'kdconsent-banner kdconsent-position-' + (behavior.position || 'bottom');
+	  wrapper.setAttribute('role', 'dialog');
+	  wrapper.setAttribute('aria-modal', 'true');
+	  wrapper.setAttribute('aria-labelledby', 'kdconsent-banner-title');
 
   var title = document.createElement('h3');
   title.className = 'kdconsent-banner-title';
+	  title.id = 'kdconsent-banner-title';
   title.textContent = labels.bannerTitle;
 
   var body = document.createElement('p');
@@ -93,9 +108,14 @@
 
   var modal = document.createElement('div');
   modal.className = 'kdconsent-modal';
+	  modal.setAttribute('role', 'dialog');
+	  modal.setAttribute('aria-modal', 'true');
+	  modal.setAttribute('aria-labelledby', 'kdconsent-modal-title');
+	  modal.setAttribute('tabindex', '-1');
 
   var modalTitle = document.createElement('h3');
   modalTitle.className = 'kdconsent-modal-title';
+	  modalTitle.id = 'kdconsent-modal-title';
   modalTitle.textContent = labels.preferencesTitle;
 
   var modalBody = document.createElement('div');
@@ -129,7 +149,10 @@
     var left = document.createElement('div');
     left.className = 'kdconsent-modal-item-text';
 
-    var label = document.createElement('strong');
+	var inputId = 'kdconsent-purpose-' + String(category.id);
+	var label = document.createElement('label');
+	label.className = 'kdconsent-modal-item-label';
+	label.htmlFor = inputId;
     label.textContent = category.label || category.id;
 
     var desc = document.createElement('span');
@@ -140,6 +163,7 @@
 
     var input = document.createElement('input');
     input.type = 'checkbox';
+	input.id = inputId;
     input.checked = isCategoryChecked(category, consent);
     input.disabled = !!category.required || category.id === 'essential';
 
@@ -149,6 +173,8 @@
     item.appendChild(input);
     modalBody.appendChild(item);
   });
+
+	appendServiceTransparency();
 
   acceptButton.addEventListener('click', function () {
     var next = {};
@@ -170,6 +196,7 @@
 
   customizeButton.addEventListener('click', openPreferences);
   closeButton.addEventListener('click', closePreferences);
+	modal.addEventListener('keydown', trapModalFocus);
 
   saveButton.addEventListener('click', function () {
     var next = {};
@@ -294,8 +321,15 @@
   }
 
   function openPreferences() {
+	lastFocusedElement = document.activeElement;
     setBannerBackdropVisibility(false);
     setModalVisibility(true);
+	window.setTimeout(function () {
+	  var first = focusableElements()[0] || modal;
+	  if (first && typeof first.focus === 'function') {
+		first.focus();
+	  }
+	}, 0);
   }
 
   function closePreferences() {
@@ -303,7 +337,108 @@
     if (!wrapper.hidden && !consent) {
       setBannerBackdropVisibility(true);
     }
+	if (lastFocusedElement && typeof lastFocusedElement.focus === 'function') {
+	  lastFocusedElement.focus();
+	}
+	lastFocusedElement = null;
   }
+
+	function trapModalFocus(event) {
+	  if (event.key === 'Escape') {
+		event.preventDefault();
+		closePreferences();
+		return;
+	  }
+
+	  if (event.key !== 'Tab') {
+		return;
+	  }
+
+	  var focusable = focusableElements();
+	  if (focusable.length === 0) {
+		event.preventDefault();
+		modal.focus();
+		return;
+	  }
+
+	  var first = focusable[0];
+	  var last = focusable[focusable.length - 1];
+	  if (event.shiftKey && document.activeElement === first) {
+		event.preventDefault();
+		last.focus();
+	  } else if (!event.shiftKey && document.activeElement === last) {
+		event.preventDefault();
+		first.focus();
+	  }
+	}
+
+	function focusableElements() {
+	  return Array.prototype.slice.call(
+		modal.querySelectorAll('button:not([disabled]), input:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])')
+	  );
+	}
+
+	function appendServiceTransparency() {
+	  if (services.length === 0) {
+		return;
+	  }
+
+	  var heading = document.createElement('h4');
+	  heading.className = 'kdconsent-services-title';
+	  heading.textContent = labels.servicesTitle;
+	  modalBody.appendChild(heading);
+
+	  services.forEach(function (service) {
+		var details = document.createElement('details');
+		details.className = 'kdconsent-service-details';
+		var summary = document.createElement('summary');
+		summary.textContent = service.name || service.id;
+		details.appendChild(summary);
+
+		var list = document.createElement('dl');
+		appendDetail(list, labels.providerLabel, service.provider);
+		appendDetail(list, labels.purposeLabel, service.purposeDescription || service.purpose);
+		appendDetail(list, labels.dataLabel, joinValues(service.data));
+		appendDetail(list, labels.cookiesLabel, joinValues(service.cookies));
+		appendDetail(list, labels.durationLabel, service.duration);
+		appendDetail(list, labels.recipientsLabel, joinValues(service.recipients));
+		appendDetail(list, labels.transferLabel, service.thirdCountryTransfer);
+
+		if (service.privacyUrl) {
+		  var term = document.createElement('dt');
+		  term.textContent = labels.privacyLabel;
+		  var description = document.createElement('dd');
+		  var link = document.createElement('a');
+		  link.href = service.privacyUrl;
+		  link.target = '_blank';
+		  link.rel = 'noopener noreferrer';
+		  link.textContent = service.privacyUrl;
+		  description.appendChild(link);
+		  list.appendChild(term);
+		  list.appendChild(description);
+		}
+
+		details.appendChild(list);
+		modalBody.appendChild(details);
+	  });
+	}
+
+	function appendDetail(list, label, value) {
+	  if (!value) {
+		return;
+	  }
+
+	  var term = document.createElement('dt');
+	  term.textContent = label;
+	  var description = document.createElement('dd');
+	  description.textContent = value;
+	  list.appendChild(term);
+	  list.appendChild(description);
+	}
+
+	function joinValues(values) {
+	  return Array.isArray(values) ? values.join(', ') : String(values || '');
+	}
 
   function setModalVisibility(isVisible) {
     modalOverlay.style.setProperty('display', isVisible ? 'grid' : 'none', 'important');

@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 final class Installer {
-	public const DB_VERSION                  = '0.2.0';
+	public const DB_VERSION                  = '0.4.0';
 	public const OPTION_DB_VERSION           = 'kdconsent_db_version';
 	public const OPTION_SETTINGS             = 'kdconsent_settings';
 	public const OPTION_CONSENT_VERSION      = 'kdconsent_consent_version';
@@ -87,16 +87,35 @@ final class Installer {
 			"CREATE TABLE {$table_name} (
 				id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
 				consent_hash char(64) NOT NULL,
-				ip_hash char(64) NOT NULL,
-				user_agent_hash char(64) NOT NULL,
 				categories_json longtext NOT NULL,
 				consent_version int(11) unsigned NOT NULL,
 				created_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+				expires_at datetime DEFAULT NULL,
 				PRIMARY KEY (id),
 				KEY created_at (created_at),
 				KEY consent_hash (consent_hash)
 			) {$charset_collate};"
 		);
+
+		self::drop_legacy_personal_columns( $table_name );
+		$wpdb->query( "UPDATE `{$table_name}` SET expires_at = DATE_ADD(created_at, INTERVAL 12 MONTH) WHERE expires_at IS NULL" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+	}
+
+	private static function drop_legacy_personal_columns( string $table_name ): void {
+		global $wpdb;
+
+		foreach ( array( 'ip_hash', 'user_agent_hash' ) as $column ) {
+			$exists = $wpdb->get_var(
+				$wpdb->prepare(
+					"SHOW COLUMNS FROM `{$table_name}` LIKE %s", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+					$column
+				)
+			);
+
+			if ( $column === $exists ) {
+				$wpdb->query( "ALTER TABLE `{$table_name}` DROP COLUMN `{$column}`" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			}
+		}
 	}
 
 	public static function ensure_options(): void {
@@ -158,6 +177,15 @@ final class Installer {
 					'saveLabel'        => 'Save preferences',
 					'closeLabel'       => 'Close',
 					'preferencesTitle' => 'Cookie preferences',
+					'servicesTitle'     => 'Services',
+					'providerLabel'     => 'Provider',
+					'purposeLabel'      => 'Purpose',
+					'dataLabel'         => 'Data',
+					'cookiesLabel'      => 'Cookies',
+					'durationLabel'     => 'Duration',
+					'recipientsLabel'   => 'Recipients',
+					'transferLabel'     => 'Third-country transfer',
+					'privacyLabel'      => 'Privacy policy',
 				),
 				'bg_BG' => array(
 					'bannerTitle'      => 'Използваме бисквитки',
@@ -168,6 +196,15 @@ final class Installer {
 					'saveLabel'        => 'Запази предпочитанията',
 					'closeLabel'       => 'Затвори',
 					'preferencesTitle' => 'Предпочитания за бисквитки',
+					'servicesTitle'     => 'Услуги',
+					'providerLabel'     => 'Доставчик',
+					'purposeLabel'      => 'Цел',
+					'dataLabel'         => 'Данни',
+					'cookiesLabel'      => 'Бисквитки',
+					'durationLabel'     => 'Срок',
+					'recipientsLabel'   => 'Получатели',
+					'transferLabel'     => 'Трансфер към трета държава',
+					'privacyLabel'      => 'Политика за поверителност',
 				),
 				'de_DE' => array(
 					'bannerTitle'      => 'Wir verwenden Cookies',
@@ -178,6 +215,15 @@ final class Installer {
 					'saveLabel'        => 'Einstellungen speichern',
 					'closeLabel'       => 'Schließen',
 					'preferencesTitle' => 'Cookie-Einstellungen',
+					'servicesTitle'     => 'Dienste',
+					'providerLabel'     => 'Anbieter',
+					'purposeLabel'      => 'Zweck',
+					'dataLabel'         => 'Daten',
+					'cookiesLabel'      => 'Cookies',
+					'durationLabel'     => 'Laufzeit',
+					'recipientsLabel'   => 'Empfänger',
+					'transferLabel'     => 'Drittlandtransfer',
+					'privacyLabel'      => 'Datenschutzerklärung',
 				),
 			),
 			'styles'              => array(
