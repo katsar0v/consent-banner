@@ -15,6 +15,7 @@ use PHPUnit\Framework\TestCase;
 
 final class ConsentStateTest extends TestCase {
 	protected function setUp(): void {
+		$GLOBALS['kdconsent_test_filters'] = array();
 		$GLOBALS['kdconsent_test_options'] = array(
 			Installer::OPTION_CONSENT_VERSION => 7,
 		);
