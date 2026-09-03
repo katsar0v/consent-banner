@@ -70,7 +70,7 @@ final class RestRouter {
 		);
 	}
 
-	public static function admin_permission( WP_REST_Request $request ): true|WP_Error {
+	public static function admin_permission( WP_REST_Request $request ): bool|WP_Error {
 		$nonce = (string) $request->get_header( 'X-WP-Nonce' );
 		if ( '' === $nonce || ! wp_verify_nonce( $nonce, 'wp_rest' ) ) {
 			return new WP_Error(
