@@ -20,18 +20,25 @@ final class ConsentState {
 	public function __construct(
 		private array $categories,
 		private int $version,
-		private int $timestamp
+		private int $timestamp,
+		private ?string $receipt_id = null
 	) {}
 
 	/**
 	 * @return array<string,mixed>
 	 */
 	public function to_array(): array {
-		return array(
+		$state = array(
 			'v' => $this->version,
 			't' => $this->timestamp,
 			'c' => $this->categories,
 		);
+
+		if ( null !== $this->receipt_id ) {
+			$state['r'] = $this->receipt_id;
+		}
+
+		return $state;
 	}
 
 	/**
@@ -47,5 +54,9 @@ final class ConsentState {
 
 	public function timestamp(): int {
 		return $this->timestamp;
+	}
+
+	public function receipt_id(): ?string {
+		return $this->receipt_id;
 	}
 }

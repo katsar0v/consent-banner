@@ -92,7 +92,15 @@ final class ServiceRegistry {
 
 		return array(
 			'id'                 => sanitize_key( (string) ( $raw['id'] ?? '' ) ),
+			'name'               => sanitize_text_field( (string) ( $raw['name'] ?? $raw['id'] ?? '' ) ),
+			'provider'           => sanitize_text_field( (string) ( $raw['provider'] ?? '' ) ),
 			'purpose'            => sanitize_key( (string) ( $raw['purpose'] ?? '' ) ),
+			'purposeDescription' => sanitize_text_field( (string) ( $raw['purposeDescription'] ?? '' ) ),
+			'data'               => self::sanitize_text_list( $raw['data'] ?? array() ),
+			'duration'           => sanitize_text_field( (string) ( $raw['duration'] ?? '' ) ),
+			'recipients'         => self::sanitize_text_list( $raw['recipients'] ?? array() ),
+			'thirdCountryTransfer' => sanitize_text_field( (string) ( $raw['thirdCountryTransfer'] ?? '' ) ),
+			'privacyUrl'         => esc_url_raw( (string) ( $raw['privacyUrl'] ?? '' ), array( 'http', 'https' ) ),
 			'scriptHandles'      => self::sanitize_keys( $raw['scriptHandles'] ?? array() ),
 			'allowedUrls'        => $allowed_urls,
 			'scripts'            => $scripts,
@@ -132,5 +140,11 @@ final class ServiceRegistry {
 		);
 
 		return array_values( array_unique( array_filter( $names ) ) );
+	}
+
+	/** @return list<string> */
+	private static function sanitize_text_list( mixed $raw ): array {
+		$values = array_map( 'sanitize_text_field', is_array( $raw ) ? $raw : array() );
+		return array_values( array_unique( array_filter( $values ) ) );
 	}
 }

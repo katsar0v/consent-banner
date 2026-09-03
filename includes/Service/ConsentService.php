@@ -58,10 +58,15 @@ final class ConsentService {
 			$normalized['essential'] = true;
 		}
 
-		$state = new ConsentState(
+		$timestamp  = time();
+		$receipt_id = ! empty( $settings['enableConsentLog'] )
+			? $this->consent_log_repository->generate_receipt_id( $normalized, $this->consent_version(), $timestamp )
+			: null;
+		$state      = new ConsentState(
 			$normalized,
 			$this->consent_version(),
-			time()
+			$timestamp,
+			$receipt_id
 		);
 
 		$this->set_cookie( $state, (int) ( $settings['consentLifetimeDays'] ?? 180 ) );
@@ -165,7 +170,11 @@ final class ConsentService {
 			$normalized['essential'] = true;
 		}
 
-		return new ConsentState( $normalized, $version, $timestamp );
+		$receipt_id = isset( $data['r'] ) && is_string( $data['r'] ) && preg_match( '/^[a-f0-9]{64}$/', $data['r'] )
+			? $data['r']
+			: null;
+
+		return new ConsentState( $normalized, $version, $timestamp, $receipt_id );
 	}
 
 	public static function is_expired( int $timestamp, int $lifetime_days, ?int $now = null ): bool {
