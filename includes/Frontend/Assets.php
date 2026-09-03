@@ -64,16 +64,29 @@ final class Assets {
 		}
 
 		$loader_path   = KDCONSENT_PLUGIN_DIR . 'assets/js/loader.js';
+		$registry_path = KDCONSENT_PLUGIN_DIR . 'assets/js/service-registry.js';
 		$ui_path       = KDCONSENT_PLUGIN_DIR . 'assets/js/banner-ui.js';
 		$style_path    = KDCONSENT_PLUGIN_DIR . 'assets/css/banner.css';
 		$loader_ver    = self::asset_version( $loader_path );
+		$registry_ver  = self::asset_version( $registry_path );
 		$public_config = ( new PublicConfig() )->build();
 		$public_config['consent'] = null;
 
 		wp_enqueue_script(
+			'kdconsent-service-registry',
+			KDCONSENT_PLUGIN_URL . 'assets/js/service-registry.js',
+			array(),
+			$registry_ver,
+			array(
+				'in_footer' => true,
+				'strategy'  => 'defer',
+			)
+		);
+
+		wp_enqueue_script(
 			'kdconsent-loader',
 			KDCONSENT_PLUGIN_URL . 'assets/js/loader.js',
-			array(),
+			array( 'kdconsent-service-registry' ),
 			$loader_ver,
 			array(
 				'in_footer' => true,
@@ -87,6 +100,7 @@ final class Assets {
 			'legacyCookieName' => LegacyCompat::COOKIE_NAME,
 			'storageKey'       => 'kdconsent_consent_state',
 			'consentVersion'   => max( 1, (int) get_option( Installer::OPTION_CONSENT_VERSION, 1 ) ),
+			'serviceMode'      => self::is_local_debug() ? 'debug' : 'live',
 			'config'           => $public_config,
 			'assets'           => array(
 				'script' => esc_url_raw(
