@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+export TZ=UTC
+
 plugin_version="$(sed -n "s/^define( 'KDCONSENT_PLUGIN_VERSION', '\([^']*\)' );/\1/p" consent-banner.php)"
 [[ -n "${plugin_version}" ]] || { printf 'Unable to read plugin version.\n' >&2; exit 1; }
 
