@@ -46,6 +46,16 @@ final class CommerceModuleTest extends TestCase {
 		self::assertArrayHasKey( 'bricks/element/render_attributes', $GLOBALS['kdconsent_test_filters'] );
 		self::assertArrayHasKey( 'woocommerce_available_variation', $GLOBALS['kdconsent_test_filters'] );
 		self::assertArrayHasKey( 'woocommerce_cart_item_remove_link', $GLOBALS['kdconsent_test_filters'] );
+		self::assertArrayHasKey( 'woocommerce_checkout_create_order', $GLOBALS['kdconsent_test_actions'] );
+		self::assertArrayHasKey( 'woocommerce_store_api_checkout_update_order_meta', $GLOBALS['kdconsent_test_actions'] );
+		self::assertArrayHasKey( 'woocommerce_payment_complete', $GLOBALS['kdconsent_test_actions'] );
+		self::assertArrayHasKey( 'woocommerce_order_status_changed', $GLOBALS['kdconsent_test_actions'] );
+		self::assertArrayHasKey( 'woocommerce_order_refunded', $GLOBALS['kdconsent_test_actions'] );
+		self::assertArrayHasKey( 'kdconsent_commerce_process_purchase', $GLOBALS['kdconsent_test_actions'] );
+		self::assertArrayHasKey( 'kdconsent_commerce_process_refund', $GLOBALS['kdconsent_test_actions'] );
+		self::assertArrayHasKey( 'action_scheduler_failed_execution', $GLOBALS['kdconsent_test_actions'] );
+		self::assertArrayHasKey( 'action_scheduler_failed_action', $GLOBALS['kdconsent_test_actions'] );
+		self::assertArrayHasKey( 'action_scheduler_unexpected_shutdown', $GLOBALS['kdconsent_test_actions'] );
 	}
 
 	public function test_cart_line_value_uses_variation_and_post_discount_net_unit_price(): void {

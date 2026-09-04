@@ -21,6 +21,7 @@ final class Module {
 	 * lets themes register their integration filters after plugins have loaded.
 	 */
 	public static function register(): void {
+		OrderDispatcher::register();
 		add_action( 'wp_enqueue_scripts', array( Assets::class, 'enqueue' ), 30 );
 		add_filter( 'wc_order_attribution_allow_tracking', array( self::class, 'allow_order_attribution' ), PHP_INT_MAX );
 		add_filter( 'bricks/element/render_attributes', array( BricksAdapter::class, 'attributes' ), 20, 3 );

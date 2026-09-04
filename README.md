@@ -119,6 +119,48 @@ add_filter(
 );
 ```
 
+### Optional server commerce events
+
+The same `kdconsent_commerce_enabled` filter opts into a WooCommerce server dispatcher for `purchase` and `refund`. WooCommerce and Action Scheduler remain optional dependencies: without WooCommerce the callbacks are inert, and without a working scheduler no delivery state is written.
+
+Classic checkout and Store API checkout capture the normalized consent snapshot on the order. By default, only paid first orders created through `checkout` or `store-api` qualify. Subscription renewals are rejected when WooCommerce Subscriptions is available. A site integration can add stricter exclusions without replacing these defaults:
+
+```php
+add_filter(
+    'kdconsent_commerce_order_qualifies',
+    static function ( bool $qualifies, WC_Order $order ): bool {
+        return $qualifies && '' === (string) $order->get_meta( '_my_import_id', true );
+    },
+    10,
+    2
+);
+```
+
+Purchase IDs are always `purchase:<order_id>` and refund IDs are `refund:<order_id>:<refund_id>`. The occurrence time comes from WooCommerce's paid/refund creation timestamp rather than job execution time. Merchandise value is the exact sum of post-discount line totals without tax or shipping; unit price is the corresponding line total divided by quantity. Purchase `paid_value` is the paid order total. Refund `value` contains only actual refund lines, so a shipping-only refund has merchandise value `0`; refund `paid_value` is the actual refund amount. When WooCommerce records a non-zero product refund line without a quantity, the canonical event preserves that affected product as one unit priced at the refunded line amount.
+
+Every event is reduced to the positive-list contract before `kdconsent_commerce_event` runs, and its result is redacted again. Canonical IDs, timestamps, consent, value math, items, and privacy booleans cannot be replaced by a filter. A filter can suppress planned destinations, but the remaining set is intersected with the currently registered, consented services. Contact values, addresses, IP addresses, user agents, attribution cookies, and click IDs are never exposed. Only `has_email`, `has_phone`, and a click-ID boolean derived from actual `gclid`, `wbraid`, or `gbraid` order metadata can be present.
+
+The plugin bundles no live transport. A live transport listens to the public delivery action and must explicitly acknowledge success through its `DeliveryConfirmation`; registration or a callback return value never counts as delivery:
+
+```php
+use KatsarovDesign\ConsentBanner\Commerce\DeliveryConfirmation;
+
+add_action(
+    'kdconsent_commerce_deliver_purchase',
+    static function ( array $event, DeliveryConfirmation $confirmation ): void {
+        if ( my_transport_send_redacted_event( $event ) ) {
+            $confirmation->confirm();
+        }
+    },
+    10,
+    2
+);
+```
+
+Refund transports use `kdconsent_commerce_deliver_refund` with the same two arguments. Unconfirmed or failed attempts stay pending and receive capped, unique backoff retries through Action Scheduler. A later paid/refund source hook can requeue work that remains pending after the cap. Transport exceptions are rethrown so Action Scheduler records the failed attempt; failed, timed-out, and unexpectedly terminated plugin jobs are also reconciled into the retry path.
+
+In `debug` runtime mode, the dispatcher performs no HTTP request or live transport action. It writes only the twice-redacted event as `[kdconsent-commerce] <json>` to the PHP error log and marks the job `debug-delivered` after a successful write. Repeated callbacks for `delivered` or `debug-delivered` entities are no-ops.
+
 ## REST API
 
 Namespace:
@@ -188,9 +230,13 @@ docker exec -w /var/www/html php wp consent-banner import /tmp/consent-banner-se
 | Filter | `kdconsent_categories` | Adjust runtime categories before use/render. |
 | Filter | `kdconsent_services` | Register declarative, purpose-gated service definitions. |
 | Filter | `kdconsent_runtime_mode` | Select validated `live` or `debug` frontend transport. |
-| Filter | `kdconsent_commerce_enabled` | Opt into the transport-free browser commerce module; defaults to `false`. |
+| Filter | `kdconsent_commerce_enabled` | Opt into browser and WooCommerce server commerce modules; defaults to `false`. |
 | Filter | `kdconsent_commerce_bricks_list_context` | Supply sanitized `list_id`, `list_name`, and `list_group` metadata; arguments are context, element, settings, and attribute key. |
+| Filter | `kdconsent_commerce_order_qualifies` | Add site-specific order exclusions after the built-in checkout/Store API and renewal rules. |
+| Filter | `kdconsent_commerce_event` | Inspect the already-redacted server envelope or suppress planned destinations; canonical event and commerce fields remain enforced. |
 | Action | `kdconsent_consent_recorded` | Runs when a consent decision is persisted. |
+| Action | `kdconsent_commerce_deliver_purchase` | Receive a redacted purchase and explicitly confirm successful live transport. |
+| Action | `kdconsent_commerce_deliver_refund` | Receive a redacted refund and explicitly confirm successful live transport. |
 | PHP helper | `kdconsent_has_consent( string $category ): bool` | Check category consent in PHP templates/plugin logic. |
 
 ## Data Storage
@@ -204,6 +250,11 @@ docker exec -w /var/www/html php wp consent-banner import /tmp/consent-banner-se
 | `kdconsent_remove_on_uninstall` | Opt-in uninstall cleanup flag. |
 | `kdconsent_consent` cookie | Signed client consent payload (`v`, `t`, `c`). |
 | `{prefix}kdconsent_consent_log` | Optional hashed consent proof entries. |
+| `_kdconsent_commerce_consent_snapshot` | Normalized purpose booleans captured on a WooCommerce order. |
+| `_kdconsent_commerce_purchase_state` | Purchase scheduling/delivery state on the order. |
+| `_kdconsent_commerce_refund_state` | Refund scheduling/delivery state on the refund. |
+
+Server jobs use the `kdconsent-commerce` Action Scheduler group. The internal process hooks are `kdconsent_commerce_process_purchase` and `kdconsent_commerce_process_refund`; integrations should use the public delivery actions above rather than those queue callbacks.
 
 ## Development
 
@@ -220,7 +271,7 @@ includes/Plugin.php                Hook wiring
 includes/Installer.php             Defaults, table creation, upgrades
 includes/Admin/                    Admin menu, settings page, admin assets
 includes/Frontend/                 Banner mount, frontend assets, shortcode
-includes/Commerce/                 Optional WooCommerce/Bricks browser event module
+includes/Commerce/                 Optional browser and server commerce event modules
 includes/Rest/                     REST routes and consent/settings controller
 includes/Repository/               Settings and optional consent log persistence
 includes/Service/                  Consent and localization logic
