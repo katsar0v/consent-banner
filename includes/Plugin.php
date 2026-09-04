@@ -13,6 +13,7 @@ use KatsarovDesign\ConsentBanner\Admin\Assets as AdminAssets;
 use KatsarovDesign\ConsentBanner\Admin\Menu;
 use KatsarovDesign\ConsentBanner\Admin\SettingsPage;
 use KatsarovDesign\ConsentBanner\Cli\SettingsCommand;
+use KatsarovDesign\ConsentBanner\Commerce\Module as CommerceModule;
 use KatsarovDesign\ConsentBanner\Frontend\Assets as FrontendAssets;
 use KatsarovDesign\ConsentBanner\Frontend\Shortcode;
 use KatsarovDesign\ConsentBanner\Rest\RestRouter;
@@ -40,6 +41,7 @@ final class Plugin {
 	}
 
 	public function init(): void {
+		CommerceModule::register();
 		add_action( 'init', array( $this, 'load_textdomain' ) );
 		add_action( 'init', array( Shortcode::class, 'register' ) );
 		add_action( 'wp_loaded', array( ConsentDefinitionFingerprint::class, 'sync' ), PHP_INT_MAX );

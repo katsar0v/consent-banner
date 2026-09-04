@@ -30,6 +30,7 @@ Version 0.4.0 adds a synchronous Consent Mode v2 bootstrap, an allowlisted servi
 | Internationalization | English, Bulgarian, and German text packs (site locale based). |
 | Audit option | Optional pseudonymous receipts without IP, user agent, or PII. |
 | Service control | Purpose-gated URL allowlists with cookie/storage teardown on revocation. |
+| Commerce events | Optional, transport-free WooCommerce/Bricks browser event contract with positive-list redaction. |
 
 ## Requirements
 
@@ -85,6 +86,38 @@ add_filter( 'kdconsent_runtime_mode', static fn(): string => 'debug' );
 ```
 
 `debug` logs Consent Mode commands and planned service activations in the browser console. `live` writes Consent Mode commands to the data layer and may load consented, allowlisted service scripts. Any value other than `live` or `debug` falls back to `live`.
+
+### Optional browser commerce events
+
+The generic commerce module is disabled by default and has no remote transport. Enable it from an integration or theme after plugins load:
+
+```php
+add_filter( 'kdconsent_commerce_enabled', '__return_true' );
+```
+
+It emits `page_view`, `view_item_list`, `select_item`, `view_item`, `add_to_cart`, `remove_from_cart`, `view_cart`, `begin_checkout`, `add_shipping_info`, `add_payment_info`, and `search`. Every `kdconsent:commerce` DOM event uses the same redacted envelope exposed by `window.kdconsentCommerce`; in debug mode that envelope is also logged with `[kdconsent-commerce]`. No search term, contact data, address, network identifier, click identifier, or attribution cookie value is exposed.
+
+`planned_destinations` contains only sanitized IDs from `kdconsent_services` whose declared purpose is currently granted. The module never hardcodes a vendor or sends an HTTP request.
+
+When WooCommerce is active, product/variation IDs, SKU, product name, post-discount net unit price, quantity, currency, and cart value are provided. Woo Order Attribution remains off in cacheable HTML, follows marketing consent in the browser, and removes known `sbjs_*` first-party state after denial or revocation. The WooCommerce and Bricks integrations are optional and guarded by runtime checks.
+
+Classic cart and mini-cart removal links are enriched at render/fragment time with exact `data-kdconsent-commerce-*` item fields from the current cart line. Confirmed AJAX adds use the matching returned fragment's effective net unit price while retaining the quantity added by that action, rather than the cart line's accumulated quantity. Per-cart lookup data is localized only on the non-cacheable cart and checkout pages, and internal cart keys and parent/variation lookup fields never enter public event payloads. Woo Blocks confirmations that only expose `preserveCartData` are emitted only from the latest exact, unexpired product intent (Woo product-button/remove-link classes, `data-wc-context`, or `data-kdconsent-commerce-action`). A confirmation without exact event data or a recent captured intent is ignored rather than assigned to a guessed product.
+
+Bricks WooCommerce lists receive semantic roles and `data-kdconsent-commerce-*` attributes. Integrations can supply a site-specific list identity without coupling it to the plugin:
+
+```php
+add_filter(
+    'kdconsent_commerce_bricks_list_context',
+    static function ( array $context, object $element, array $settings, string $attribute_key ): array {
+        $context['list_id']    = 'featured-products';
+        $context['list_name']  = 'Featured products';
+        $context['list_group'] = 'featured';
+        return $context;
+    },
+    10,
+    4
+);
+```
 
 ## REST API
 
@@ -155,6 +188,8 @@ docker exec -w /var/www/html php wp consent-banner import /tmp/consent-banner-se
 | Filter | `kdconsent_categories` | Adjust runtime categories before use/render. |
 | Filter | `kdconsent_services` | Register declarative, purpose-gated service definitions. |
 | Filter | `kdconsent_runtime_mode` | Select validated `live` or `debug` frontend transport. |
+| Filter | `kdconsent_commerce_enabled` | Opt into the transport-free browser commerce module; defaults to `false`. |
+| Filter | `kdconsent_commerce_bricks_list_context` | Supply sanitized `list_id`, `list_name`, and `list_group` metadata; arguments are context, element, settings, and attribute key. |
 | Action | `kdconsent_consent_recorded` | Runs when a consent decision is persisted. |
 | PHP helper | `kdconsent_has_consent( string $category ): bool` | Check category consent in PHP templates/plugin logic. |
 
@@ -185,6 +220,7 @@ includes/Plugin.php                Hook wiring
 includes/Installer.php             Defaults, table creation, upgrades
 includes/Admin/                    Admin menu, settings page, admin assets
 includes/Frontend/                 Banner mount, frontend assets, shortcode
+includes/Commerce/                 Optional WooCommerce/Bricks browser event module
 includes/Rest/                     REST routes and consent/settings controller
 includes/Repository/               Settings and optional consent log persistence
 includes/Service/                  Consent and localization logic
