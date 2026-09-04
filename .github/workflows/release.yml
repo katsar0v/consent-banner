@@ -18,11 +18,7 @@ jobs:
       - name: Verify annotated tag, main provenance, and plugin version
         run: |
           git fetch origin main:refs/remotes/origin/main
-          tag_ref="refs/tags/${GITHUB_REF_NAME}"
-          tag_commit="$(git rev-parse "${tag_ref}^{commit}")"
-          test "$(git cat-file -t "${tag_ref}")" = "tag"
-          test "${tag_commit}" = "$(git rev-parse origin/main)"
-          test "$(git rev-parse HEAD)" = "${tag_commit}"
+          bash bin/verify-release-provenance.sh "${GITHUB_REF_NAME}"
           bash bin/verify-release-version.sh "${GITHUB_REF_NAME}"
       - name: Build release artifact
         run: bash bin/create-release.sh
