@@ -453,8 +453,8 @@ msgid "Show \"Reject all\" button"
 msgstr "Показване на бутона \"Откажи всички\""
 
 #: views/tabs/general.php:94
-msgid "Enable consent proof logging (hashed IP/UA)"
-msgstr "Активиране на лог за доказателство на съгласие (хеширани IP/UA)"
+msgid "Enable pseudonymous consent proof logging (no IP, user agent, or PII)"
+msgstr "Активиране на псевдонимно регистриране на доказателства за съгласие (без IP адрес, потребителски агент или лични данни)"
 
 #: views/tabs/general.php:95
 msgid "Remove plugin data on uninstall"

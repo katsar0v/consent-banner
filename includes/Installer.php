@@ -20,6 +20,7 @@ final class Installer {
 	public const OPTION_CONSENT_VERSION      = 'kdconsent_consent_version';
 	public const OPTION_REMOVE_ON_UNINSTALL  = 'kdconsent_remove_on_uninstall';
 	public const OPTION_SERVICE_REGISTRY_HASH = 'kdconsent_service_registry_hash';
+	public const OPTION_CONSENT_DEFINITIONS_HASH = 'kdconsent_consent_definitions_hash';
 	public const TABLE_CONSENT_LOG           = 'kdconsent_consent_log';
 
 	public static function install(): void {
@@ -326,6 +327,7 @@ final class Installer {
 		delete_option( self::OPTION_CONSENT_VERSION );
 		delete_option( self::OPTION_REMOVE_ON_UNINSTALL );
 		delete_option( self::OPTION_SERVICE_REGISTRY_HASH );
+		delete_option( self::OPTION_CONSENT_DEFINITIONS_HASH );
 		delete_option( LegacyCompat::OPTION_DB_VERSION );
 		delete_option( LegacyCompat::OPTION_SETTINGS );
 		delete_option( LegacyCompat::OPTION_CONSENT_VERSION );

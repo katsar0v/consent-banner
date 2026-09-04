@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 use KatsarovDesign\ConsentBanner\Installer;
 use KatsarovDesign\ConsentBanner\Repository\SettingsRepository;
+use KatsarovDesign\ConsentBanner\Service\ConsentDefinitionFingerprint;
 
 final class RestIntegrationTest extends WP_UnitTestCase {
 	private static int $administrator_id;
@@ -37,6 +38,13 @@ final class RestIntegrationTest extends WP_UnitTestCase {
 		self::assertSame( 200, $response->get_status() );
 		self::assertNull( $data['consent'] );
 		self::assertStringStartsWith( 'public,', $response->get_headers()['Cache-Control'] );
+	}
+
+	public function test_definition_fingerprint_runs_after_runtime_integrations_load(): void {
+		self::assertSame(
+			PHP_INT_MAX,
+			has_action( 'wp_loaded', array( ConsentDefinitionFingerprint::class, 'sync' ) )
+		);
 	}
 
 	public function test_patch_preserves_omitted_settings(): void {

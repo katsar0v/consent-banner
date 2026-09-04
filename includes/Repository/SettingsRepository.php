@@ -12,6 +12,7 @@ namespace KatsarovDesign\ConsentBanner\Repository;
 use KatsarovDesign\ConsentBanner\Domain\Category;
 use KatsarovDesign\ConsentBanner\Installer;
 use KatsarovDesign\ConsentBanner\LegacyCompat;
+use KatsarovDesign\ConsentBanner\Service\ConsentDefinitionFingerprint;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -43,9 +44,10 @@ final class SettingsRepository {
 
 	/**
 	 * @param array<string,mixed> $settings Raw incoming settings payload.
+	 * @param bool                $bump_consent_version Whether consent-relevant changes should bump consent.
 	 * @return array<string,mixed>
 	 */
-	public function update( array $settings ): array {
+	public function update( array $settings, bool $bump_consent_version = true ): array {
 		$previous  = $this->get();
 		$sanitized = $this->sanitize( $settings );
 
@@ -54,9 +56,7 @@ final class SettingsRepository {
 
 		self::$cached_settings = $sanitized;
 
-		if ( $this->consent_fingerprint( $previous ) !== $this->consent_fingerprint( $sanitized ) ) {
-			$this->bump_consent_version();
-		}
+		ConsentDefinitionFingerprint::settings_updated( $previous, $sanitized, $bump_consent_version );
 
 		return $sanitized;
 	}
@@ -65,10 +65,11 @@ final class SettingsRepository {
 	 * Merge a REST PATCH payload into current settings without erasing omitted keys.
 	 *
 	 * @param array<string,mixed> $settings Partial incoming settings payload.
+	 * @param bool                $bump_consent_version Whether consent-relevant changes should bump consent.
 	 * @return array<string,mixed>
 	 */
-	public function patch( array $settings ): array {
-		return $this->update( $this->merge_patch( $this->get(), $settings ) );
+	public function patch( array $settings, bool $bump_consent_version = true ): array {
+		return $this->update( $this->merge_patch( $this->get(), $settings ), $bump_consent_version );
 	}
 
 	/**
@@ -301,25 +302,6 @@ final class SettingsRepository {
 		$color = sanitize_hex_color( (string) $value );
 
 		return null !== $color ? strtoupper( $color ) : $default_color;
-	}
-
-	/**
-	 * @param array<string,mixed> $settings Sanitized settings.
-	 */
-	private function consent_fingerprint( array $settings ): string {
-		$material = array(
-			'categories'          => $settings['categories'] ?? array(),
-			'texts'               => $settings['texts'] ?? array(),
-			'consentLifetimeDays' => $settings['consentLifetimeDays'] ?? null,
-			'showRejectButton'    => true,
-		);
-
-		return hash( 'sha256', (string) wp_json_encode( $material ) );
-	}
-
-	private function bump_consent_version(): void {
-		$current = max( 1, (int) get_option( Installer::OPTION_CONSENT_VERSION, 1 ) );
-		update_option( Installer::OPTION_CONSENT_VERSION, $current + 1, false );
 	}
 
 	/**
