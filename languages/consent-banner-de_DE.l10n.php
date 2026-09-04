@@ -113,7 +113,7 @@ return array (
     'Consent lifetime (days)' => 'Einwilligungsdauer (Tage)',
     'Options' => 'Optionen',
     'Show "Reject all" button' => 'Button "Alle ablehnen" anzeigen',
-    'Enable consent proof logging (hashed IP/UA)' => 'Protokollierung des Einwilligungsnachweises aktivieren (gehashte IP/UA)',
+    'Enable pseudonymous consent proof logging (no IP, user agent, or PII)' => 'Pseudonyme Einwilligungsnachweise protokollieren (keine IP-Adresse, kein User-Agent und keine personenbezogenen Daten)',
     'Remove plugin data on uninstall' => 'Plugin-Daten bei der Deinstallation entfernen',
     'Bump consent version after save and ask everyone again' => 'Einwilligungsversion nach dem Speichern erhöhen und alle erneut fragen',
   ),

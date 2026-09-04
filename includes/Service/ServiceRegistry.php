@@ -9,8 +9,6 @@ declare(strict_types=1);
 
 namespace KatsarovDesign\ConsentBanner\Service;
 
-use KatsarovDesign\ConsentBanner\Installer;
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -44,21 +42,7 @@ final class ServiceRegistry {
 	}
 
 	public static function sync_consent_version(): void {
-		$hash     = hash( 'sha256', (string) wp_json_encode( self::services() ) );
-		$previous = get_option( Installer::OPTION_SERVICE_REGISTRY_HASH, false );
-
-		if ( false === $previous ) {
-			add_option( Installer::OPTION_SERVICE_REGISTRY_HASH, $hash, '', false );
-			return;
-		}
-
-		if ( hash_equals( (string) $previous, $hash ) ) {
-			return;
-		}
-
-		update_option( Installer::OPTION_SERVICE_REGISTRY_HASH, $hash, false );
-		$current = max( 1, (int) get_option( Installer::OPTION_CONSENT_VERSION, 1 ) );
-		update_option( Installer::OPTION_CONSENT_VERSION, $current + 1, false );
+		ConsentDefinitionFingerprint::sync();
 	}
 
 	/**

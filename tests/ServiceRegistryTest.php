@@ -7,12 +7,20 @@
 
 declare(strict_types=1);
 
+use KatsarovDesign\ConsentBanner\Installer;
+use KatsarovDesign\ConsentBanner\Repository\SettingsRepository;
 use KatsarovDesign\ConsentBanner\Service\ServiceRegistry;
 use PHPUnit\Framework\TestCase;
 
 final class ServiceRegistryTest extends TestCase {
 	protected function setUp(): void {
 		$GLOBALS['kdconsent_test_filters'] = array();
+		$GLOBALS['kdconsent_test_options'] = array(
+			Installer::OPTION_CONSENT_VERSION => 4,
+		);
+
+		$cache = new ReflectionProperty( SettingsRepository::class, 'cached_settings' );
+		$cache->setValue( null, null );
 	}
 
 	public function test_registry_sanitizes_descriptors_and_rejects_non_allowlisted_scripts(): void {
@@ -58,5 +66,24 @@ final class ServiceRegistryTest extends TestCase {
 		self::assertCount( 1, $services[0]['scripts'] );
 		self::assertSame( 'https://cdn.example.test/clarity.js', $services[0]['scripts'][0]['src'] );
 		self::assertSame( array( '_clck', 'bad' ), $services[0]['cookies'] );
+	}
+
+	public function test_legacy_sync_method_uses_the_combined_fingerprint(): void {
+		ServiceRegistry::sync_consent_version();
+		add_filter(
+			'kdconsent_services',
+			static fn(): array => array(
+				array(
+					'id'      => 'analytics',
+					'name'    => 'Analytics',
+					'purpose' => 'analytics',
+				)
+			)
+		);
+
+		ServiceRegistry::sync_consent_version();
+		ServiceRegistry::sync_consent_version();
+
+		self::assertSame( 5, get_option( Installer::OPTION_CONSENT_VERSION ) );
 	}
 }

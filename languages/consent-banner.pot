@@ -452,7 +452,7 @@ msgid "Show \"Reject all\" button"
 msgstr ""
 
 #: views/tabs/general.php:94
-msgid "Enable consent proof logging (hashed IP/UA)"
+msgid "Enable pseudonymous consent proof logging (no IP, user agent, or PII)"
 msgstr ""
 
 #: views/tabs/general.php:95

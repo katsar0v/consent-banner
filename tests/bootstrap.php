@@ -11,6 +11,7 @@ define( 'DAY_IN_SECONDS', 86400 );
 
 $GLOBALS['kdconsent_test_options'] = array();
 $GLOBALS['kdconsent_test_filters'] = array();
+$GLOBALS['kdconsent_test_cache_deletions'] = array();
 
 function __( string $text, string $domain = 'default' ): string {
 	return $text;
@@ -56,12 +57,29 @@ function update_option( string $name, mixed $value, bool $autoload = true ): boo
 }
 
 function add_option( string $name, mixed $value, string $deprecated = '', bool $autoload = true ): bool {
+	$callback = $GLOBALS['kdconsent_test_add_option_callback'] ?? null;
+	if ( is_callable( $callback ) ) {
+		$result = $callback( $name, $value, $deprecated, $autoload );
+		if ( is_bool( $result ) ) {
+			return $result;
+		}
+	}
+
 	if ( array_key_exists( $name, $GLOBALS['kdconsent_test_options'] ) ) {
 		return false;
 	}
 
 	$GLOBALS['kdconsent_test_options'][ $name ] = $value;
 	return true;
+}
+
+function wp_cache_delete( string $key, string $group = '' ): bool {
+	$GLOBALS['kdconsent_test_cache_deletions'][] = array( $key, $group );
+	return true;
+}
+
+function maybe_serialize( mixed $value ): mixed {
+	return is_array( $value ) || is_object( $value ) ? serialize( $value ) : $value;
 }
 
 function wp_json_encode( mixed $value, int $flags = 0 ): string|false {
@@ -79,4 +97,8 @@ require_once dirname( __DIR__ ) . '/includes/Domain/ConsentState.php';
 require_once dirname( __DIR__ ) . '/includes/Repository/SettingsRepository.php';
 require_once dirname( __DIR__ ) . '/includes/Service/ConsentService.php';
 require_once dirname( __DIR__ ) . '/includes/Service/ServiceRegistry.php';
+require_once dirname( __DIR__ ) . '/includes/Service/ConsentDefinitionFingerprint.php';
+require_once dirname( __DIR__ ) . '/includes/Service/RuntimeMode.php';
+require_once dirname( __DIR__ ) . '/includes/Service/SettingsTransferException.php';
+require_once dirname( __DIR__ ) . '/includes/Service/SettingsTransfer.php';
 require_once dirname( __DIR__ ) . '/includes/Repository/ConsentLogRepository.php';
