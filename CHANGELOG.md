@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Added an opt-in, vendor-neutral browser commerce module with a redacted local event API, consent-derived service destinations, optional WooCommerce/Bricks context, sourcebuster cleanup, and no remote transport.
 - Added a generic validated runtime mode for live and local debug transports.
 - Unified effective category, consent-text, lifetime, and service fingerprinting so definition changes request consent exactly once without reacting to appearance changes.
 - Preserved no-reconsent settings imports by synchronizing definitions without incrementing the consent version.
