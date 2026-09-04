@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 final class Installer {
-	public const DB_VERSION                  = '0.4.0';
+	public const DB_VERSION                  = '0.5.0';
 	public const OPTION_DB_VERSION           = 'kdconsent_db_version';
 	public const OPTION_SETTINGS             = 'kdconsent_settings';
 	public const OPTION_CONSENT_VERSION      = 'kdconsent_consent_version';
