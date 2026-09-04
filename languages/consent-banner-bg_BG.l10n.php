@@ -113,7 +113,7 @@ return array (
     'Consent lifetime (days)' => 'Срок на съгласието (дни)',
     'Options' => 'Опции',
     'Show "Reject all" button' => 'Показване на бутона "Откажи всички"',
-    'Enable consent proof logging (hashed IP/UA)' => 'Активиране на лог за доказателство на съгласие (хеширани IP/UA)',
+    'Enable pseudonymous consent proof logging (no IP, user agent, or PII)' => 'Активиране на псевдонимно регистриране на доказателства за съгласие (без IP адрес, потребителски агент или лични данни)',
     'Remove plugin data on uninstall' => 'Премахване на данните на плъгина при деинсталиране',
     'Bump consent version after save and ask everyone again' => 'Увеличаване на версията на съгласието след запазване и повторно питане на всички',
   ),

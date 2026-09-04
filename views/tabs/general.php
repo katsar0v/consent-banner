@@ -91,7 +91,7 @@ $categories = is_array( $settings['categories'] ?? null ) ? $settings['categorie
 			<th scope="row"><?php echo esc_html__( 'Options', 'consent-banner' ); ?></th>
 			<td>
 				<label><input type="checkbox" value="1" checked disabled> <?php echo esc_html__( 'Always show "Reject all" button', 'consent-banner' ); ?></label><br>
-				<label><input type="checkbox" name="enableConsentLog" value="1" <?php checked( ! empty( $settings['enableConsentLog'] ) ); ?>> <?php echo esc_html__( 'Enable consent proof logging (hashed IP/UA)', 'consent-banner' ); ?></label><br>
+				<label><input type="checkbox" name="enableConsentLog" value="1" <?php checked( ! empty( $settings['enableConsentLog'] ) ); ?>> <?php echo esc_html__( 'Enable pseudonymous consent proof logging (no IP, user agent, or PII)', 'consent-banner' ); ?></label><br>
 				<label><input type="checkbox" name="removeOnUninstall" value="1" <?php checked( ! empty( $settings['removeOnUninstall'] ) ); ?>> <?php echo esc_html__( 'Remove plugin data on uninstall', 'consent-banner' ); ?></label><br>
 				<label><input type="checkbox" name="bumpConsentVersion" value="1"> <?php echo esc_html__( 'Bump consent version after save and ask everyone again', 'consent-banner' ); ?></label>
 			</td>
