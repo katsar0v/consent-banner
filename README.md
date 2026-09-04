@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <img alt="Version 0.4.0" src="https://img.shields.io/badge/version-0.4.0-1f6feb?style=for-the-badge">
+  <img alt="Version 0.5.0" src="https://img.shields.io/badge/version-0.5.0-1f6feb?style=for-the-badge">
   <img alt="WordPress 6.8+" src="https://img.shields.io/badge/WordPress-6.8%2B-21759b?style=for-the-badge&logo=wordpress&logoColor=white">
   <img alt="PHP 8.1+" src="https://img.shields.io/badge/PHP-8.1%2B-777bb4?style=for-the-badge&logo=php&logoColor=white">
   <img alt="License GPL-2.0-or-later" src="https://img.shields.io/badge/license-GPL--2.0--or--later-0f766e?style=for-the-badge">
@@ -15,7 +15,7 @@
 
 Consent Banner adds a configurable consent banner to WordPress with **Accept all**, **Reject all**, and **Customize** flows. Categories are managed in admin, essential cookies stay enabled by design, and consent can be revisited from a shortcode or theme trigger.
 
-Version 0.4.0 adds a synchronous Consent Mode v2 bootstrap, an allowlisted service registry, teardown on revocation, accessible preferences, and data-minimal twelve-month receipts.
+Version 0.5.0 adds validated runtime modes and opt-in, vendor-neutral browser and server commerce contracts with consent-derived destinations, positive-list redaction, and no built-in remote transport.
 
 ## Highlights
 

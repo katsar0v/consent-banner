@@ -1,7 +1,7 @@
 {
   "name": "consent-banner-tests",
   "private": true,
-  "version": "0.4.0",
+  "version": "0.5.0",
   "scripts": {
     "test": "npm run test:unit && npm run test:gtm",
     "test:unit": "node tests/js/consent-storage.test.js && node tests/js/consent-mode-v2.test.js && node tests/js/service-registry.test.js && node tests/js/accessibility-contract.test.js && node tests/js/commerce.test.js",
