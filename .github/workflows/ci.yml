@@ -79,7 +79,9 @@ jobs:
         with:
           fetch-depth: 0
       - name: Verify release version consistency
-        run: bash bin/verify-release-version.sh
+        run: |
+          bash bin/verify-release-version.sh
+          bash tests/release-provenance.sh
       - name: Build twice and compare
         run: |
           bash bin/create-release.sh /tmp/consent-banner-a.zip
