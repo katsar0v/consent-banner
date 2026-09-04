@@ -21,6 +21,10 @@ $GLOBALS['kdconsent_test_inline_scripts'] = array();
 $GLOBALS['kdconsent_test_products'] = array();
 $GLOBALS['kdconsent_test_page'] = array();
 $GLOBALS['kdconsent_test_wc'] = (object) array( 'cart' => null );
+$GLOBALS['kdconsent_test_orders'] = array();
+$GLOBALS['kdconsent_test_scheduled_actions'] = array();
+$GLOBALS['kdconsent_test_action_store'] = array();
+$GLOBALS['kdconsent_test_renewal_order_ids'] = array();
 
 function __( string $text, string $domain = 'default' ): string {
 	return $text;
@@ -55,6 +59,16 @@ function add_filter( string $hook, callable $callback, int $priority = 10, int $
 function add_action( string $hook, callable $callback, int $priority = 10, int $accepted_args = 1 ): bool {
 	$GLOBALS['kdconsent_test_actions'][ $hook ][] = array( $callback, $priority, $accepted_args );
 	return true;
+}
+
+function do_action( string $hook, mixed ...$args ): void {
+	$callbacks = $GLOBALS['kdconsent_test_actions'][ $hook ] ?? array();
+	usort( $callbacks, static fn( array $left, array $right ): int => $left[1] <=> $right[1] );
+	foreach ( $callbacks as $definition ) {
+		$callback      = $definition[0];
+		$accepted_args = $definition[2];
+		$callback( ...array_slice( $args, 0, $accepted_args ) );
+	}
 }
 
 function apply_filters( string $hook, mixed $value, mixed ...$args ): mixed {
@@ -201,6 +215,57 @@ function WC(): mixed {
 	return $GLOBALS['kdconsent_test_wc'];
 }
 
+function wc_get_order( int $order_id ): mixed {
+	return $GLOBALS['kdconsent_test_orders'][ $order_id ] ?? false;
+}
+
+/** @return list<string> */
+function wc_get_is_paid_statuses(): array {
+	return array( 'processing', 'completed' );
+}
+
+function wcs_order_contains_renewal( WC_Order $order ): bool {
+	return in_array( $order->get_id(), $GLOBALS['kdconsent_test_renewal_order_ids'], true );
+}
+
+/** @param list<int> $args */
+function as_enqueue_async_action( string $hook, array $args = array(), string $group = '', bool $unique = false ): int {
+	$callback = $GLOBALS['kdconsent_test_enqueue_callback'] ?? null;
+	if ( is_callable( $callback ) ) {
+		return (int) $callback( $hook, $args, $group, $unique );
+	}
+
+	$id = count( $GLOBALS['kdconsent_test_scheduled_actions'] ) + 1;
+	$GLOBALS['kdconsent_test_scheduled_actions'][ $id ] = array( $hook, $args, $group, 'pending' );
+	return $id;
+}
+
+/** @param list<int> $args */
+function as_schedule_single_action( int $timestamp, string $hook, array $args = array(), string $group = '', bool $unique = false ): int {
+	$callback = $GLOBALS['kdconsent_test_schedule_callback'] ?? null;
+	if ( is_callable( $callback ) ) {
+		return (int) $callback( $timestamp, $hook, $args, $group, $unique );
+	}
+
+	return as_enqueue_async_action( $hook, $args, $group, $unique );
+}
+
+/** @param list<int> $args */
+function as_has_scheduled_action( string $hook, ?array $args = null, string $group = '' ): bool {
+	$callback = $GLOBALS['kdconsent_test_has_scheduled_callback'] ?? null;
+	if ( is_callable( $callback ) ) {
+		return (bool) $callback( $hook, $args, $group );
+	}
+
+	foreach ( $GLOBALS['kdconsent_test_scheduled_actions'] as $action ) {
+		if ( $hook === $action[0] && $args === $action[1] && $group === $action[2] && in_array( $action[3], array( 'pending', 'running' ), true ) ) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
 if ( ! class_exists( 'WC_Product' ) ) {
 	class WC_Product {
 		public function __construct(
@@ -224,6 +289,211 @@ if ( ! class_exists( 'WC_Product' ) ) {
 
 		public function get_price(): string {
 			return (string) $this->price;
+		}
+	}
+}
+
+if ( ! class_exists( 'WC_Abstract_Order' ) ) {
+	class WC_Abstract_Order {
+		/** @var array<string,mixed> */
+		protected array $meta = array();
+		/** @var list<object> */
+		protected array $items = array();
+		public int $save_count = 0;
+		public int $save_meta_count = 0;
+
+		public function get_meta( string $key, bool $single = true ): mixed {
+			return $this->meta[ $key ] ?? '';
+		}
+
+		public function update_meta_data( string $key, mixed $value ): void {
+			$this->meta[ $key ] = $value;
+		}
+
+		public function delete_meta_data( string $key ): void {
+			unset( $this->meta[ $key ] );
+		}
+
+		public function save(): int {
+			++$this->save_count;
+			return 1;
+		}
+
+		public function save_meta_data(): void {
+			++$this->save_meta_count;
+		}
+
+		/** @return list<object> */
+		public function get_items( string $type = '' ): array {
+			return $this->items;
+		}
+
+		/** @param list<object> $items */
+		public function set_items( array $items ): void {
+			$this->items = $items;
+		}
+	}
+}
+
+if ( ! class_exists( 'WC_Order' ) ) {
+	class WC_Order extends WC_Abstract_Order {
+		public function __construct(
+			private int $id,
+			private string $created_via = 'checkout',
+			private string $status = 'processing',
+			private float $total = 0.0,
+			private float $shipping = 0.0,
+			private float $tax = 0.0,
+			private string $currency = 'EUR',
+			private string $email = '',
+			private string $phone = '',
+			private mixed $date_paid = null,
+			private mixed $date_created = null,
+			private mixed $date_modified = null
+		) {
+			$this->date_created = $this->date_created ?? new DateTimeImmutable( '@1704067200' );
+			$this->date_modified = $this->date_modified ?? $this->date_created;
+		}
+
+		public function get_id(): int {
+			return $this->id;
+		}
+
+		public function get_created_via(): string {
+			return $this->created_via;
+		}
+
+		public function get_status(): string {
+			return $this->status;
+		}
+
+		public function is_paid(): bool {
+			return in_array( $this->status, wc_get_is_paid_statuses(), true );
+		}
+
+		public function get_total(): string {
+			return (string) $this->total;
+		}
+
+		public function get_shipping_total(): string {
+			return (string) $this->shipping;
+		}
+
+		public function get_total_tax(): string {
+			return (string) $this->tax;
+		}
+
+		public function get_currency(): string {
+			return $this->currency;
+		}
+
+		public function get_billing_email(): string {
+			return $this->email;
+		}
+
+		public function get_billing_phone(): string {
+			return $this->phone;
+		}
+
+		public function get_date_paid(): mixed {
+			return $this->date_paid;
+		}
+
+		public function get_date_created(): mixed {
+			return $this->date_created;
+		}
+
+		public function get_date_modified(): mixed {
+			return $this->date_modified;
+		}
+	}
+}
+
+if ( ! class_exists( 'WC_Order_Refund' ) ) {
+	class WC_Order_Refund extends WC_Order {
+		public function __construct( int $id, private float $amount, private int $parent_id, mixed $date_created = null ) {
+			parent::__construct( $id, 'refund', 'completed', 0.0, 0.0, 0.0, 'EUR', '', '', null, $date_created );
+		}
+
+		public function get_amount(): string {
+			return (string) $this->amount;
+		}
+
+		public function get_parent_id(): int {
+			return $this->parent_id;
+		}
+	}
+}
+
+if ( ! class_exists( 'WC_Order_Item_Product' ) ) {
+	class WC_Order_Item_Product {
+		public function __construct(
+			private int $product_id,
+			private int $variation_id,
+			private int $quantity,
+			private float $total,
+			private string $name,
+			private ?WC_Product $product = null
+		) {}
+
+		public function get_product_id(): int {
+			return $this->product_id;
+		}
+
+		public function get_variation_id(): int {
+			return $this->variation_id;
+		}
+
+		public function get_quantity(): int {
+			return $this->quantity;
+		}
+
+		public function get_total(): string {
+			return (string) $this->total;
+		}
+
+		public function get_name(): string {
+			return $this->name;
+		}
+
+		public function get_product(): ?WC_Product {
+			return $this->product;
+		}
+	}
+}
+
+if ( ! class_exists( 'KDConsent_Test_Action' ) ) {
+	class KDConsent_Test_Action {
+		/** @param list<int> $args */
+		public function __construct( private string $hook, private array $args, private string $group ) {}
+
+		public function get_hook(): string {
+			return $this->hook;
+		}
+
+		/** @return list<int> */
+		public function get_args(): array {
+			return $this->args;
+		}
+
+		public function get_group(): string {
+			return $this->group;
+		}
+	}
+}
+
+if ( ! class_exists( 'KDConsent_Test_Action_Store' ) ) {
+	class KDConsent_Test_Action_Store {
+		public function fetch_action( int $action_id ): mixed {
+			return $GLOBALS['kdconsent_test_action_store'][ $action_id ] ?? null;
+		}
+	}
+}
+
+if ( ! class_exists( 'ActionScheduler' ) ) {
+	class ActionScheduler {
+		public static function store(): KDConsent_Test_Action_Store {
+			return new KDConsent_Test_Action_Store();
 		}
 	}
 }
@@ -267,6 +537,13 @@ require_once dirname( __DIR__ ) . '/includes/Service/RuntimeMode.php';
 require_once dirname( __DIR__ ) . '/includes/Service/SettingsTransferException.php';
 require_once dirname( __DIR__ ) . '/includes/Service/SettingsTransfer.php';
 require_once dirname( __DIR__ ) . '/includes/Repository/ConsentLogRepository.php';
+require_once dirname( __DIR__ ) . '/includes/Commerce/DeliveryConfirmation.php';
+require_once dirname( __DIR__ ) . '/includes/Commerce/DestinationResolver.php';
+require_once dirname( __DIR__ ) . '/includes/Commerce/EventRedactor.php';
+require_once dirname( __DIR__ ) . '/includes/Commerce/ConsentSnapshot.php';
+require_once dirname( __DIR__ ) . '/includes/Commerce/OrderEventFactory.php';
+require_once dirname( __DIR__ ) . '/includes/Commerce/DebugTransport.php';
+require_once dirname( __DIR__ ) . '/includes/Commerce/OrderDispatcher.php';
 require_once dirname( __DIR__ ) . '/includes/Commerce/Module.php';
 require_once dirname( __DIR__ ) . '/includes/Commerce/FrontendContext.php';
 require_once dirname( __DIR__ ) . '/includes/Commerce/BricksAdapter.php';

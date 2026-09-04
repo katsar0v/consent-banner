@@ -20,6 +20,21 @@ tests_add_filter(
 		}
 		if ( is_readable( $woocommerce ) ) {
 			require_once $woocommerce;
+			add_action(
+				'init',
+				static function (): void {
+					if ( class_exists( 'WC_Install' ) ) {
+						WC_Install::create_tables();
+					}
+					if ( class_exists( 'ActionScheduler_StoreSchema' ) ) {
+						( new ActionScheduler_StoreSchema() )->register_tables( true );
+					}
+					if ( class_exists( 'ActionScheduler_LoggerSchema' ) ) {
+						( new ActionScheduler_LoggerSchema() )->register_tables( true );
+					}
+				},
+				-PHP_INT_MAX
+			);
 		}
 
 		require dirname( __DIR__, 2 ) . '/consent-banner.php';
