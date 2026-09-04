@@ -4,7 +4,7 @@ Tags: cookies, gdpr, consent, privacy
 Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 0.4.0
+Stable tag: 0.5.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -24,6 +24,8 @@ Consent Banner provides:
 - Consent-gated service registry with revocation teardown.
 - Transparent service disclosures and pseudonymous 12-month receipts.
 - Accessible dialogs with focus trapping and focus return.
+- Optional, vendor-neutral browser commerce events for WooCommerce and Bricks.
+- Optional paid-order and refund dispatch through Action Scheduler.
 
 == Installation ==
 
@@ -42,6 +44,15 @@ Yes, for services declared through the service registry. Only explicitly allowli
 Yes. Use shortcode `[kdconsent_preferences]` or trigger `.kdconsent-open-preferences` to reopen preferences.
 
 == Changelog ==
+
+= 0.5.0 =
+
+- Added a validated runtime mode for live and local debug transports.
+- Added opt-in browser commerce events with consent-derived destinations and positive-list redaction.
+- Added opt-in paid-order and refund dispatch with exact value math and idempotent Action Scheduler jobs.
+- Unified material consent-definition fingerprinting without reacting to appearance changes.
+- Preserved no-reconsent imports while synchronizing effective definitions.
+- Clarified that pseudonymous receipts never store IP addresses, user agents, or PII.
 
 = 0.4.0 =
 

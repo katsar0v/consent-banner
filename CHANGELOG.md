@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.5.0
+
 - Added an opt-in, vendor-neutral browser commerce module with a redacted local event API, consent-derived service destinations, optional WooCommerce/Bricks context, sourcebuster cleanup, and no remote transport.
 - Added opt-in paid-order and refund dispatch with consent snapshots, exact WooCommerce value math, idempotent Action Scheduler jobs, explicit delivery acknowledgements, capped retries, and a redacted server debug transport.
 - Added a generic validated runtime mode for live and local debug transports.
