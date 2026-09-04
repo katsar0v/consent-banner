@@ -84,7 +84,7 @@ jobs:
           bash tests/release-provenance.sh
       - name: Build twice and compare
         run: |
-          bash bin/create-release.sh /tmp/consent-banner-a.zip
-          bash bin/create-release.sh /tmp/consent-banner-b.zip
+          TZ=UTC bash bin/create-release.sh /tmp/consent-banner-a.zip
+          TZ=Europe/Sofia bash bin/create-release.sh /tmp/consent-banner-b.zip
           cmp /tmp/consent-banner-a.zip /tmp/consent-banner-b.zip
           unzip -l /tmp/consent-banner-a.zip
