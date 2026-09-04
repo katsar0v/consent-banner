@@ -453,8 +453,8 @@ msgid "Show \"Reject all\" button"
 msgstr "Button \"Alle ablehnen\" anzeigen"
 
 #: views/tabs/general.php:94
-msgid "Enable consent proof logging (hashed IP/UA)"
-msgstr "Protokollierung des Einwilligungsnachweises aktivieren (gehashte IP/UA)"
+msgid "Enable pseudonymous consent proof logging (no IP, user agent, or PII)"
+msgstr "Pseudonyme Einwilligungsnachweise protokollieren (keine IP-Adresse, kein User-Agent und keine personenbezogenen Daten)"
 
 #: views/tabs/general.php:95
 msgid "Remove plugin data on uninstall"

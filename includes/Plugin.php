@@ -16,7 +16,7 @@ use KatsarovDesign\ConsentBanner\Cli\SettingsCommand;
 use KatsarovDesign\ConsentBanner\Frontend\Assets as FrontendAssets;
 use KatsarovDesign\ConsentBanner\Frontend\Shortcode;
 use KatsarovDesign\ConsentBanner\Rest\RestRouter;
-use KatsarovDesign\ConsentBanner\Service\ServiceRegistry;
+use KatsarovDesign\ConsentBanner\Service\ConsentDefinitionFingerprint;
 use KatsarovDesign\ConsentBanner\Repository\ConsentLogRepository;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -42,7 +42,7 @@ final class Plugin {
 	public function init(): void {
 		add_action( 'init', array( $this, 'load_textdomain' ) );
 		add_action( 'init', array( Shortcode::class, 'register' ) );
-		add_action( 'init', array( ServiceRegistry::class, 'sync_consent_version' ), 1 );
+		add_action( 'wp_loaded', array( ConsentDefinitionFingerprint::class, 'sync' ), PHP_INT_MAX );
 		add_action( 'init', array( ConsentLogRepository::class, 'purge_expired' ), 20 );
 		add_action( 'rest_api_init', array( Installer::class, 'maybe_upgrade' ), 5 );
 		add_action( 'rest_api_init', array( RestRouter::class, 'register_routes' ) );

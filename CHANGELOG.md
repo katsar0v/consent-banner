@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Added a generic validated runtime mode for live and local debug transports.
+- Unified effective category, consent-text, lifetime, and service fingerprinting so definition changes request consent exactly once without reacting to appearance changes.
+- Preserved no-reconsent settings imports by synchronizing definitions without incrementing the consent version.
+- Corrected consent-receipt copy to state that IP addresses, user agents, and PII are not stored.
+
 ## 0.4.0
 
 - Added deterministic expiry, automatic consent versioning, and cache-neutral public configuration.

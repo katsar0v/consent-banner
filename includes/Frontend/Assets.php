@@ -14,6 +14,7 @@ use KatsarovDesign\ConsentBanner\LegacyCompat;
 use KatsarovDesign\ConsentBanner\Rest\RestRouter;
 use KatsarovDesign\ConsentBanner\Service\ConsentService;
 use KatsarovDesign\ConsentBanner\Service\PublicConfig;
+use KatsarovDesign\ConsentBanner\Service\RuntimeMode;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -26,7 +27,7 @@ final class Assets {
 		}
 
 		$settings  = ( new PublicConfig() )->build();
-		$transport = apply_filters( 'kdconsent_consent_mode_transport', self::is_local_debug() ? 'debug' : 'dataLayer' );
+		$transport = apply_filters( 'kdconsent_consent_mode_transport', RuntimeMode::is_debug() ? 'debug' : 'dataLayer' );
 		$transport = in_array( $transport, array( 'debug', 'dataLayer' ), true ) ? $transport : 'dataLayer';
 		$config    = array(
 			'cookieName'         => ConsentService::COOKIE_NAME,
@@ -100,7 +101,7 @@ final class Assets {
 			'legacyCookieName' => LegacyCompat::COOKIE_NAME,
 			'storageKey'       => 'kdconsent_consent_state',
 			'consentVersion'   => max( 1, (int) get_option( Installer::OPTION_CONSENT_VERSION, 1 ) ),
-			'serviceMode'      => self::is_local_debug() ? 'debug' : 'live',
+			'serviceMode'      => RuntimeMode::current(),
 			'config'           => $public_config,
 			'assets'           => array(
 				'script' => esc_url_raw(
@@ -136,12 +137,5 @@ final class Assets {
 		return is_readable( $path )
 			? KDCONSENT_PLUGIN_VERSION . '.' . (string) filemtime( $path )
 			: KDCONSENT_PLUGIN_VERSION;
-	}
-
-	private static function is_local_debug(): bool {
-		return 'local' === wp_get_environment_type()
-			&& defined( 'EQUANIS_TRACKING_MODE' )
-			&& 'debug' === EQUANIS_TRACKING_MODE
-			&& ( ! defined( 'EQUANIS_REMOTE_TRACKING' ) || ! EQUANIS_REMOTE_TRACKING );
 	}
 }

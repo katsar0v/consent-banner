@@ -74,6 +74,17 @@ docker exec -w /var/www/html php wp plugin activate consent-banner --allow-root
 - `Customize`: opens modal with category toggles (essential locked on).
 - `[kdconsent_preferences]` shortcode renders a button to reopen preferences.
 - Any element with class `.kdconsent-open-preferences` reopens preferences.
+- Effective categories, consent texts, consent lifetime, and service definitions share one fingerprint. A change to any of them invalidates prior consent exactly once; style, position, animation, and delay changes do not.
+
+### Runtime mode
+
+The frontend defaults to `live`. Integrations can select the local, non-loading debug transport with a filter:
+
+```php
+add_filter( 'kdconsent_runtime_mode', static fn(): string => 'debug' );
+```
+
+`debug` logs Consent Mode commands and planned service activations in the browser console. `live` writes Consent Mode commands to the data layer and may load consented, allowlisted service scripts. Any value other than `live` or `debug` falls back to `live`.
 
 ## REST API
 
@@ -142,6 +153,8 @@ docker exec -w /var/www/html php wp consent-banner import /tmp/consent-banner-se
 | --- | --- | --- |
 | Filter | `kdconsent_default_categories` | Override install-time category defaults. |
 | Filter | `kdconsent_categories` | Adjust runtime categories before use/render. |
+| Filter | `kdconsent_services` | Register declarative, purpose-gated service definitions. |
+| Filter | `kdconsent_runtime_mode` | Select validated `live` or `debug` frontend transport. |
 | Action | `kdconsent_consent_recorded` | Runs when a consent decision is persisted. |
 | PHP helper | `kdconsent_has_consent( string $category ): bool` | Check category consent in PHP templates/plugin logic. |
 
@@ -151,6 +164,7 @@ docker exec -w /var/www/html php wp consent-banner import /tmp/consent-banner-se
 | --- | --- |
 | `kdconsent_settings` | Main plugin settings payload. |
 | `kdconsent_consent_version` | Consent schema/version for re-prompting users. |
+| `kdconsent_consent_definitions_hash` | Fingerprint of effective category and service definitions. |
 | `kdconsent_db_version` | Plugin DB version state. |
 | `kdconsent_remove_on_uninstall` | Opt-in uninstall cleanup flag. |
 | `kdconsent_consent` cookie | Signed client consent payload (`v`, `t`, `c`). |
