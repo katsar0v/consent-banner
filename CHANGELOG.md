@@ -10,6 +10,7 @@
 - Unified effective category, consent-text, lifetime, and service fingerprinting so definition changes request consent exactly once without reacting to appearance changes.
 - Preserved no-reconsent settings imports by synchronizing definitions without incrementing the consent version.
 - Corrected consent-receipt copy to state that IP addresses, user agents, and PII are not stored.
+- Aligned translation metadata and hardened release provenance, packaging, and checksum verification.
 
 ## 0.4.0
 

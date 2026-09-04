@@ -53,6 +53,7 @@ Yes. Use shortcode `[kdconsent_preferences]` or trigger `.kdconsent-open-prefere
 - Unified material consent-definition fingerprinting without reacting to appearance changes.
 - Preserved no-reconsent imports while synchronizing effective definitions.
 - Clarified that pseudonymous receipts never store IP addresses, user agents, or PII.
+- Aligned translation metadata and hardened release provenance, packaging, and checksum verification.
 
 = 0.4.0 =
 
