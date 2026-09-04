@@ -78,6 +78,8 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - name: Verify release version consistency
+        run: bash bin/verify-release-version.sh
       - name: Build twice and compare
         run: |
           bash bin/create-release.sh /tmp/consent-banner-a.zip

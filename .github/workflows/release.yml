@@ -18,10 +18,12 @@ jobs:
       - name: Verify annotated tag, main provenance, and plugin version
         run: |
           git fetch origin main:refs/remotes/origin/main
-          test "$(git cat-file -t "${GITHUB_REF_NAME}")" = "tag"
-          test "$(git rev-parse "${GITHUB_REF_NAME}^{commit}")" = "$(git rev-parse origin/main)"
-          version="$(sed -n "s/^define( 'KDCONSENT_PLUGIN_VERSION', '\([^']*\)' );/\1/p" consent-banner.php)"
-          test "${GITHUB_REF_NAME}" = "v${version}"
+          tag_ref="refs/tags/${GITHUB_REF_NAME}"
+          tag_commit="$(git rev-parse "${tag_ref}^{commit}")"
+          test "$(git cat-file -t "${tag_ref}")" = "tag"
+          test "${tag_commit}" = "$(git rev-parse origin/main)"
+          test "$(git rev-parse HEAD)" = "${tag_commit}"
+          bash bin/verify-release-version.sh "${GITHUB_REF_NAME}"
       - name: Build release artifact
         run: bash bin/create-release.sh
       - name: Write checksum
