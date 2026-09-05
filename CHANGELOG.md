@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Kept manually styled preferences links/buttons intact when the deferred dialog stylesheet loads; default button styling now belongs only to plugin-generated controls.
+
+- Added an enabled-by-default automatic footer preferences control and an Appearance setting to remove its entire wrapper without affecting saved consent or manual preference controls.
+
 ## 0.5.0
 
 - Added an opt-in, vendor-neutral browser commerce module with a redacted local event API, consent-derived service destinations, optional WooCommerce/Bricks context, sourcebuster cleanup, and no remote transport.

@@ -75,7 +75,40 @@ docker exec -w /var/www/html php wp plugin activate consent-banner --allow-root
 - `Customize`: opens modal with category toggles (essential locked on).
 - `[kdconsent_preferences]` shortcode renders a button to reopen preferences.
 - Any element with class `.kdconsent-open-preferences` reopens preferences.
-- Effective categories, consent texts, consent lifetime, and service definitions share one fingerprint. A change to any of them invalidates prior consent exactly once; style, position, animation, and delay changes do not.
+- Effective categories, consent texts, consent lifetime, and service definitions share one fingerprint. A change to any of them invalidates prior consent exactly once; style, position, animation, delay, and automatic footer display changes do not.
+
+### Automatic footer preferences control
+
+**Settings → Consent Banner → Appearance → Display behavior** includes
+**Automatically show Cookie settings in the footer** (`autoFooterPreferences`).
+It defaults to enabled, including when upgrading settings that omit the key.
+The plugin renders one `.kdconsent-footer-preferences` wrapper through `wp_footer`.
+Disabling the checkbox removes the whole wrapper server-side, leaving no empty row.
+Clear any full-page cache after changing it. Export/import and REST PATCH preserve
+this setting; changing only this setting does not increment the consent version.
+
+Provide a replacement in your own footer or another accessible location before
+disabling automatic display. Use `[kdconsent_preferences]`, for example in a
+Bricks Shortcode element, or a native link/button with `kdconsent-open-preferences`:
+
+```html
+<button type="button" class="kdconsent-open-preferences">Cookie settings</button>
+```
+
+The trigger class adds behavior only and leaves manually styled links/buttons intact,
+including after the dialog stylesheet loads. Shortcode and automatic buttons use
+the separate `kdconsent-preferences-button` class for their default appearance.
+
+Custom JavaScript can also call `window.kdconsent.openPreferences()` after the
+loader is ready. These manual controls remain independent of the checkbox and
+work for returning visitors whose banner UI has not loaded yet.
+
+**Theme migration:** Equanis's reported row came from
+`Equanis\Consent\LiveTracking::preferences_link`, registered on `wp_footer`,
+not from the 0.5.0 plugin. Remove that legacy automatic callback when adopting
+the plugin renderer, otherwise it remains independent and can cause duplication.
+Keep `wp_footer` and consent runtime scripts enabled. Theme-specific styling can
+target `.kdconsent-footer-preferences .kdconsent-open-preferences`.
 
 ### Runtime mode
 

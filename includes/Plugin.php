@@ -16,6 +16,7 @@ use KatsarovDesign\ConsentBanner\Cli\SettingsCommand;
 use KatsarovDesign\ConsentBanner\Commerce\Module as CommerceModule;
 use KatsarovDesign\ConsentBanner\Frontend\Assets as FrontendAssets;
 use KatsarovDesign\ConsentBanner\Frontend\Shortcode;
+use KatsarovDesign\ConsentBanner\Frontend\FooterPreferences;
 use KatsarovDesign\ConsentBanner\Rest\RestRouter;
 use KatsarovDesign\ConsentBanner\Service\ConsentDefinitionFingerprint;
 use KatsarovDesign\ConsentBanner\Repository\ConsentLogRepository;
@@ -61,6 +62,7 @@ final class Plugin {
 		} else {
 			add_action( 'wp_head', array( FrontendAssets::class, 'bootstrap' ), -PHP_INT_MAX );
 			add_action( 'wp_enqueue_scripts', array( FrontendAssets::class, 'enqueue' ) );
+			add_action( 'wp_footer', array( FooterPreferences::class, 'render' ), 999 );
 		}
 
 		if ( defined( 'WP_CLI' ) && WP_CLI ) {

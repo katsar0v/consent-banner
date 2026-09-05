@@ -122,6 +122,7 @@ final class SettingsRepository {
 			'position'            => $position,
 			'animation'           => $animation,
 			'showDelayMs'         => $show_delay,
+			'autoFooterPreferences' => (bool) ( $settings['autoFooterPreferences'] ?? $defaults['autoFooterPreferences'] ),
 			'theme'               => (string) $defaults['theme'],
 			'showRejectButton'    => true,
 			'enableConsentLog'    => ! empty( $settings['enableConsentLog'] ),

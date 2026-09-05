@@ -30,7 +30,7 @@ final class Shortcode {
 			: __( 'Cookie settings', 'consent-banner' );
 
 		return sprintf(
-			'<button type="button" class="kdconsent-open-preferences">%s</button>',
+			'<button type="button" class="kdconsent-open-preferences kdconsent-preferences-button">%s</button>',
 			esc_html( $label )
 		);
 	}
