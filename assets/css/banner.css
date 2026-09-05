@@ -359,8 +359,9 @@
   margin-top: 16px;
 }
 
-.kdconsent-open-preferences,
-.kdcb-open-preferences {
+/* Trigger classes are behavior-only; keep custom theme links and buttons intact. */
+.kdconsent-preferences-button {
+  color: #1f2328;
   border: 1px solid #cbd5e1;
   border-radius: 6px;
   background: #fff;

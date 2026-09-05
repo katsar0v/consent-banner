@@ -95,6 +95,10 @@ Bricks Shortcode element, or a native link/button with `kdconsent-open-preferenc
 <button type="button" class="kdconsent-open-preferences">Cookie settings</button>
 ```
 
+The trigger class adds behavior only and leaves manually styled links/buttons intact,
+including after the dialog stylesheet loads. Shortcode and automatic buttons use
+the separate `kdconsent-preferences-button` class for their default appearance.
+
 Custom JavaScript can also call `window.kdconsent.openPreferences()` after the
 loader is ready. These manual controls remain independent of the checkbox and
 work for returning visitors whose banner UI has not loaded yet.

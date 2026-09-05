@@ -29,7 +29,7 @@ final class FooterPreferencesTest extends TestCase {
 
 		self::assertTrue( ( new SettingsRepository() )->get()['autoFooterPreferences'] );
 		self::assertSame(
-			'<div class="kdconsent-footer-preferences"><button type="button" class="kdconsent-open-preferences">Cookie settings</button></div>',
+			'<div class="kdconsent-footer-preferences"><button type="button" class="kdconsent-open-preferences kdconsent-preferences-button">Cookie settings</button></div>',
 			$this->output()
 		);
 	}
@@ -60,7 +60,7 @@ final class FooterPreferencesTest extends TestCase {
 		( new SettingsRepository() )->patch( array( 'autoFooterPreferences' => false ) );
 		self::assertSame( '', $this->output() );
 		self::assertSame(
-			'<button type="button" class="kdconsent-open-preferences">My &lt;settings&gt;</button>',
+			'<button type="button" class="kdconsent-open-preferences kdconsent-preferences-button">My &lt;settings&gt;</button>',
 			Shortcode::render( array(), 'My <settings>' )
 		);
 	}
