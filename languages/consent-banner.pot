@@ -462,3 +462,15 @@ msgstr ""
 #: views/tabs/general.php:96
 msgid "Bump consent version after save and ask everyone again"
 msgstr ""
+
+#: views/tabs/appearance.php
+msgid "Footer preferences"
+msgstr ""
+
+#: views/tabs/appearance.php
+msgid "Automatically show Cookie settings in the footer"
+msgstr ""
+
+#: views/tabs/appearance.php
+msgid "When disabled, add [kdconsent_preferences] or a link/button with the class kdconsent-open-preferences to your own footer or another accessible location. Custom JavaScript can call window.kdconsent.openPreferences(). Saved consent choices are preserved. Clear your page cache after changing this setting."
+msgstr ""

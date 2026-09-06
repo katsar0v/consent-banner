@@ -32,6 +32,7 @@ final class SettingsTransfer {
 		'position',
 		'animation',
 		'showDelayMs',
+		'autoFooterPreferences',
 		'theme',
 		'showRejectButton',
 		'enableConsentLog',

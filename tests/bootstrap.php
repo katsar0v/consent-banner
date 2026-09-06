@@ -549,3 +549,10 @@ require_once dirname( __DIR__ ) . '/includes/Commerce/FrontendContext.php';
 require_once dirname( __DIR__ ) . '/includes/Commerce/BricksAdapter.php';
 require_once dirname( __DIR__ ) . '/includes/Commerce/Assets.php';
 require_once dirname( __DIR__ ) . '/includes/Commerce/CartRemoveLink.php';
+
+function esc_html( string $text ): string {
+	return htmlspecialchars( $text, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8' );
+}
+
+require_once dirname( __DIR__ ) . '/includes/Frontend/Shortcode.php';
+require_once dirname( __DIR__ ) . '/includes/Frontend/FooterPreferences.php';

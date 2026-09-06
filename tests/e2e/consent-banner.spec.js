@@ -82,3 +82,35 @@ test('consent UI stays local, optional purposes start off, and transparency is a
   expect(externalRequests).toEqual([]);
   expect(pageErrors).toEqual([]);
 });
+
+
+test('deferred dialog CSS preserves manually styled preference triggers and their focus state', async ({ page }) => {
+  await page.setContent(`<!doctype html><html><head><style>
+    footer { background: #999; padding: 30px; color: white; }
+    #manual-link { color: white; font-size: 12px; }
+    #manual-button { color: white; background: #80642f; padding: 2px; border: 0; }
+  </style></head><body><footer>
+    <a id="manual-link" href="#preferences" class="kdconsent-open-preferences">Cookie settings</a>
+    <button id="manual-button" class="kdconsent-open-preferences">Custom settings</button>
+    <button id="plugin-button" class="kdconsent-open-preferences kdconsent-preferences-button">Shortcode settings</button>
+  </footer></body></html>`);
+  const appearance = async (selector) => page.locator(selector).evaluate((element) => {
+    const style = getComputedStyle(element);
+    return {
+      color: style.color, background: style.backgroundColor, padding: style.padding,
+      border: style.border, borderRadius: style.borderRadius,
+      width: element.getBoundingClientRect().width, height: element.getBoundingClientRect().height
+    };
+  });
+  const linkBefore = await appearance('#manual-link');
+  const buttonBefore = await appearance('#manual-button');
+  // Returning visitors load this stylesheet for the first time when reopening preferences.
+  await page.addStyleTag({ path: path.join(pluginRoot, 'assets/css/banner.css') });
+  await page.locator('#manual-link').focus();
+  expect(await appearance('#manual-link')).toEqual(linkBefore);
+  await page.locator('#manual-link').hover();
+  expect(await appearance('#manual-link')).toEqual(linkBefore);
+  await page.locator('#manual-button').focus();
+  expect(await appearance('#manual-button')).toEqual(buttonBefore);
+  expect(await appearance('#plugin-button')).toMatchObject({ color: 'rgb(31, 35, 40)', background: 'rgb(255, 255, 255)' });
+});

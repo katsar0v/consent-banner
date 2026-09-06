@@ -97,6 +97,16 @@ $button_color_fields = array(
 <table class="form-table" role="presentation">
 	<tbody>
 		<tr>
+			<th scope="row"><?php echo esc_html__( 'Footer preferences', 'consent-banner' ); ?></th>
+			<td>
+				<label for="kdconsent-auto-footer-preferences">
+					<input type="checkbox" id="kdconsent-auto-footer-preferences" name="autoFooterPreferences" value="1" aria-describedby="kdconsent-auto-footer-help" <?php checked( (bool) ( $settings['autoFooterPreferences'] ?? true ) ); ?>>
+					<?php echo esc_html__( 'Automatically show Cookie settings in the footer', 'consent-banner' ); ?>
+				</label>
+				<p class="description" id="kdconsent-auto-footer-help"><?php echo esc_html__( 'When disabled, add [kdconsent_preferences] or a link/button with the class kdconsent-open-preferences to your own footer or another accessible location. Custom JavaScript can call window.kdconsent.openPreferences(). Saved consent choices are preserved. Clear your page cache after changing this setting.', 'consent-banner' ); ?></p>
+			</td>
+		</tr>
+		<tr>
 			<th scope="row"><label for="kdconsent-animation"><?php echo esc_html__( 'Animation', 'consent-banner' ); ?></label></th>
 			<td>
 				<select id="kdconsent-animation" name="animation">

@@ -463,3 +463,15 @@ msgstr "Plugin-Daten bei der Deinstallation entfernen"
 #: views/tabs/general.php:96
 msgid "Bump consent version after save and ask everyone again"
 msgstr "Einwilligungsversion nach dem Speichern erhöhen und alle erneut fragen"
+
+#: views/tabs/appearance.php
+msgid "Footer preferences"
+msgstr "Cookie-Einstellungen im Footer"
+
+#: views/tabs/appearance.php
+msgid "Automatically show Cookie settings in the footer"
+msgstr "Cookie-Einstellungen automatisch im Footer anzeigen"
+
+#: views/tabs/appearance.php
+msgid "When disabled, add [kdconsent_preferences] or a link/button with the class kdconsent-open-preferences to your own footer or another accessible location. Custom JavaScript can call window.kdconsent.openPreferences(). Saved consent choices are preserved. Clear your page cache after changing this setting."
+msgstr "Wenn deaktiviert, fügen Sie [kdconsent_preferences] oder einen Link/Button mit der Klasse kdconsent-open-preferences in Ihren eigenen Footer oder an einer anderen zugänglichen Stelle ein. Eigenes JavaScript kann window.kdconsent.openPreferences() aufrufen. Gespeicherte Einwilligungen bleiben erhalten. Leeren Sie nach einer Änderung den Seiten-Cache."
