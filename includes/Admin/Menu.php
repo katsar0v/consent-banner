@@ -40,10 +40,6 @@ final class Menu {
 				'label'   => __( 'External scripts', 'consent-banner' ),
 				'enabled' => false,
 			),
-			'tcf'              => array(
-				'label'   => __( 'TCF', 'consent-banner' ),
-				'enabled' => false,
-			),
 		);
 	}
 
