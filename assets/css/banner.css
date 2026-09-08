@@ -49,8 +49,26 @@
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
-.kdconsent-position-center .kdconsent-banner {
-  margin-top: 20px;
+#kdconsent-banner-root.kdconsent-position-center {
+  inset: 0;
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  padding: 20px;
+  pointer-events: none;
+}
+
+#kdconsent-banner-root.kdconsent-position-center .kdconsent-banner {
+  box-sizing: border-box;
+  max-height: calc(100vh - 40px);
+  max-height: calc(100dvh - 40px);
+  margin: 0;
+  overflow-y: auto;
+  pointer-events: auto;
+}
+
+#kdconsent-banner-root.kdconsent-position-center .kdconsent-modal-overlay {
+  pointer-events: auto;
 }
 
 .kdconsent-banner-overlay {
@@ -386,6 +404,16 @@
 
   .kdconsent-banner-actions .kdconsent-btn-customize {
     grid-column: 1 / -1;
+  }
+
+  #kdconsent-banner-root.kdconsent-position-center {
+    padding: 12px;
+  }
+
+  #kdconsent-banner-root.kdconsent-position-center .kdconsent-banner {
+    max-height: calc(100vh - 24px);
+    max-height: calc(100dvh - 24px);
+    margin: 0;
   }
 
   .kdconsent-modal {

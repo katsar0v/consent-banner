@@ -52,6 +52,7 @@
 
   var behavior = config.behavior || {};
   var showRejectButton = behavior.showRejectButton !== false;
+  var position = behavior.position || 'bottom';
   var styleSettings = behavior.styles && typeof behavior.styles === 'object' ? behavior.styles : {};
   var animationType = normalizeAnimation(behavior.animation);
   var showDelayMs = normalizeDelay(behavior.showDelayMs);
@@ -64,9 +65,12 @@
     'kdconsent-anim-blur-in'
   ];
 
+  root.classList.remove('kdconsent-position-bottom', 'kdconsent-position-center');
+  root.classList.add('kdconsent-position-' + position);
+
   var wrapper = document.createElement('div');
   wrapper.className =
-    'kdconsent-banner kdconsent-position-' + (behavior.position || 'bottom');
+    'kdconsent-banner kdconsent-position-' + position;
 	  wrapper.setAttribute('role', 'dialog');
 	  wrapper.setAttribute('aria-modal', 'true');
 	  wrapper.setAttribute('aria-labelledby', 'kdconsent-banner-title');
