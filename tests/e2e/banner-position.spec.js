@@ -92,6 +92,8 @@ test('center position uses the viewport center, keeps preferences functional, an
 
   await page.getByRole('button', { name: 'Customize' }).click();
   await expect(page.locator('.kdconsent-modal-overlay')).toHaveAttribute('aria-hidden', 'false');
+  // Preferences transfers focus asynchronously before it can handle keyboard input.
+  await expect(page.locator('#kdconsent-purpose-analytics')).toBeFocused();
   await page.keyboard.press('Escape');
   await expect(page.locator('.kdconsent-modal-overlay')).toHaveAttribute('aria-hidden', 'true');
 
