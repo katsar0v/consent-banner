@@ -108,6 +108,16 @@ $button_color_fields = array(
 			</td>
 		</tr>
 		<tr>
+			<th scope="row"><?php echo esc_html__( 'Page interaction', 'consent-banner' ); ?></th>
+			<td>
+				<label for="kdconsent-block-until-choice">
+					<input type="checkbox" id="kdconsent-block-until-choice" name="blockUntilChoice" value="1" aria-describedby="kdconsent-block-until-choice-help" <?php checked( (bool) ( $settings['blockUntilChoice'] ?? false ) ); ?>>
+					<?php echo esc_html__( 'Block the page until the visitor makes a choice', 'consent-banner' ); ?>
+				</label>
+				<p class="description" id="kdconsent-block-until-choice-help"><?php echo esc_html__( 'While the banner is shown, the page behind it is dimmed and cannot be scrolled, clicked or reached with the keyboard until the visitor accepts, rejects or saves preferences. Reject all stays one click away. The WordPress privacy policy page is never blocked, and the banner links to it. Clear your page cache after changing this setting.', 'consent-banner' ); ?></p>
+			</td>
+		</tr>
+		<tr>
 			<th scope="row"><label for="kdconsent-animation"><?php echo esc_html__( 'Animation', 'consent-banner' ); ?></label></th>
 			<td>
 				<select id="kdconsent-animation" name="animation">

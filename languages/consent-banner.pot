@@ -478,3 +478,15 @@ msgstr ""
 #: views/tabs/appearance.php
 msgid "When disabled, add [kdconsent_preferences] or a link/button with the class kdconsent-open-preferences to your own footer or another accessible location. Custom JavaScript can call window.kdconsent.openPreferences(). Saved consent choices are preserved. Clear your page cache after changing this setting."
 msgstr ""
+
+#: views/tabs/appearance.php
+msgid "Page interaction"
+msgstr ""
+
+#: views/tabs/appearance.php
+msgid "Block the page until the visitor makes a choice"
+msgstr ""
+
+#: views/tabs/appearance.php
+msgid "While the banner is shown, the page behind it is dimmed and cannot be scrolled, clicked or reached with the keyboard until the visitor accepts, rejects or saves preferences. Reject all stays one click away. The WordPress privacy policy page is never blocked, and the banner links to it. Clear your page cache after changing this setting."
+msgstr ""

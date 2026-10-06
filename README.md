@@ -110,6 +110,23 @@ the plugin renderer, otherwise it remains independent and can cause duplication.
 Keep `wp_footer` and consent runtime scripts enabled. Theme-specific styling can
 target `.kdconsent-footer-preferences .kdconsent-open-preferences`.
 
+### Block the page until a choice
+
+**Settings → Consent Banner → Appearance → Display behavior → Page interaction**
+(`blockUntilChoice`) is off by default. When enabled, the page behind a waiting banner
+is dimmed and cannot be scrolled, clicked or reached with the keyboard: every other
+top-level element of `<body>` gets `inert`, `<html>` gets `kdconsent-scroll-locked`,
+the root gets `kdconsent-blocking`, and focus moves to the banner. Accept all,
+Reject all and Save preferences release the page; closing the preferences dialog
+without a choice does not. Reject all stays one click away, so visitors are asked
+for an answer, not for consent in exchange for access.
+
+The WordPress privacy policy page (**Settings → Privacy**) is never blocked, and the
+banner links to it whenever one is published. Keep the banner root, which renders in
+`wp_footer`, a direct child of `<body>`; an ancestor that contains it stays interactive.
+Changing the setting does not increment the consent version. Clear any full-page cache
+after changing it.
+
 ### Runtime mode
 
 The frontend defaults to `live`. Integrations can select the local, non-loading debug transport with a filter:

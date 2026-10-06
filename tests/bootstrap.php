@@ -126,6 +126,14 @@ function absint( mixed $value ): int {
 	return abs( (int) $value );
 }
 
+function determine_locale(): string {
+	return (string) ( $GLOBALS['kdconsent_test_locale'] ?? 'en_US' );
+}
+
+function get_privacy_policy_url(): string {
+	return (string) ( $GLOBALS['kdconsent_test_privacy_policy_url'] ?? '' );
+}
+
 function is_admin(): bool {
 	return false;
 }
@@ -536,6 +544,8 @@ require_once dirname( __DIR__ ) . '/includes/Service/ConsentDefinitionFingerprin
 require_once dirname( __DIR__ ) . '/includes/Service/RuntimeMode.php';
 require_once dirname( __DIR__ ) . '/includes/Service/SettingsTransferException.php';
 require_once dirname( __DIR__ ) . '/includes/Service/SettingsTransfer.php';
+require_once dirname( __DIR__ ) . '/includes/Service/Localization.php';
+require_once dirname( __DIR__ ) . '/includes/Service/PublicConfig.php';
 require_once dirname( __DIR__ ) . '/includes/Repository/ConsentLogRepository.php';
 require_once dirname( __DIR__ ) . '/includes/Commerce/DeliveryConfirmation.php';
 require_once dirname( __DIR__ ) . '/includes/Commerce/DestinationResolver.php';
