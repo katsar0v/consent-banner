@@ -79,6 +79,31 @@
   pointer-events: none;
 }
 
+/* Block until choice: the backdrop catches clicks and the page cannot scroll while the banner waits for an answer. */
+#kdconsent-banner-root.kdconsent-blocking .kdconsent-banner-overlay {
+  pointer-events: auto;
+}
+
+html.kdconsent-scroll-locked,
+html.kdconsent-scroll-locked body {
+  overflow: hidden;
+}
+
+/* Keep the scrollbar's space so the page does not shift sideways when scrolling locks and unlocks. */
+html.kdconsent-scroll-locked {
+  scrollbar-gutter: stable;
+}
+
+/* The banner receives focus as a whole when it blocks the page; its buttons show their own focus. */
+.kdconsent-banner[tabindex="-1"]:focus {
+  outline: none;
+}
+
+.kdconsent-banner-privacy {
+  color: inherit;
+  text-decoration: underline;
+}
+
 .kdconsent-banner.kdconsent-anim-enter {
   animation-duration: 420ms;
   animation-fill-mode: both;

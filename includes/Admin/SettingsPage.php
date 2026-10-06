@@ -90,6 +90,7 @@ final class SettingsPage {
 
 		if ( 'appearance' === $current_tab ) {
 			$settings['autoFooterPreferences'] = ! empty( $_POST['autoFooterPreferences'] );
+			$settings['blockUntilChoice']      = ! empty( $_POST['blockUntilChoice'] );
 			$settings['texts'] = isset( $_POST['texts'] ) && is_array( $_POST['texts'] )
 				? (array) map_deep( wp_unslash( $_POST['texts'] ), 'sanitize_textarea_field' )
 				: array();

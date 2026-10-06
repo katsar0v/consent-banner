@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Added an opt-in "Block the page until the visitor makes a choice" setting (`blockUntilChoice`): the page behind the banner is dimmed, inert and scroll-locked until the visitor accepts, rejects or saves preferences. The WordPress privacy policy page is never blocked, and changing the setting never requests consent again.
+- The banner now links to the WordPress privacy policy page when one is published.
+
 - Added an optional preferences intro text (EN/BG/DE, editable under Appearance; empty hides it) and an "Accept all" button to the preferences dialog, which now orders its buttons Close, Save preferences, Accept all. The intro is presentational and never requests consent again.
 
 - Kept manually styled preferences links/buttons intact when the deferred dialog stylesheet loads; default button styling now belongs only to plugin-generated controls.

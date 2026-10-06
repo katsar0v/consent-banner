@@ -57,6 +57,10 @@
   var styleSettings = behavior.styles && typeof behavior.styles === 'object' ? behavior.styles : {};
   var animationType = normalizeAnimation(behavior.animation);
   var showDelayMs = normalizeDelay(behavior.showDelayMs);
+	var privacyPolicyUrl = typeof behavior.privacyPolicyUrl === 'string' ? behavior.privacyPolicyUrl : '';
+	var blockUntilChoice = behavior.blockUntilChoice === true && !isCurrentPage(privacyPolicyUrl);
+	var inertElements = [];
+	var pageLocked = false;
   var animationClasses = [
     'kdconsent-anim-fade-in',
     'kdconsent-anim-slide-in-up',
@@ -84,6 +88,14 @@
   var body = document.createElement('p');
   body.className = 'kdconsent-banner-body';
   body.textContent = labels.bannerBody;
+	if (privacyPolicyUrl) {
+	  var privacyLink = document.createElement('a');
+	  privacyLink.className = 'kdconsent-banner-privacy';
+	  privacyLink.href = privacyPolicyUrl;
+	  privacyLink.textContent = labels.privacyLabel;
+	  body.appendChild(document.createTextNode(' '));
+	  body.appendChild(privacyLink);
+	}
 
   var actions = document.createElement('div');
   actions.className = 'kdconsent-banner-actions';
@@ -312,7 +324,63 @@
     wrapper.hidden = false;
     setBannerBackdropVisibility(true);
     applyBannerAnimation();
+	lockPage();
   }
+
+	// Until the visitor chooses, the rest of the page is inert (no clicks, focus or screen-reader access) and
+	// cannot scroll, the same as behind a native modal dialog. The consent root itself stays interactive.
+	function lockPage() {
+	  if (!blockUntilChoice || pageLocked || consent) {
+		return;
+	  }
+
+	  pageLocked = true;
+	  root.classList.add('kdconsent-blocking');
+	  document.documentElement.classList.add('kdconsent-scroll-locked');
+	  Array.prototype.forEach.call(document.body.children, function (element) {
+		if (element === root || element.contains(root) || element.inert) {
+		  return;
+		}
+
+		element.inert = true;
+		inertElements.push(element);
+	  });
+
+	  if (!wrapper.hasAttribute('tabindex')) {
+		wrapper.setAttribute('tabindex', '-1');
+	  }
+	  if (!wrapper.contains(document.activeElement) && typeof wrapper.focus === 'function') {
+		wrapper.focus({ preventScroll: true });
+	  }
+	}
+
+	function unlockPage() {
+	  if (!pageLocked) {
+		return;
+	  }
+
+	  pageLocked = false;
+	  root.classList.remove('kdconsent-blocking');
+	  document.documentElement.classList.remove('kdconsent-scroll-locked');
+	  inertElements.forEach(function (element) {
+		element.inert = false;
+	  });
+	  inertElements = [];
+	}
+
+	function isCurrentPage(url) {
+	  if (!url) {
+		return false;
+	  }
+
+	  try {
+		var target = new URL(url, window.location.href);
+		return target.origin === window.location.origin &&
+		  target.pathname.replace(/\/+$/, '') === window.location.pathname.replace(/\/+$/, '');
+	  } catch (e) {
+		return false;
+	  }
+	}
 
   function applyBannerAnimation() {
     var className = 'kdconsent-anim-' + animationType;
@@ -658,6 +726,7 @@
 
     wrapper.hidden = true;
     setBannerBackdropVisibility(false);
+	unlockPage();
     closePreferences();
 
     listeners.forEach(function (listener) {

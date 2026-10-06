@@ -479,3 +479,15 @@ msgstr "Cookie-Einstellungen automatisch im Footer anzeigen"
 #: views/tabs/appearance.php
 msgid "When disabled, add [kdconsent_preferences] or a link/button with the class kdconsent-open-preferences to your own footer or another accessible location. Custom JavaScript can call window.kdconsent.openPreferences(). Saved consent choices are preserved. Clear your page cache after changing this setting."
 msgstr "Wenn deaktiviert, fügen Sie [kdconsent_preferences] oder einen Link/Button mit der Klasse kdconsent-open-preferences in Ihren eigenen Footer oder an einer anderen zugänglichen Stelle ein. Eigenes JavaScript kann window.kdconsent.openPreferences() aufrufen. Gespeicherte Einwilligungen bleiben erhalten. Leeren Sie nach einer Änderung den Seiten-Cache."
+
+#: views/tabs/appearance.php
+msgid "Page interaction"
+msgstr "Seiteninteraktion"
+
+#: views/tabs/appearance.php
+msgid "Block the page until the visitor makes a choice"
+msgstr "Seite sperren, bis der Besucher eine Auswahl trifft"
+
+#: views/tabs/appearance.php
+msgid "While the banner is shown, the page behind it is dimmed and cannot be scrolled, clicked or reached with the keyboard until the visitor accepts, rejects or saves preferences. Reject all stays one click away. The WordPress privacy policy page is never blocked, and the banner links to it. Clear your page cache after changing this setting."
+msgstr "Solange das Banner angezeigt wird, ist die Seite dahinter abgedunkelt und kann weder gescrollt, angeklickt noch per Tastatur erreicht werden, bis der Besucher akzeptiert, ablehnt oder seine Einstellungen speichert. „Alle ablehnen“ bleibt einen Klick entfernt. Die WordPress-Datenschutzseite wird nie gesperrt, und das Banner verlinkt darauf. Leeren Sie nach einer Änderung dieser Einstellung den Seitencache."

@@ -283,6 +283,7 @@ final class Installer {
 			'animation'           => 'fade-in',
 			'showDelayMs'         => 0,
 			'autoFooterPreferences' => true,
+			'blockUntilChoice'      => false,
 			'theme'               => 'light',
 			'showRejectButton'    => true,
 			'enableConsentLog'    => false,

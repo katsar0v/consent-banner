@@ -43,6 +43,8 @@ final class PublicConfig {
 				'animation'           => (string) ( $settings['animation'] ?? 'fade-in' ),
 				'showDelayMs'         => (int) ( $settings['showDelayMs'] ?? 0 ),
 				'styles'              => is_array( $settings['styles'] ?? null ) ? $settings['styles'] : array(),
+				'blockUntilChoice'    => (bool) ( $settings['blockUntilChoice'] ?? false ),
+				'privacyPolicyUrl'    => (string) get_privacy_policy_url(),
 			),
 			'consentVersion' => $this->consent_service->consent_version(),
 			'consent'        => null,
