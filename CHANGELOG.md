@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Added an optional preferences intro text (EN/BG/DE, editable under Appearance; empty hides it) and an "Accept all" button to the preferences dialog, which now orders its buttons Close, Save preferences, Accept all. The intro is presentational and never requests consent again.
+
 - Kept manually styled preferences links/buttons intact when the deferred dialog stylesheet loads; default button styling now belongs only to plugin-generated controls.
 
 - Added an enabled-by-default automatic footer preferences control and an Appearance setting to remove its entire wrapper without affecting saved consent or manual preference controls.

@@ -170,9 +170,30 @@ final class ConsentDefinitionFingerprint {
 	private static function consent_settings( array $settings ): array {
 		return array(
 			'categories'          => is_array( $settings['categories'] ?? null ) ? $settings['categories'] : array(),
-			'texts'               => is_array( $settings['texts'] ?? null ) ? $settings['texts'] : array(),
+			'texts'               => self::consent_texts( $settings['texts'] ?? null ),
 			'consentLifetimeDays' => isset( $settings['consentLifetimeDays'] ) ? (int) $settings['consentLifetimeDays'] : null,
 		);
+	}
+
+	/**
+	 * Texts that describe the consent request. The preferences intro is presentational, like the appearance
+	 * settings, so adding or editing it never asks visitors to consent again.
+	 *
+	 * @param mixed $texts Texts keyed by locale.
+	 * @return array<string,mixed>
+	 */
+	private static function consent_texts( mixed $texts ): array {
+		if ( ! is_array( $texts ) ) {
+			return array();
+		}
+
+		foreach ( $texts as $locale => $locale_texts ) {
+			if ( is_array( $locale_texts ) ) {
+				unset( $texts[ $locale ]['preferencesIntro'] );
+			}
+		}
+
+		return $texts;
 	}
 
 	private static function bump_consent_version(): void {

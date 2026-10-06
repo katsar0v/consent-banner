@@ -39,6 +39,7 @@
     saveLabel: texts.saveLabel || 'Save preferences',
     closeLabel: texts.closeLabel || 'Close',
 	preferencesTitle: texts.preferencesTitle || 'Cookie preferences',
+	preferencesIntro: texts.preferencesIntro || '',
 	servicesTitle: texts.servicesTitle || 'Services',
 	providerLabel: texts.providerLabel || 'Provider',
 	purposeLabel: texts.purposeLabel || 'Purpose',
@@ -122,19 +123,28 @@
 	  modalTitle.id = 'kdconsent-modal-title';
   modalTitle.textContent = labels.preferencesTitle;
 
+	var modalIntro = document.createElement('p');
+	modalIntro.className = 'kdconsent-modal-intro';
+	modalIntro.textContent = labels.preferencesIntro;
+
   var modalBody = document.createElement('div');
   modalBody.className = 'kdconsent-modal-body';
 
   var modalActions = document.createElement('div');
   modalActions.className = 'kdconsent-modal-actions';
 
-  var saveButton = buildButton(labels.saveLabel, 'kdconsent-btn kdconsent-btn-primary kdconsent-btn-save');
   var closeButton = buildButton(labels.closeLabel, 'kdconsent-btn kdconsent-btn-tertiary kdconsent-btn-close');
+  var saveButton = buildButton(labels.saveLabel, 'kdconsent-btn kdconsent-btn-secondary kdconsent-btn-save');
+	var modalAcceptButton = buildButton(labels.acceptAllLabel, 'kdconsent-btn kdconsent-btn-primary kdconsent-btn-accept');
 
-  modalActions.appendChild(saveButton);
   modalActions.appendChild(closeButton);
+  modalActions.appendChild(saveButton);
+	modalActions.appendChild(modalAcceptButton);
 
   modal.appendChild(modalTitle);
+	if (labels.preferencesIntro) {
+	  modal.appendChild(modalIntro);
+	}
   modal.appendChild(modalBody);
   modal.appendChild(modalActions);
   modalOverlay.appendChild(modal);
@@ -180,14 +190,8 @@
 
 	appendServiceTransparency();
 
-  acceptButton.addEventListener('click', function () {
-    var next = {};
-    categories.forEach(function (category) {
-      next[category.id] = true;
-    });
-    next.essential = true;
-    submitConsent(next);
-  });
+  acceptButton.addEventListener('click', acceptAll);
+	modalAcceptButton.addEventListener('click', acceptAll);
 
   rejectButton.addEventListener('click', function () {
     var next = {};
@@ -257,6 +261,15 @@
     }
   };
   window.kdcb = window.kdconsent;
+
+	function acceptAll() {
+	  var next = {};
+	  categories.forEach(function (category) {
+		next[category.id] = true;
+	  });
+	  next.essential = true;
+	  submitConsent(next);
+	}
 
   function buildButton(label, className) {
     var button = document.createElement('button');

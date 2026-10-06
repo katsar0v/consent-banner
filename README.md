@@ -72,7 +72,7 @@ docker exec -w /var/www/html php wp plugin activate consent-banner --allow-root
 - A deferred loader checks the consent cookie first; full config, CSS, and UI load only when consent is missing, stale, or preferences are opened.
 - `Accept all`: enables all categories.
 - `Reject all`: enables only required categories.
-- `Customize`: opens modal with category toggles (essential locked on).
+- `Customize`: opens modal with an optional intro text and category toggles (essential locked on). The modal offers `Close`, `Save preferences` and `Accept all`.
 - `[kdconsent_preferences]` shortcode renders a button to reopen preferences.
 - Any element with class `.kdconsent-open-preferences` reopens preferences.
 - Effective categories, consent texts, consent lifetime, and service definitions share one fingerprint. A change to any of them invalidates prior consent exactly once; style, position, animation, delay, and automatic footer display changes do not.
