@@ -223,6 +223,10 @@ msgid "Preferences title"
 msgstr "Titel der Einstellungen"
 
 #: views/tabs/appearance.php:53
+msgid "Preferences intro"
+msgstr "Einleitung der Einstellungen"
+
+#: views/tabs/appearance.php:53
 msgid "Accept button"
 msgstr "Button \"Akzeptieren\""
 

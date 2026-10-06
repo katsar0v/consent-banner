@@ -50,6 +50,7 @@ $fields = array(
 	'saveLabel'        => __( 'Save preferences label', 'consent-banner' ),
 	'closeLabel'       => __( 'Close label', 'consent-banner' ),
 	'preferencesTitle' => __( 'Preferences title', 'consent-banner' ),
+	'preferencesIntro' => __( 'Preferences intro', 'consent-banner' ),
 	'servicesTitle'     => __( 'Services title', 'consent-banner' ),
 	'providerLabel'     => __( 'Provider label', 'consent-banner' ),
 	'purposeLabel'      => __( 'Purpose label', 'consent-banner' ),

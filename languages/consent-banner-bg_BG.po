@@ -223,6 +223,10 @@ msgid "Preferences title"
 msgstr "Заглавие на предпочитанията"
 
 #: views/tabs/appearance.php:53
+msgid "Preferences intro"
+msgstr "Въвеждащ текст в предпочитанията"
+
+#: views/tabs/appearance.php:53
 msgid "Accept button"
 msgstr "Бутон за приемане"
 

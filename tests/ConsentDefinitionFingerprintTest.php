@@ -131,6 +131,22 @@ final class ConsentDefinitionFingerprintTest extends TestCase {
 		self::assertSame( 7, get_option( Installer::OPTION_CONSENT_VERSION ) );
 	}
 
+	public function test_preferences_intro_changes_do_not_bump(): void {
+		ConsentDefinitionFingerprint::sync();
+		$repository = new SettingsRepository();
+		$settings   = $repository->get();
+
+		$settings['texts']['bg_BG']['preferencesIntro'] = 'Изберете кои бисквитки разрешавате.';
+		$settings                                       = $repository->update( $settings );
+		ConsentDefinitionFingerprint::sync();
+
+		$settings['texts']['en_US']['preferencesIntro'] = '';
+		$repository->update( $settings );
+		ConsentDefinitionFingerprint::sync();
+
+		self::assertSame( 7, get_option( Installer::OPTION_CONSENT_VERSION ) );
+	}
+
 	public function test_text_and_lifetime_changes_each_bump_once(): void {
 		ConsentDefinitionFingerprint::sync();
 		$repository = new SettingsRepository();

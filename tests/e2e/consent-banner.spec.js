@@ -84,6 +84,64 @@ test('consent UI stays local, optional purposes start off, and transparency is a
 });
 
 
+test('preferences dialog shows the intro and its Accept all button grants every purpose', async ({ page }) => {
+  await page.setContent('<!doctype html><html><head></head><body><div id="kdconsent-banner-root"></div></body></html>');
+  await page.addScriptTag({ path: path.join(pluginRoot, 'assets/js/consent-storage.js') });
+  await page.addScriptTag({ path: path.join(pluginRoot, 'assets/js/banner-ui.js') });
+  await page.evaluate(() => {
+    window.kdconsentInitBanner(
+      {
+        consentVersion: 1,
+        restRoot: '/wp-json/kdconsent/v1/',
+        texts: {
+          acceptAllLabel: 'Accept all',
+          customizeLabel: 'Customize',
+          saveLabel: 'Save',
+          closeLabel: 'Close',
+          preferencesIntro: 'Choose what you allow.'
+        },
+        categories: [
+          { id: 'essential', label: 'Essential', required: true, enabledByDefault: true },
+          { id: 'analytics', label: 'Analytics', required: false, enabledByDefault: false }
+        ],
+        behavior: { showRejectButton: true, showDelayMs: 0, position: 'bottom' }
+      },
+      { listeners: [], getConsent: () => null, setConsent: (consent) => { window.savedConsent = consent; } }
+    );
+  });
+
+  await page.getByRole('button', { name: 'Customize' }).click();
+  const dialog = page.locator('.kdconsent-modal');
+  await expect(dialog.locator('.kdconsent-modal-intro')).toHaveText('Choose what you allow.');
+  await expect(dialog.locator('.kdconsent-modal-actions button')).toHaveText(['Close', 'Save', 'Accept all']);
+
+  await dialog.getByRole('button', { name: 'Accept all' }).click();
+  await expect(page.locator('.kdconsent-modal-overlay')).toHaveAttribute('aria-hidden', 'true');
+  await expect(page.locator('.kdconsent-banner')).toBeHidden();
+  expect(await page.evaluate(() => window.savedConsent.c)).toEqual({ essential: true, analytics: true });
+});
+
+test('preferences dialog omits an empty intro', async ({ page }) => {
+  await page.setContent('<!doctype html><html><head></head><body><div id="kdconsent-banner-root"></div></body></html>');
+  await page.addScriptTag({ path: path.join(pluginRoot, 'assets/js/consent-storage.js') });
+  await page.addScriptTag({ path: path.join(pluginRoot, 'assets/js/banner-ui.js') });
+  await page.evaluate(() => {
+    window.kdconsentInitBanner(
+      {
+        consentVersion: 1,
+        texts: { customizeLabel: 'Customize', preferencesIntro: '' },
+        categories: [{ id: 'essential', label: 'Essential', required: true, enabledByDefault: true }],
+        behavior: { showDelayMs: 0 }
+      },
+      { listeners: [], getConsent: () => null, setConsent: () => {} }
+    );
+  });
+
+  await page.getByRole('button', { name: 'Customize' }).click();
+  await expect(page.locator('.kdconsent-modal-overlay')).toHaveAttribute('aria-hidden', 'false');
+  await expect(page.locator('.kdconsent-modal-intro')).toHaveCount(0);
+});
+
 test('deferred dialog CSS preserves manually styled preference triggers and their focus state', async ({ page }) => {
   await page.setContent(`<!doctype html><html><head><style>
     footer { background: #999; padding: 30px; color: white; }
